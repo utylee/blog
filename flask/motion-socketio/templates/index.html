@@ -7,6 +7,9 @@
 			var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
 
 			$("img").attr('width', $(window).width()/2 - 20);
+			$("img").hover(function(){
+				$(this).css('cursor', 'pointer');
+			});
 		
 			socket.on('update', function(msg){
 				if(i == -1){
@@ -53,7 +56,6 @@
 {% endblock %}
 {% block content %}
 	<div id="log">
-
 	</div>
 	<table width=300 border='0'>
 		<tr border='0'>

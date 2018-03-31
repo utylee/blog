@@ -14,6 +14,10 @@ def init():
     print('initing')
     global filenames, img_root
     l = sorted(glob.iglob(img_root +'2*jpg'), key=os.path.getctime)
+    # samba 서버가 오토마운트 되지 않은 상태에서 자꾸 접속하려 하니 time_wait가 발생하는 것 같습니다
+    # 오류 발생시키기 위해 assert 를 적당한 조건으로 넣어줬습니다만 
+    # 생각해보니 이것은 원래 exception이 나지 않았을까 싶고 supervisor에서의 무한 자동 재시작이 문제인 것 같기도 합니다
+    assert len(l) > 3
     for i in l[-4:]:
         filenames.append(i[-18:]) 
 
@@ -173,5 +177,6 @@ def disconnect():
 
 if __name__ == "__main__":
     init()
-    socketio.run(app, host='0.0.0.0', port='5000')
+    #socketio.run(app, host='0.0.0.0', port='5000')
+    socketio.run(app, host='0.0.0.0', port='5001')
 
