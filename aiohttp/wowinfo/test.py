@@ -1,5 +1,9 @@
 from aiohttp import web
 import aiohttp_mako 
+import sqlalchemy as sa
+from aiopg.sa import create_engine
+
+# 관심 아이템들 목록
 
 # 웹소켓 핸들러입니다
 async def ws_handle(request):
