@@ -1,0 +1,21 @@
+<%inherit file="base.html"/>
+
+<%block name="script">
+	<script type="text/javascript" charset="utf-8">
+		var socket = new WebSocket('ws://'+window.location.host+'/ws');
+		socket.onopen = function(){
+			socket.send('connect');
+		}
+		socket.onmessage = function(msg){
+			if (msg.data == 'fuck'){
+				alert('bitch');
+			}
+		}
+	</script>
+</%block>
+
+<%block name="content">
+<div class="jumbotron text-center">
+	<h1>${name}</h1>
+</div>
+</%block>
