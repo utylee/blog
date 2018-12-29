@@ -8,14 +8,44 @@
 		}
 		socket.onmessage = function(msg){
 			if (msg.data == 'fuck'){
-				alert('bitch');
+				//alert('bitch');
 			}
 		}
 	</script>
 </%block>
 
 <%block name="content">
-<div class="jumbotron text-center">
-	<h1>${name}</h1>
+## vertical 100% 가 안되는 문제의 유일한 해결법이었습니다. 고생했습니다
+<div style="height: 100vh">
+<div class="container h-100">
+	<div class="row h-100 " style="width:60%; margin:0 auto;">
+		% for a in ar:
+		<div class="col my-auto" >
+			<div class="card" style="max-width:12rem">
+				<div class="card-img-top bg-secondary"  >
+					<center>
+						<%doc>
+						border를 img태그를 이용하고 아이템이미지를 div의 백그라운드로 거꾸로 사용해서
+					   	border가 잘리는문제를 해결하였습니다
+						</%doc>
+						<div class="iconlarge" style="background-image: url('${'../static/images/' + a['image']}')">
+							<img src="${'../static/css/images/border.png'}"/>
+						</div>
+					</center>
+				</div>
+
+				<div class="card-body">
+					<p class="card-title"><h5>${a['name']}</h5></p>
+					<p class="card-text">
+					<span class="moneygold">${a['price'][0]}</span>
+					<span class="moneysilver">${a['price'][1]}</span>
+					<span class="moneycopper">${a['price'][2]}</span>
+					</p>
+				</div>
+			</div>
+		</div>
+		% endfor
+	</div>
+</div>
 </div>
 </%block>
