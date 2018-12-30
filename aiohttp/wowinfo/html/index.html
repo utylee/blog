@@ -11,6 +11,42 @@
 				//alert('bitch');
 			}
 		}
+
+		//$(document).ready(function(){
+		// jQuery document ready 를 대신하는 자바스크립트입니다 다만 익스플로러 9이하에선 안된다는 말도 있네요
+		document.addEventListener("DOMContentLoaded", function(){
+		
+		% for a in ar:
+		var chartData${loop.index} = {
+			labels: ["", "", "", "", "", "", "", "", "", "", ""],
+			datasets: [{
+				data: [589, 445, 483, 503, 689, 692, 634, 700, 800, 700, 900],
+			}
+			]
+		};
+
+
+		var chLine${loop.index} = document.getElementById("chLine${loop.index}");
+		if(chLine${loop.index}) {
+			new Chart(chLine${loop.index}, {
+				type: 'line',
+				data: chartData${loop.index},
+				options: {
+					scales: {
+						yAxes: [{
+							ticks: {
+								beginAtZero: false
+							}
+						}]
+					},
+					legend: {
+						display: false
+					}
+				}
+			});
+		}
+		% endfor
+		});
 	</script>
 </%block>
 
@@ -18,10 +54,10 @@
 ## vertical 100% 가 안되는 문제의 유일한 해결법이었습니다. 고생했습니다
 <div style="height: 100vh">
 <div class="container h-100">
-	<div class="row h-100 " style="width:60%; margin:0 auto;">
-		% for a in ar:
+	<div class="row" style="width:70%;height:100%; margin:0 auto;">
+		% for a in ar[:6]:
 		<div class="col my-auto" >
-			<div class="card" style="max-width:12rem">
+			<div class="card" style="max-width:14rem">
 				<div class="card-img-top bg-secondary"  >
 					<center>
 						<%doc>
@@ -34,14 +70,23 @@
 					</center>
 				</div>
 
-				<div class="card-body">
-					<p class="card-title"><h5>${a['name']}</h5></p>
-					<p class="card-text">
+				<div class="card-body " >
+					<div class="card-title" align="center"  ><span style="font-size:1.2rem">${a['name']}</span><span class="badge badge-primary badge-pill" >10</span></div>
+					<ul class="list-group list-group-flush">
+					<li class="list-group-item">
+					<p class="card-text" align="center">
 					<span class="moneygold">${a['price'][0]}</span>
 					<span class="moneysilver">${a['price'][1]}</span>
 					<span class="moneycopper">${a['price'][2]}</span>
+					<span class="badge badge-secondary text-muted" >유타일리</span>
 					</p>
+					</li>
+					<li class="list-group-item">
+					<canvas id="chLine${loop.index}"></canvas>
+					</li>
+					</ul>
 				</div>
+				##<div class="card-footer text-muted"><h6>3 days ago</h6></div>
 			</div>
 		</div>
 		% endfor

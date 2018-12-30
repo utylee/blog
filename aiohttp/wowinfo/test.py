@@ -1,12 +1,21 @@
+import asyncio
 from aiohttp import web
 import aiohttp_mako 
 import sqlalchemy as sa
 from aiopg.sa import create_engine
-
+from auction import proc
+'''
 metadata = sa.MetaData()
 items = {}
+myapi = 'm5u8gdp6qmhbjkhbht3ax9byp62wench'
+server = '아즈샤라'
+locale = 'ko_KR'
+'''
+
 
 # 관심 아이템들 목록
+pin_items = ['사술매듭 가방', '하늘 골렘', '심해 가방', 
+            '살아있는 강철', '유령무쇠 주괴', '호화로운 모피']
 
 # 웹소켓 핸들러입니다
 async def ws_handle(request):
@@ -24,9 +33,12 @@ async def handle(request):
     #return web.Response(text='fuck')
     ar = [{'name':'사술매듭 가방', 'price': [30,20,40], 'image':'inv_tailoring_hexweavebag.jpg'},
         {'name':'하늘 골렘', 'price': [150000,20,40], 'image':'ability_mount_shreddermount.jpg'},
+        {'name':'하늘 골렘', 'price': [150000,20,40], 'image':'ability_mount_shreddermount.jpg'},
+        {'name':'하늘 골렘', 'price': [150000,20,40], 'image':'ability_mount_shreddermount.jpg'},
+        {'name':'하늘 골렘', 'price': [150000,20,40], 'image':'ability_mount_shreddermount.jpg'},
         {'name':'살아있는 강철', 'price': [30,20,40], 'image':'inv_ingot_livingsteel.jpg'}]
 
-    return {'name': '한글은 어떨지', 'ar':ar}
+    return {'name': '7', 'ar':ar}
 
 async def init():
     app = web.Application()
@@ -46,6 +58,21 @@ async def init():
     # 웹소켓 핸들러도 get을 통해 정의해줘야합니다
     app.router.add_get('/ws', ws_handle)
 
+    loop = asyncio.get_event_loop()
+    loop.create_task(main_proc())
+    print('안오나')
+
     return app
+
+async def main_proc():
+    # 5분마다 반복합니다
+    while True:
+        await fetch_auction()
+
+        await asyncio.sleep(300)
+
+async def fetch_auction():
+    print('.경매장 정보 가져오기 시작')
+    await proc()
 
 web.run_app(init(),port=7777)
