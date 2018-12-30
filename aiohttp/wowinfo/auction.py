@@ -33,7 +33,7 @@ name_list = ['부자인생', '부자인셍', '부쟈인생', '부쟈인섕','부
 my_item = []
 
 
-async def proc():
+async def proc(item_list):
     # DB에 접속해둡니다
     async with create_engine(user='postgres',
                             database='auction_db',
@@ -93,6 +93,11 @@ async def proc():
 
             target_item_id = await get_item_id(conn, target_item_name)
 
+            item_id_list = []
+            for ll in item_list:
+                id_ = await get_item_id(conn, ll)
+                item_id_list.append(id_)
+
             # 저장된 파일을 읽은 후 한줄씩 탐색합니다
             golems = []
             sellers = []
@@ -146,7 +151,9 @@ async def proc():
                 num += 1
 
                 #하늘골렘 아이템의 리스트를 작성합니다
-                if l['item'] == target_item_id:     #하늘골렘
+                # 각 아이템의 리스트를 작성합니다
+                if l['item'] in item_id_list:
+                #if l['item'] == target_item_id:     #하늘골렘
                 #if l['item'] == 95416:     #하늘골렘
                 #if l['item'] == 114821:     #사술매듭 가방
                     d = json.dumps(l, ensure_ascii = False) #ensure_ascii는 유니코드 출력의 한글 문제를 해결해줍니다
@@ -178,7 +185,7 @@ async def proc():
                 if l['owner'] in name_list:
                     #print('헤헤헤')
                     mine = []
-                    mine.append(get_item(l['item']))
+                    mine.append(get_item_name(l['item']))
                     mine.append(l['owner'])
                     mine.append(int(l['buyout']/10000))
                     #print(get_item(l['item']))
@@ -215,13 +222,31 @@ async def get_item_id(conn, name):
         id = r[0]
         result = 1
 
+    '''
+    # item이라는 변수가 없습니다
     #해당 아이템이 로컬 테이블에 없다면 받아온 후 로컬 테이블에 저정합니다
     if result == 0:
         print('### item no. {} 이 로컬에 없기에 battlenet dev를 통해 이름을 가져옵니다...'.format(int(item)))
-        name = get_item(item)
+        name = get_item(item) #item
         print(name)
         await conn.execute(tbl_items.insert().values(id=int(item), name=name))
+    '''
 
     return id 
 
+# 로컬 db에서 id를 통해 이름를 가져옵니다
+async def get_item_name(conn, item_id):
+    result = 0
+    async for r in conn.execute(tbl_items.select().where(tbl_items.c.id==item_id)):
+        name = r[0]
+        result = 1
+
+    #해당 아이템이 로컬 테이블에 없다면 받아온 후 로컬 테이블에 저정합니다
+    if result == 0:
+        print('### item no. {} 이 로컬에 없기에 battlenet dev를 통해 이름을 가져옵니다...'.format(int(item_id)))
+        name = get_item(item_id)
+        print(name)
+        await conn.execute(tbl_items.insert().values(id=int(item_id), name=name))
+
+    return name 
 

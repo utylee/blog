@@ -12,10 +12,12 @@ server = '아즈샤라'
 locale = 'ko_KR'
 '''
 
-
 # 관심 아이템들 목록
 pin_items = ['사술매듭 가방', '하늘 골렘', '심해 가방', 
             '살아있는 강철', '유령무쇠 주괴', '호화로운 모피']
+
+# fetch 실행 주기 :5분
+interval = 300 #초
 
 # 웹소켓 핸들러입니다
 async def ws_handle(request):
@@ -41,6 +43,7 @@ async def handle(request):
     return {'name': '7', 'ar':ar}
 
 async def init():
+    global interval
     app = web.Application()
     # 한글 주석들이 파싱하다가 에러가 나버리는 바람에 샘플대로 encoding 옵션을 다시 모두 넣어줬습니다
     # directories 부분을 지정해주면 샘플과 달리 파일을 직접 언급해서 가져올수 있습니다
@@ -59,20 +62,19 @@ async def init():
     app.router.add_get('/ws', ws_handle)
 
     loop = asyncio.get_event_loop()
-    loop.create_task(main_proc())
-    print('안오나')
+    loop.create_task(main_proc(pin_items, interval))
 
     return app
 
-async def main_proc():
+async def main_proc(item_list, intv):
     # 5분마다 반복합니다
     while True:
-        await fetch_auction()
+        await fetch_auction(item_list)
 
-        await asyncio.sleep(300)
+        await asyncio.sleep(intv)
 
-async def fetch_auction():
+async def fetch_auction(item_list):
     print('.경매장 정보 가져오기 시작')
-    await proc()
+    await proc(item_list)
 
 web.run_app(init(),port=7777)
