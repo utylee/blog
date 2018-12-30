@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#
+auction.json
+
 # C extensions
 *.so
 
