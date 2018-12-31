@@ -3,15 +3,25 @@
 <%block name="script">
 	<script type="text/javascript" charset="utf-8">
 		//$(document).ready(function(){
+		/*
+		var socket = new WebSocket('ws://'+window.location.host+'/ws');
+		socket.onopen = function(){
+			alert('open');
+			socket.send('connect');
+		}
+		*/
+
 		// jQuery document ready 를 대신하는 자바스크립트입니다 다만 익스플로러 9이하에선 안된다는 말도 있네요
 		document.addEventListener("DOMContentLoaded", function(){
 			var socket = new WebSocket('ws://'+window.location.host+'/ws');
 			socket.onopen = function(){
+				//alert('open');
 				socket.send('connect');
 			}
 			socket.onmessage = function(msg){
 				if (msg.data == 'update'){
 					// 업데이트 신호가 들어오면 해당 div를 갱신합니다
+					alert('update');
 					
 					$.getJSON('/update', function(data) {
 						//alert(data[Object.keys(data)[1]].gold);

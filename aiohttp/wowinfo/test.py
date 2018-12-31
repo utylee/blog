@@ -113,6 +113,4 @@ async def fetch_auction(item_list):
     except:
         pass
 
-
-
 web.run_app(init(),port=7777)
