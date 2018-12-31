@@ -2,10 +2,16 @@ import asyncio
 import requests
 import json
 import pycurl
+from collections import defaultdict
+import math
+
 
 import sqlalchemy as sa
 from aiopg.sa import create_engine
 
+from db_tableinfo import *
+
+'''
 metadata = sa.MetaData()
 
 # 경매장 테이블입니다
@@ -25,6 +31,7 @@ tbl_auctions = sa.Table('auctions', metadata,
 tbl_items = sa.Table('items', metadata,
         sa.Column('id', sa.Integer, primary_key=True),
         sa.Column('name', sa.String(255)))
+'''
 
 myapi = 'm5u8gdp6qmhbjkhbht3ax9byp62wench'
 server = '아즈샤라'
@@ -101,7 +108,7 @@ async def proc(item_list):
             # 저장된 파일을 읽은 후 한줄씩 탐색합니다
             golems = []
             sellers = []
-            num = 0
+            min_seller = ''
             i = 0
             price = 0
             min = 0
@@ -111,8 +118,11 @@ async def proc(item_list):
 
             total = len(js['auctions'])
             print('총 {} 개의 경매 아이템이 등록되어있습니다'.format(total))
+            #result_dict = dict.fromkeys(['num', 'min', 'min_seller'])
+            result_dict_set = defaultdict(dict)#dict.fromkeys(item_list, result_dict)
 
             for l in js['auctions']:
+                num = 0
                 '''
                 # 프로그레션을 표시합니다
                 pct = int(num * 100 / total)
@@ -148,8 +158,10 @@ async def proc(item_list):
                                                     timeleft=l['timeLeft'],
                                                     datetime='000'))
                 '''
-                num += 1
+                #num += 1
 
+                #result_dict = dict.fromkeys(['num', 'min', 'min_seller'])
+                #result_dict_set = dict.fromkeys(item_list, result_dict)
                 #하늘골렘 아이템의 리스트를 작성합니다
                 # 각 아이템의 리스트를 작성합니다
                 if l['item'] in item_id_list:
@@ -157,21 +169,38 @@ async def proc(item_list):
                 #if l['item'] == 95416:     #하늘골렘
                 #if l['item'] == 114821:     #사술매듭 가방
                     d = json.dumps(l, ensure_ascii = False) #ensure_ascii는 유니코드 출력의 한글 문제를 해결해줍니다
-                    #print(l)
-                    #print(d)
-                    i += 1
+                    #i += 1
+                    #print('{}\n{}'.format(l['item'], item_id_list.index(l['item'])))
+                    item_name = item_list[item_id_list.index(l['item'])]
+                    if result_dict_set[item_name].get('num') is not None:
+                        #num = int(result_dict_set[item_name]['num']) + 1
+                        result_dict_set[item_name]['num'] = result_dict_set[item_name]['num'] + 1
+                    else:
+                        result_dict_set[item_name]['num'] = 1
+                        #num = 1
+
+                    #print('{}\n{}\n{}\n\n'.format(l,item_name, result_dict_set))
                     sellers.append(l['owner'])
-                    price = l['buyout']
+                    price = l['buyout'] / int(l['quantity']) # 묶음 가격을 감안하지 못해서 추가합니다
 
                     # 간혹 즉구가없이 경매가만 올리는 유저가 있어 계산에 오류가 생기길래 추가했습니다
-                    if price == 0:
-                        price = l['bid']
+                    #if price == 0:
+                    if l['buyout'] == 0:
+                        price = l['bid'] / int(l['quantity'])
 
-                    if min == 0:
-                        min = int(price)
+                    #if min == 0:
+                    if result_dict_set[item_name].get('min') is None:
+                        #min = int(price)
+                        #min_seller = l['owner']
+                        result_dict_set[item_name]['min'] = int(price)
+                        result_dict_set[item_name]['min_seller'] = l['owner']
                     else:
-                        if int(price) < min:
-                            min = int(price) 
+                        #if int(price) < min:
+                        if int(price) < result_dict_set[item_name]['min']:
+                            #min = int(price) 
+                            #min_seller = l['owner']
+                            result_dict_set[item_name]['min'] = int(price)
+                            result_dict_set[item_name]['min_seller'] = l['owner']
 
                     if max == 0:
                         max = int(price)
@@ -180,29 +209,38 @@ async def proc(item_list):
                             max = int(price) 
 
                     sum += price
+                    
+                    #result_dict_set[item_name] = {'min' : min, 'min_seller' : min_seller, 'num' : num}
 
                 # 내가 경매에 부친 물건이 있는지 표시합니다
+                '''
                 if l['owner'] in name_list:
                     #print('헤헤헤')
                     mine = []
+                    mine.append(get_item_name(l['item']))
                     mine.append(get_item_name(l['item']))
                     mine.append(l['owner'])
                     mine.append(int(l['buyout']/10000))
                     #print(get_item(l['item']))
                     my_item.append(mine)
+                    '''
 
 
+            print(result_dict_set)
 
+            '''
             print("\n** 총 {}개의 {}이(가) 올라와 있습니다".format(i, target_item_name))
             print("최소/최대가격은 각각 {} / {} 골드입니다".format(int(min/10000), int(max/10000)))
             print("평균가격은 {}골드입니다".format(int((sum/i)/10000)))
             print("{}".format(set(sellers)))
+            '''
 
             if len(my_item) > 0:
                 print('------------------------------------------------')
                 print('** 내아이템들:')
                 for l in my_item:
                     print(l)
+        return await deco_dictset(result_dict_set)
 
 
 # battle dev 로부터 아이템을 가져옵니다
@@ -250,3 +288,42 @@ async def get_item_name(conn, item_id):
 
     return name 
 
+# item에 대응하는 이미지 파일명을 가져옵니다 db가 다릅니다 wowinfo db에 이미
+async def deco_dictset(data):
+    # db접속 한번에 다 처리합니다. 접속으로인한 딜레이를 제거하기 위함입니다. 실제로 영향이 클지는 모르겠지만
+    async with create_engine(user='postgres',
+                            database='wowinfo',
+                            host='192.168.0.211',
+                            password='sksmsqnwk11') as engine:
+        async with engine.acquire() as conn:
+            # 이미지 파일명을 대입합니다
+            for a in data.keys():
+                async for r in conn.execute(tbl_images.select().where(tbl_images.c.item_name==a)):
+                    data[a]['image'] = r[1]
+                    print('------\n{}\n{}'.format(a, data))
+                '''
+                ar = {'하늘 골렘': {'num': 10, 'min': 1379999900, 'min_seller': '밀림왕세나씨'}, 
+                        '호화로운 모피': {'num': 158, 'min': 4000, 'min_seller': '우렝밀렵'}, 
+                        '심해 가방': {'num': 173, 'min': 18560000, 'min_seller': '남미왕'}, 
+                        '살아있는 강철': {'num': 77, 'min': 34900000, 'min_seller': '임리치'}, 
+                        '사술매듭 가방': {'num': 300, 'min': 18000000, 'min_seller': '인중개박살'}, 
+                        '유령무쇠 주괴': {'num': 25, 'min': 3505000, 'min_seller': 'Spit'}}
+                '''
+
+                # 골드,실버,카퍼 를 분리해줍니다
+                price = int(data[a]['min'])
+
+                if price < 10000:
+                    data[a]['gold'] = 0
+                else:
+                    data[a]['gold'] = math.floor(price / 10000)
+
+                price = price - data[a]['gold'] * 10000
+                if price < 100:
+                    data[a]['silver'] = 0
+                else:
+                    data[a]['silver'] = math.floor(price / 100)
+
+                data[a]['copper'] = price - data[a]['silver'] * 100
+
+    return data

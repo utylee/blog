@@ -2,50 +2,68 @@
 
 <%block name="script">
 	<script type="text/javascript" charset="utf-8">
-		var socket = new WebSocket('ws://'+window.location.host+'/ws');
-		socket.onopen = function(){
-			socket.send('connect');
-		}
-		socket.onmessage = function(msg){
-			if (msg.data == 'fuck'){
-				//alert('bitch');
-			}
-		}
-
 		//$(document).ready(function(){
 		// jQuery document ready 를 대신하는 자바스크립트입니다 다만 익스플로러 9이하에선 안된다는 말도 있네요
 		document.addEventListener("DOMContentLoaded", function(){
-		
-		% for a in ar:
-		var chartData${loop.index} = {
-			labels: ["", "", "", "", "", "", "", "", "", "", ""],
-			datasets: [{
-				data: [589, 445, 483, 503, 689, 692, 634, 700, 800, 700, 900],
+			var socket = new WebSocket('ws://'+window.location.host+'/ws');
+			socket.onopen = function(){
+				socket.send('connect');
 			}
-			]
-		};
+			socket.onmessage = function(msg){
+				if (msg.data == 'update'){
+					// 업데이트 신호가 들어오면 해당 div를 갱신합니다
+					
+					$.getJSON('/update', function(data) {
+						//alert(data[Object.keys(data)[1]].gold);
 
 
-		var chLine${loop.index} = document.getElementById("chLine${loop.index}");
-		if(chLine${loop.index}) {
-			new Chart(chLine${loop.index}, {
-				type: 'line',
-				data: chartData${loop.index},
-				options: {
-					scales: {
-						yAxes: [{
-							ticks: {
-								beginAtZero: false
-							}
-						}]
-					},
-					legend: {
-						display: false
-					}
+						// data 갯수, 즉 6회동안 각 요소 갱신을 반복합니다
+						for (i=0;i < Object.keys(data).length;i++) {
+							//$("#moneygold" + i).text(data.gold);
+							document.getElementById("image"+i).setAttribute("style", "background-image: url('${imageroot}/" + data[Object.keys(data)[i]].image + "')"); 
+							document.getElementById("itemname"+i).innerHTML = Object.keys(data)[i];
+							document.getElementById("num"+i).innerHTML = data[Object.keys(data)[i]].num;
+							document.getElementById("moneygold"+i).innerHTML = data[Object.keys(data)[i]].gold;
+							document.getElementById("moneysilver"+i).innerHTML = data[Object.keys(data)[i]].silver;
+							document.getElementById("moneycopper"+i).innerHTML = data[Object.keys(data)[i]].copper;
+							document.getElementById("min_seller"+i).innerHTML = data[Object.keys(data)[i]].min_seller;
+						}
+				
+					});
+				
 				}
-			});
-		}
-		% endfor
+			}
+			
+			% for a in ar:
+				var chartData${loop.index} = {
+					labels: ["", "", "", "", "", "", "", "", "", "", ""],
+					datasets: [{
+						data: [589, 445, 483, 503, 689, 692, 634, 700, 800, 700, 900],
+					}
+					]
+				};
+
+
+				var chLine${loop.index} = document.getElementById("chLine${loop.index}");
+				if(chLine${loop.index}) {
+					new Chart(chLine${loop.index}, {
+						type: 'line',
+						data: chartData${loop.index},
+						options: {
+							scales: {
+								yAxes: [{
+									ticks: {
+										beginAtZero: false
+									}
+								}]
+							},
+							legend: {
+								display: false
+							}
+						}
+					});
+				}
+			% endfor
 		});
 	</script>
 </%block>
@@ -55,7 +73,7 @@
 <div style="height: 100vh">
 <div class="container h-100">
 	<div class="row" style="width:70%;height:100%; margin:0 auto;">
-		% for a in ar[:6]:
+		% for a in ar.keys():
 		<div class="col my-auto" >
 			<div class="card" style="max-width:14rem">
 				<div class="card-img-top bg-secondary"  >
@@ -64,27 +82,29 @@
 						border를 img태그를 이용하고 아이템이미지를 div의 백그라운드로 거꾸로 사용해서
 					   	border가 잘리는문제를 해결하였습니다
 						</%doc>
-						<div class="iconlarge" style="background-image: url('${'../static/images/' + a['image']}')">
-							<img src="${'../static/css/images/border.png'}"/>
+						##<div id="image${loop.index}" class="iconlarge" style="background-image: url('${'../static/images/' + ar[a]['image']}')">
+						<div id="image${loop.index}" class="iconlarge" style="background-image: url('${imageroot + ar[a]['image']}')">
+							<img src="../static/css/images/border.png"/>
 						</div>
 					</center>
 				</div>
 
 				<div class="card-body " >
-					<div class="card-title" align="center"  ><span style="font-size:1.2rem">${a['name']}</span><span class="badge badge-primary badge-pill" >10</span></div>
+					<div class="card-title" align="center"  ><span id="itemname${loop.index}" style="font-size:1.2rem">${a}</span><span id="num${loop.index}" class="badge badge-success badge-pill" >${ar[a]['num']}</span></div>
 					<ul class="list-group list-group-flush">
 					<li class="list-group-item">
 					<p class="card-text" align="center">
-					<span class="moneygold">${a['price'][0]}</span>
-					<span class="moneysilver">${a['price'][1]}</span>
-					<span class="moneycopper">${a['price'][2]}</span>
-					<span class="badge badge-secondary text-muted" >유타일리</span>
+					<span id="moneygold${loop.index}" class="moneygold">${int(ar[a]['gold'])}</span>
+					<span id="moneysilver${loop.index}" class="moneysilver">${int(ar[a]['silver'])}</span>
+					<span id="moneycopper${loop.index}" class="moneycopper">${int(ar[a]['copper'])}</span>
+					<br>
+					<span id="min_seller${loop.index}" class="badge badge-secondary text-muted" >${ar[a]['min_seller']}</span>
 					</p>
 					</li>
 					<div style="font-size:12px;margin-top:0px;" align="center">
 					<li class="list-group-item" align="center">
 						<canvas id="chLine${loop.index}"></canvas>
-					<div  align="center" class="badge badge-success" >시</div>
+					<div  align="center" class="badge badge-primary" >시</div>
 					<div  align="center" class="badge badge-secondary text-muted" >일</div>
 					</li>
 					</div>
