@@ -4,6 +4,7 @@ import aiohttp_mako
 import sqlalchemy as sa
 from aiopg.sa import create_engine
 from auction import proc
+import datetime
 '''
 metadata = sa.MetaData()
 items = {}
@@ -41,7 +42,14 @@ async def update(request):
     global ar
     #print("/update handler came in")
     #print(ar)
-    return web.json_response(ar)
+    now = datetime.datetime.now()
+    
+    data = {}
+    data['ar'] = ar
+    data['time'] = now.strftime("%y/%m/%d-%H:%M")
+
+    return web.json_response(data)
+    #return web.json_response(ar)
 
 @aiohttp_mako.template('index.html')
 async def handle(request):

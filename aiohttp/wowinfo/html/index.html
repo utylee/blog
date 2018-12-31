@@ -22,6 +22,9 @@
 					$.getJSON('/update', function(data) {
 						//alert(Object.keys(data).length);
 						// data 갯수, 즉 6회동안 각 요소 갱신을 반복합니다
+						t = data.time;
+						data = data.ar;
+						//alert(t);
 						for (i=0;i < Object.keys(data).length;i++) {
 							//$("#moneygold" + i).text(data.gold);
 							document.getElementById("image"+i).setAttribute("style", "background-image: url('${imageroot}/" + data[Object.keys(data)[i]].image + "')"); 
@@ -32,6 +35,8 @@
 							document.getElementById("moneycopper"+i).innerHTML = data[Object.keys(data)[i]].copper;
 							document.getElementById("min_seller"+i).innerHTML = data[Object.keys(data)[i]].min_seller;
 						}
+						document.getElementById("update_time").innerHTML = t
+
 					});
 				}
 			}
@@ -76,7 +81,8 @@
 ## vertical 100% 가 안되는 문제의 유일한 해결법이었습니다. 고생했습니다
 <div style="height: 100vh">
 <div class="container h-100">
-	<div class="row" style="width:70%;height:100%; margin:0 auto;">
+	<div class="row" style="height:10%"></div>
+	<div class="row" style="width:70%;height:80%; margin:0 auto;">
 		% for a in ar.keys():
 		<div class="col my-auto" >
 			<div class="card" style="max-width:14rem">
@@ -118,6 +124,12 @@
 			</div>
 		</div>
 		% endfor
+	</div>
+
+	## bottom row
+	<div class="row" style="width:100%;height:10%;margin:0 auto;" >
+		<span class="text-secondary">auctionDB dumped at&nbsp;</span>
+		<span id="update_time" class="text-secondary">3</span>
 	</div>
 </div>
 </div>
