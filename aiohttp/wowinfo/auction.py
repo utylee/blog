@@ -11,27 +11,6 @@ from aiopg.sa import create_engine
 
 from db_tableinfo import *
 
-'''
-metadata = sa.MetaData()
-
-# 경매장 테이블입니다
-tbl_auctions = sa.Table('auctions', metadata,
-        sa.Column('item_name', sa.String(255)),
-        sa.Column('auc', sa.Integer, primary_key=True),
-        sa.Column('item', sa.Integer),
-        sa.Column('owner', sa.String(255)),
-        sa.Column('owner_realm', sa.String(255)),
-        sa.Column('bid', sa.Integer),
-        sa.Column('buyout', sa.Integer),
-        sa.Column('quantity', sa.Integer),
-        sa.Column('timeleft', sa.String(255)),
-        sa.Column('datetime', sa.String(255)))
-
-# item name을 저장한 테이블입니다
-tbl_items = sa.Table('items', metadata,
-        sa.Column('id', sa.Integer, primary_key=True),
-        sa.Column('name', sa.String(255)))
-'''
 
 myapi = 'm5u8gdp6qmhbjkhbht3ax9byp62wench'
 server = '아즈샤라'
@@ -174,7 +153,7 @@ async def proc(item_list):
                     item_name = item_list[item_id_list.index(l['item'])]
                     if result_dict_set[item_name].get('num') is not None:
                         #num = int(result_dict_set[item_name]['num']) + 1
-                        result_dict_set[item_name]['num'] = result_dict_set[item_name]['num'] + 1
+                        result_dict_set[item_name]['num'] = result_dict_set[item_name]['num'] + l['quantity']
                     else:
                         result_dict_set[item_name]['num'] = 1
                         #num = 1
