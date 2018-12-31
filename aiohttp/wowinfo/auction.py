@@ -34,7 +34,11 @@ async def proc(item_list):
             #return
             # .loads 함수인 것을 봅니다. s가 없는 load 함수는 파일포인터를 받더군요
             print('json주소를 받아옵니다')
-            load = json.loads(requests.get(url).text)
+            loop = asyncio.get_event_loop()
+            future = loop.run_in_executor(None, requests.get, url)
+            response = await future
+            load =json.loads(response.text)
+            #load = json.loads(requests.get(url).text)
             js = load['files'][0]['url']
 
             print('주소:{} \n로부터 json 덤프 파일을 다운로드합니다...\n'.format(js))
