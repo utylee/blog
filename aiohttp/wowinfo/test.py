@@ -9,9 +9,11 @@ import datetime
 metadata = sa.MetaData()
 items = {}
 myapi = 'm5u8gdp6qmhbjkhbht3ax9byp62wench'
-server = '아즈샤라'
 locale = 'ko_KR'
 '''
+
+# 서버 선택
+server = '아즈샤라'
 
 # 관심 아이템들 목록
 pin_items = ['사술매듭 가방', '하늘 골렘', '심해 가방', 
@@ -22,6 +24,7 @@ pin_items = ['사술매듭 가방', '하늘 골렘', '심해 가방',
 interval = 300 #초
 ws = 0
 ar = {} 
+ftime = '00:00-99/99/99'  # db dump시의 시간을 저장합니다
 
 # 웹소켓 핸들러입니다
 async def ws_handle(request):
@@ -40,13 +43,13 @@ async def ws_handle(request):
 
 async def update(request):
     global ar
+    global ftime
     #print("/update handler came in")
     #print(ar)
-    now = datetime.datetime.now()
     
     data = {}
     data['ar'] = ar
-    data['time'] = now.strftime("%y/%m/%d-%H:%M")
+    data['time'] = ftime
 
     return web.json_response(data)
     #return web.json_response(ar)
@@ -105,8 +108,14 @@ async def fetch_auction(item_list):
 
     global ws
     global ar
+    global ftime
+
     #result_dict = await proc(item_list)
-    ar = await proc(item_list)
+    ar = await proc(server,item_list)
+
+    now = datetime.datetime.now()
+    ftime = now.strftime("%H:%M-%m/%d/%y")
+
     print('update in fetch')
     try:
         await ws.send_str('update')
@@ -127,6 +136,5 @@ def init_data():
         ar[a]['gold'] = 0
         ar[a]['silver'] =0
         ar[a]['copper'] =0
-
 
 web.run_app(init(),port=7777)

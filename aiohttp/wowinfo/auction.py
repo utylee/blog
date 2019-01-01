@@ -13,13 +13,13 @@ from db_tableinfo import *
 
 
 myapi = 'm5u8gdp6qmhbjkhbht3ax9byp62wench'
-server = '아즈샤라'
+#server = '아즈샤라'
 locale = 'ko_KR'
 name_list = ['부자인생', '부자인셍', '부쟈인생', '부쟈인섕','부자인솅','부자인생의소환수','부자인셈']
 my_item = []
 
 
-async def proc(item_list):
+async def proc(server, item_list):
     # DB에 접속해둡니다
     async with create_engine(user='postgres',
                             database='auction_db',

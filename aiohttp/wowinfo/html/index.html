@@ -2,18 +2,18 @@
 
 <%block name="script">
 	<script type="text/javascript" charset="utf-8">
-		// jQuery document ready 를 대신하는 자바스크립트입니다 다만 익스플로러 9이하에선 안된다는 말도 있네요
-		document.addEventListener("DOMContentLoaded", function(){
-			// websocket을 만듭니다
-			var socket = new WebSocket('ws://'+window.location.host+'/ws');
-			// 웹소켓 최초 연결시 connect 문자열을 서버로 전송합니다
-			socket.onopen = function(){
+		var socket;
+		function setupWebSocket(){
+			this.socket = new WebSocket('ws://'+window.location.host+'/ws');
+			this.socket.onopen = function(){
 				//alert('open');
 				socket.send('connect');
 			}
-
+			this.socket.onclose = function(){
+				setTimeout(setupWebSocket, 1000);
+			}
 			// 서버로부터 update 문자열이 들어왔을 경우
-			socket.onmessage = function(msg){
+			this.socket.onmessage = function(msg){
 				if (msg.data == 'update'){
 					// 업데이트 신호가 들어오면 해당 div를 갱신합니다
 					//alert('update');
@@ -40,7 +40,16 @@
 					});
 				}
 			}
-			
+		}	
+
+		// jQuery document ready 를 대신하는 자바스크립트입니다 다만 익스플로러 9이하에선 안된다는 말도 있네요
+		document.addEventListener("DOMContentLoaded", function(){
+			// innerHTML
+			document.getElementById("designed_by").innerHTML = "designed by utylee studios 2019 /&nbsp;";
+			document.getElementById("gathered_from").innerHTML = "item images gathered from wowhead.com /&nbsp; ";
+			document.getElementById("dumped_at").innerHTML = "auctionDB dumped at &nbsp;";
+			// websocket을 만듭니다
+			setupWebSocket();
 			// 차트객체 chart.js 6개를 생성합니다
 			% for a in ar:
 				var chartData${loop.index} = {
@@ -81,7 +90,32 @@
 ## vertical 100% 가 안되는 문제의 유일한 해결법이었습니다. 고생했습니다
 <div style="height: 100vh">
 <div class="container h-100">
-	<div class="row" style="height:10%"></div>
+	## 최상단 여백---------------------------------------------------------------
+	<div class="row" style="height:2%"></div>
+
+	## ---------------------------------------------------------------
+	## 최상단 row
+	<div class="row" style="width:50%;height:8%;margin:0 auto;">
+		<div class="btn-group col my-auto">
+			<button class="btn btn-secondary btn-lg btn-block text-muted" type="button">
+			<span class="icon-checkcircle" >아즈샤라</span></button>
+			<div class="btn-group">
+				<button class="btn btn-secondary text-muted dropdown-toggle"></button>
+			</div>
+		</div>
+		<div class="btn-group col my-auto">
+			<button class="btn btn-secondary btn-lg btn-block text-muted" type="button">
+				<span class="glyphicon glyphicon-list"></span>격아약초세트
+			</button>
+			<div class="btn-group">
+				<button class="btn btn-secondary dropdown-toggle text-muted"></button>
+			</div>
+		</div>
+	</div>
+
+	## ---------------------------------------------------------------
+	## ---------------------------------------------------------------
+	## 메인 row
 	<div class="row" style="width:70%;height:80%; margin:0 auto;">
 		% for a in ar.keys():
 		<div class="col my-auto" >
@@ -126,10 +160,17 @@
 		% endfor
 	</div>
 
+	## ---------------------------------------------------------------
 	## bottom row
 	<div class="row" style="width:100%;height:10%;margin:0 auto;" >
-		<span class="text-secondary">auctionDB dumped at&nbsp;</span>
-		<span id="update_time" class="text-secondary">3</span>
+		##<div class="col" style="width:2%"></div>
+		<div class="col my-auto" align="center">
+			<span id="designed_by" class="text-secondary "></span>
+			<span id="gathered_from" class="text-secondary "></span>
+			<span id="dumped_at" class="text-secondary "></span>
+			<span id="update_time" class="text-primary ">3</span>
+		</div>
+		##<div class="col" style="width:2%"></div>
 	</div>
 </div>
 </div>

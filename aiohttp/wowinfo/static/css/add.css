@@ -13,6 +13,12 @@
 	background: no-repeat right center;
 	background-image: url(images/icons/money-copper.gif);
 }
+.icon-checkcircle {
+	padding-left:2rem;
+	background: no-repeat left center ;
+	background-size:1.3rem;
+	background-image: url(images/icons/Icon-checkCircleGreen.png);
+}
 .iconlarge {
 	background: no-repeat center;
 	position: relative;
