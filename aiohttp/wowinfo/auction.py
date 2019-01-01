@@ -225,7 +225,7 @@ async def proc(server, item_list):
 
 
             #print(result_dict_set)
-            print(temp_dict)
+            #print(temp_dict)
 
             '''
             print("\n** 총 {}개의 {}이(가) 올라와 있습니다".format(i, target_item_name))
@@ -249,7 +249,12 @@ def get_item(id):
     js = json.loads(r.text)
     #print(js['name'])
     #일단 가져온 값중 이름만 취하기로 합니다
-    return js['name']
+    # 데이터를 못가져오는 경우가 발생해 아래와 같은 루틴을 추가했습니다. 
+    if js.get('status') is not None:
+        if js['status'] == 'nok':
+            return ''
+    else:
+        return js['name']
 
 # 로컬 db에서 이름을 통해 id를 가져옵니다
 async def get_item_id(conn, name):

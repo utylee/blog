@@ -21,7 +21,7 @@ pin_items = ['사술매듭 가방', '하늘 골렘', '심해 가방',
 #pin_items = ['살아있는 강철', '하늘 골렘']
 
 # fetch 실행 주기 :5분
-interval = 300 #초
+interval = 30000 #초
 ws = 0
 ar = {} 
 ftime = '00:00-99/99/99'  # db dump시의 시간을 저장합니다
