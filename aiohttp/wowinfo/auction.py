@@ -20,6 +20,8 @@ my_item = []
 
 
 async def proc(server, item_list):
+    # 임시 딕셔너리를 만듭니다. 전체 db를 아이템별로 처리합니다
+    temp_dict = {}
     # DB에 접속해둡니다
     async with create_engine(user='postgres',
                             database='auction_db',
@@ -141,17 +143,30 @@ async def proc(server, item_list):
                                                     timeleft=l['timeLeft'],
                                                     datetime='000'))
                 '''
-                #num += 1
+                # 해당아이템에 대한 딕트-리스트가 존재하지 않을경우
+                cur = int(l['item'])
+                price = 0
+                if l['buyout'] == 0:
+                    price = l['bid'] / int(l['quantity'])
+                else:
+                    price = l['buyout'] / int(l['quantity']) # 묶음 가격을 감안하지 못해서 추가합니다
 
-                #result_dict = dict.fromkeys(['num', 'min', 'min_seller'])
-                #result_dict_set = dict.fromkeys(item_list, result_dict)
+                if temp_dict.get(cur) is None:
+                    temp_dict[cur] = {'item_name': await get_item_name(conn, cur), 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner']}
+                # 해당아이템 딕트가 이미 존재할 경우
+                else:
+                    temp_dict[cur]['num'] = temp_dict[cur]['num'] + l['quantity']
+                    temp_dict[cur]['num'] = temp_dict[cur]['num'] + l['quantity']
+
+                    if (int(temp_dict[cur]['min']) == 0) or (price < temp_dict[cur]['min']):
+                        temp_dict[cur]['min'] = price
+                        temp_dict[cur]['min_seller'] = l['owner']
+
+
                 #하늘골렘 아이템의 리스트를 작성합니다
                 # 각 아이템의 리스트를 작성합니다
                 if l['item'] in item_id_list:
-                #if l['item'] == target_item_id:     #하늘골렘
-                #if l['item'] == 95416:     #하늘골렘
-                #if l['item'] == 114821:     #사술매듭 가방
-                    d = json.dumps(l, ensure_ascii = False) #ensure_ascii는 유니코드 출력의 한글 문제를 해결해줍니다
+                    #d = json.dumps(l, ensure_ascii = False) #ensure_ascii는 유니코드 출력의 한글 문제를 해결해줍니다
                     #i += 1
                     #print('{}\n{}'.format(l['item'], item_id_list.index(l['item'])))
                     item_name = item_list[item_id_list.index(l['item'])]
@@ -159,11 +174,11 @@ async def proc(server, item_list):
                         #num = int(result_dict_set[item_name]['num']) + 1
                         result_dict_set[item_name]['num'] = result_dict_set[item_name]['num'] + l['quantity']
                     else:
-                        result_dict_set[item_name]['num'] = 1
+                        result_dict_set[item_name]['num'] = l['quantity'] 
                         #num = 1
 
                     #print('{}\n{}\n{}\n\n'.format(l,item_name, result_dict_set))
-                    sellers.append(l['owner'])
+                    #sellers.append(l['owner'])
                     price = l['buyout'] / int(l['quantity']) # 묶음 가격을 감안하지 못해서 추가합니다
 
                     # 간혹 즉구가없이 경매가만 올리는 유저가 있어 계산에 오류가 생기길래 추가했습니다
@@ -209,7 +224,8 @@ async def proc(server, item_list):
                     '''
 
 
-            print(result_dict_set)
+            #print(result_dict_set)
+            print(temp_dict)
 
             '''
             print("\n** 총 {}개의 {}이(가) 올라와 있습니다".format(i, target_item_name))
