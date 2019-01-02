@@ -166,7 +166,8 @@ async def db_update_from_server(server):
                     price = int(l['buyout'] / int(l['quantity'])) # 묶음 가격을 감안하지 못해서 추가합니다
 
                 if temp_dict.get(cur) is None:
-                    temp_name = await get_item_name(conn, cur)
+                    temp_name = ''
+                    #temp_name = await get_item_name(conn, cur)
                     #print(temp_name)
                     temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner']}
                 # 해당아이템 딕트가 이미 존재할 경우
