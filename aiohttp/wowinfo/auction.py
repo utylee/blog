@@ -4,9 +4,11 @@ import json
 import pycurl
 from collections import defaultdict
 import math
+import datetime
 
 
 import sqlalchemy as sa
+from sqlalchemy.sql import and_, or_, not_
 from aiopg.sa import create_engine
 
 from db_tableinfo import *
@@ -103,8 +105,7 @@ async def proc(server, item_list):
 
             total = len(js['auctions'])
             print('총 {} 개의 경매 아이템이 등록되어있습니다'.format(total))
-            #result_dict = dict.fromkeys(['num', 'min', 'min_seller'])
-            result_dict_set = defaultdict(dict)#dict.fromkeys(item_list, result_dict)
+            result_dict_set = defaultdict(dict)
 
             for l in js['auctions']:
                 num = 0
@@ -147,12 +148,14 @@ async def proc(server, item_list):
                 cur = int(l['item'])
                 price = 0
                 if l['buyout'] == 0:
-                    price = l['bid'] / int(l['quantity'])
+                    price = int(l['bid'] / int(l['quantity']))
                 else:
-                    price = l['buyout'] / int(l['quantity']) # 묶음 가격을 감안하지 못해서 추가합니다
+                    price = int(l['buyout'] / int(l['quantity'])) # 묶음 가격을 감안하지 못해서 추가합니다
 
                 if temp_dict.get(cur) is None:
-                    temp_dict[cur] = {'item_name': await get_item_name(conn, cur), 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner']}
+                    temp_name = await get_item_name(conn, cur)
+                    #print(temp_name)
+                    temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner']}
                 # 해당아이템 딕트가 이미 존재할 경우
                 else:
                     temp_dict[cur]['num'] = temp_dict[cur]['num'] + l['quantity']
@@ -226,6 +229,63 @@ async def proc(server, item_list):
 
             #print(result_dict_set)
             #print(temp_dict)
+            ## 각 item 반복작업 종료
+
+
+            # arranged_auction db에 삽입 프로세스 by 만들어진 temp_dict를 통해
+            #
+            #
+
+            str_now = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
+
+            print('\n## arranged_auction db에현재 정리된 dict를 삽입하기 시작합니다')
+            #print(temp_dict.keys())
+
+            for id_ in temp_dict.keys():
+                found = 0
+                dict_ = temp_dict[id_]
+                #print(dict_)
+                
+                #async for r in conn.execute(tbl_arranged_auction.select().where((tbl_arranged_auction.c.server==server))):
+                async for r in conn.execute(tbl_arranged_auction.select().where(and_((tbl_arranged_auction.c.server==server),(tbl_arranged_auction.c.item==id_)))):
+                    #print(r)
+                    found = 1
+
+                ##temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner']}
+                # arranged auction에 없다면 초기 튜플을 삽입합니다
+                if found == 0:
+                    #print('no found')
+
+                    # min_chain 초기스트링만들기
+                    # 30분씩 하루 48 데이터, 그것을 30배(한달치) 한 1440개의 데이터를 보관하기로 합니다
+                    #1439개의 0을 ?로 구분하고 마지막은 현재 최저가 min을 넣어놓습니다
+                    str_chain = ''
+                    for i_ in range(0, 1439):
+                        str_chain = str_chain + '0?'
+                    str_chain = str_chain + str(dict_['min'])
+
+                    await conn.execute(tbl_arranged_auction.insert().values(server=server,
+                                                        item=id_,
+                                                        num=dict_['num'],
+                                                        min=dict_['min'],
+                                                        min_seller=dict_['min_seller'],
+                                                        min_chain=str_chain,
+                                                        edited_time=str_now,
+                                                        image=''))
+                # 해당 튜플이 있을 경우
+                else:
+                    pass
+                '''
+                    await conn.execute(tbl_arranged_auction.update().values(server=server,
+                                                        item=id_,
+                                                        num=dict_['num'],
+                                                        min=dict_['min'],
+                                                        min_seller=dict_['min_seller'],
+                                                        min_chain=str_chain,
+                                                        edited_time=str_now,
+                                                        image='']
+                                                        '''
+
 
             '''
             print("\n** 총 {}개의 {}이(가) 올라와 있습니다".format(i, target_item_name))
@@ -280,7 +340,7 @@ async def get_item_id(conn, name):
 async def get_item_name(conn, item_id):
     result = 0
     async for r in conn.execute(tbl_items.select().where(tbl_items.c.id==item_id)):
-        name = r[0]
+        name = r[1]
         result = 1
 
     #해당 아이템이 로컬 테이블에 없다면 받아온 후 로컬 테이블에 저정합니다
@@ -331,3 +391,55 @@ async def deco_dictset(data):
                 data[a]['copper'] = price - data[a]['silver'] * 100
 
     return data
+
+async def get_item_set(conn, setname):
+    itemlist = []
+
+    #async for r in conn.execute(tbl_item_set.select(tbl_item_set.c.itemname_list).where(tbl_item_set.c.set_name==setname)) :
+    async for r in conn.execute(tbl_item_set.select().where(tbl_item_set.c.set_name==setname)) :
+        itemlist = r[1].split(',')
+        print(itemlist)
+
+    return itemlist
+
+async def get_decoed_item_set(server, setname):
+    dict_ = {}
+    async with create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.211',
+                            password='sksmsqnwk11') as engine:
+        async with engine.acquire() as conn:
+            itemlist = await get_item_set(conn, setname)
+            for name_ in itemlist:
+                id_ = await get_item_id(conn, name_) 
+                image_path = ''
+                #async for image_ in conn.execute(tbl_images.select([tbl_images.c.file_name]).where(tbl_images.c.item_name==name_)):
+                async for image_ in conn.execute(tbl_images.select().where(tbl_images.c.item_name==name_)):
+                    image_path = image_[1]
+                async for tuple_ in conn.execute(tbl_arranged_auction.select().where(and_((tbl_arranged_auction.c.item==id_),(tbl_arranged_auction.c.server==server)))):
+                    print('name_:{}'.format(name_))
+                    dict_[name_] = {}
+                    dict_[name_]['num'] = tuple_[2]
+                    dict_[name_]['min'] = tuple_[3]
+                    dict_[name_]['min_seller'] = tuple_[4]
+                    dict_[name_]['min_chain'] = tuple_[5]
+                    dict_[name_]['edited_time'] = tuple_[6]
+                    dict_[name_]['image'] = image_path
+
+                    # 골드,실버,카퍼 를 분리해줍니다
+                    price = int(tuple_[3])
+
+                    if price < 10000:
+                        dict_[name_]['gold'] = 0
+                    else:
+                        dict_[name_]['gold'] = math.floor(price / 10000)
+
+                    price = price - dict_[name_]['gold'] * 10000
+                    if price < 100:
+                        dict_[name_]['silver'] = 0
+                    else:
+                        dict_[name_]['silver'] = math.floor(price / 100)
+
+                    dict_[name_]['copper'] = price - dict_[name_]['silver'] * 100
+
+    return dict_

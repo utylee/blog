@@ -3,7 +3,7 @@ from aiohttp import web
 import aiohttp_mako 
 import sqlalchemy as sa
 from aiopg.sa import create_engine
-from auction import proc
+from auction import proc, get_decoed_item_set
 import datetime
 '''
 metadata = sa.MetaData()
@@ -14,6 +14,7 @@ locale = 'ko_KR'
 
 # 서버 선택
 server = '아즈샤라'
+currentset = '격아약초세트1'
 
 # 관심 아이템들 목록
 pin_items = ['사술매듭 가방', '하늘 골렘', '심해 가방', 
@@ -109,9 +110,11 @@ async def fetch_auction(item_list):
     global ws
     global ar
     global ftime
+    global currentset
 
     #result_dict = await proc(item_list)
-    ar = await proc(server,item_list)
+    #ar = await proc(server,item_list)
+    ar = await get_decoed_item_set(server, currentset)
 
     now = datetime.datetime.now()
     ftime = now.strftime("%H:%M-%m/%d/%y")
@@ -124,6 +127,7 @@ async def fetch_auction(item_list):
 
 def init_data():
     global ar
+
 
     ar = {'사술매듭 가방': {'num': 10, 'min': 1379999900, 'min_seller': '밀림왕세나씨'}, 
                 '심해 가방': {'num': 300, 'min': 18000000, 'min_seller': '인중개박살'}, 
