@@ -1,5 +1,7 @@
 import asyncio
-import requests
+#import requests        # 비동기 방식인 aiohttp.ClientSession().get()으로 바꾸기로 합니다
+import aiohttp
+import aiofiles
 import json
 import pycurl
 from collections import defaultdict
@@ -21,7 +23,8 @@ name_list = ['부자인생', '부자인셍', '부쟈인생', '부쟈인섕','부
 my_item = []
 
 
-async def proc(server, item_list):
+#async def proc(server, item_list):
+async def db_update_from_server(server):
     # 임시 딕셔너리를 만듭니다. 전체 db를 아이템별로 처리합니다
     temp_dict = {}
     # DB에 접속해둡니다
@@ -38,32 +41,40 @@ async def proc(server, item_list):
             #return
             # .loads 함수인 것을 봅니다. s가 없는 load 함수는 파일포인터를 받더군요
             print('json주소를 받아옵니다')
+            '''
             loop = asyncio.get_event_loop()
             future = loop.run_in_executor(None, requests.get, url)
             response = await future
             load =json.loads(response.text)
             #load = json.loads(requests.get(url).text)
-            js = load['files'][0]['url']
+            '''
+            # requests가 아닌 aiohttp.ClientSession get 을 사용한 비동기방식으로 변경합니다
+            async with aiohttp.ClientSession() as sess:
+                async with sess.get(url) as resp:
+                    load = json.loads(await resp.text())
+                    js_url = load['files'][0]['url']
+                async with sess.get(js_url) as resp:
+                    print('주소:{} \n로부터 json 덤프 파일을 다운로드합니다...\n'.format(js_url))
+                    async with aiofiles.open(f'auction-{server}.json', 'wb') as f:
+                        await f.write(await resp.read())
+            # 덤프 시각을 db에 기록합니다
+            str_now = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
+            await conn.execute(tbl_wow_server_info.update().where(tbl_wow_server_info.c.server==server).values
+                                        (dumped_time=str_now))
 
-            print('주소:{} \n로부터 json 덤프 파일을 다운로드합니다...\n'.format(js))
-            #get_item(95416) #하늘골렘
-
-            # 받아온 json에 옥션 json 파일의 주소를 포함한 리스폰스를 보내줍니다. 해당 주소를 curl로 바이트다운받습니다.
-            #requests로 웹페이지로 읽어오니 속도가 너무 느려 이 방법을 사용해보기로 합니다
-            c = pycurl.Curl()
-
-            with open("auction.json", "wb") as f:
-                c.setopt(c.URL, js)
-                c.setopt(c.WRITEDATA, f)
-                c.perform()
-                c.close()
-
+            # 받아온 json에 옥션 json 파일의 주소를 포함한 리스폰스를 보내줍니다. 
             print('.다운로드 완료!')
-
             print('.파싱을 시작합니다')
+            async with aiofiles.open(f'auction-{server}.json', 'r') as f:
+                js = json.loads(await f.read())
+            #js = json.load(content)
+            print(js['auctions'])
+
+            '''
             with open("auction.json", "r") as f:
                 js = json.load(f)
                 #print(js['auctions'])
+            '''
 
             target_item_name = "하늘 골렘"
             #target_item_name = "얼어붙은 보주"
@@ -85,12 +96,14 @@ async def proc(server, item_list):
             #target_item_name = "유령무쇠 주괴"
 
 
+            '''
             target_item_id = await get_item_id(conn, target_item_name)
 
             item_id_list = []
             for ll in item_list:
                 id_ = await get_item_id(conn, ll)
                 item_id_list.append(id_)
+            '''
 
             # 저장된 파일을 읽은 후 한줄씩 탐색합니다
             golems = []
@@ -165,8 +178,7 @@ async def proc(server, item_list):
                         temp_dict[cur]['min'] = price
                         temp_dict[cur]['min_seller'] = l['owner']
 
-
-                #하늘골렘 아이템의 리스트를 작성합니다
+                '''
                 # 각 아이템의 리스트를 작성합니다
                 if l['item'] in item_id_list:
                     #d = json.dumps(l, ensure_ascii = False) #ensure_ascii는 유니코드 출력의 한글 문제를 해결해줍니다
@@ -212,6 +224,7 @@ async def proc(server, item_list):
                     sum += price
                     
                     #result_dict_set[item_name] = {'min' : min, 'min_seller' : min_seller, 'num' : num}
+                '''
 
                 # 내가 경매에 부친 물건이 있는지 표시합니다
                 '''
@@ -236,7 +249,7 @@ async def proc(server, item_list):
             #
             #
 
-            str_now = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
+            #str_now = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
 
             print('\n## arranged_auction db에현재 정리된 dict를 삽입하기 시작합니다')
             #print(temp_dict.keys())
@@ -299,14 +312,19 @@ async def proc(server, item_list):
                 print('** 내아이템들:')
                 for l in my_item:
                     print(l)
-        return await deco_dictset(result_dict_set)
+        #return await deco_dictset(result_dict_set)
+        return 
 
 
 # battle dev 로부터 아이템을 가져옵니다
-def get_item(id):
-    #https://kr.api.battle.net/wow/item/18803?locale=ko_KR&apikey=m5u8gdp6qmhbjkhbht3ax9byp62wench
-    r = requests.get('https://kr.api.battle.net/wow/item/{}?locale={}&apikey={}'.format(id, locale, myapi))
-    js = json.loads(r.text)
+async def get_item(id):
+    # requests를 비동기형 aiohttp 의 clientssion get 으로 대치합니다
+    #r = requests.get('https://kr.api.battle.net/wow/item/{}?locale={}&apikey={}'.format(id, locale, myapi))
+    #js = json.loads(r.text)
+    async with aiohttp.ClientSession() as sess:
+        async with sess.get('https://kr.api.battle.net/wow/item/{}?locale={}&apikey={}'.format(id, locale, myapi)) as resp:
+            js = json.loads(await resp.text())
+
     #print(js['name'])
     #일단 가져온 값중 이름만 취하기로 합니다
     # 데이터를 못가져오는 경우가 발생해 아래와 같은 루틴을 추가했습니다. 
@@ -346,7 +364,7 @@ async def get_item_name(conn, item_id):
     #해당 아이템이 로컬 테이블에 없다면 받아온 후 로컬 테이블에 저정합니다
     if result == 0:
         print('### item no. {} 이 로컬에 없기에 battlenet dev를 통해 이름을 가져옵니다...'.format(int(item_id)))
-        name = get_item(item_id)
+        name = await get_item(item_id)
         print(name)
         await conn.execute(tbl_items.insert().values(id=int(item_id), name=name))
 

@@ -3,8 +3,9 @@ from aiohttp import web
 import aiohttp_mako 
 import sqlalchemy as sa
 from aiopg.sa import create_engine
-from auction import proc, get_decoed_item_set
+from auction import get_decoed_item_set, db_update_from_server
 import datetime
+from db_tableinfo import *
 '''
 metadata = sa.MetaData()
 items = {}
@@ -25,7 +26,6 @@ pin_items = ['하늘 골렘', '아쿤다의 이빨', '닻풀', # 심해 가방',
 interval = 1200 #초
 ws = 0
 ar = {} 
-ftime = '00:00-99/99/99'  # db dump시의 시간을 저장합니다
 
 # 웹소켓 핸들러입니다
 async def ws_handle(request):
@@ -44,13 +44,22 @@ async def ws_handle(request):
 
 async def update(request):
     global ar
-    global ftime
+    global server
+    global currentset
     #print("/update handler came in")
     #print(ar)
     
+    #ar = await get_decoed_item_set(server, currentset)
     data = {}
     data['ar'] = ar
-    data['time'] = ftime
+
+    async with create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.211',
+                            password='sksmsqnwk11') as engine:
+        async with engine.acquire() as conn:
+            async for r in conn.execute(tbl_wow_server_info.select().where(tbl_wow_server_info.c.server==server)):
+                data['time'] = r[1]
 
     return web.json_response(data)
     #return web.json_response(ar)
@@ -59,6 +68,7 @@ async def update(request):
 async def handle(request):
     #return web.Response(text='fuck')
     global ar
+    global server
     '''
     ar = [{'name':'사술매듭 가방', 'price': [30,20,40], 'image':'inv_tailoring_hexweavebag.jpg'},
         {'name':'하늘 골렘', 'price': [150000,20,40], 'image':'ability_mount_shreddermount.jpg'},
@@ -68,7 +78,7 @@ async def handle(request):
         {'name':'살아있는 강철', 'price': [30,20,40], 'image':'inv_ingot_livingsteel.jpg'}]
         '''
 
-    return {'name': '7', 'imageroot': '../static/images/' ,'ar':ar}
+    return {'name': '7', 'imageroot': '../static/images/' ,'ar':ar, 'server':server}
 
 async def init():
     global interval
@@ -93,31 +103,44 @@ async def init():
     ws = app.router.add_get('/ws', ws_handle)
 
     loop = asyncio.get_event_loop()
-    loop.create_task(main_proc(pin_items, interval))
+    loop.create_task(main_proc(interval))
 
     return app
 
-async def main_proc(item_list, intv):
-    # 5분마다 반복합니다
-    while True:
-        await fetch_auction(item_list)
+async def main_proc(intv):
+    # 한국 와우 서버 리스트를 가져옵니다
+    serverlist = []
+    async with create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.211',
+                            password='sksmsqnwk11') as engine:
+        async with engine.acquire() as conn:
+            async for r in conn.execute(tbl_wow_server_info.select()):
+                serverlist.append(r[0])
 
+    await fetch_auction()
+    # 주기마다 반복합니다
+    while True:
+        loop = asyncio.get_event_loop()
+        loop.create_task(timer_proc(serverlist))
         await asyncio.sleep(intv)
 
-async def fetch_auction(item_list):
+async def timer_proc(serverlist):
+    for s_ in serverlist:
+        await db_update_from_server(s_)
+        await fetch_auction()
+
+async def fetch_auction():
     print('.경매장 정보 가져오기 시작')
 
     global ws
     global ar
-    global ftime
     global currentset
+    global server
 
     #result_dict = await proc(item_list)
     #ar = await proc(server,item_list)
     ar = await get_decoed_item_set(server, currentset)
-
-    now = datetime.datetime.now()
-    ftime = now.strftime("%H:%M-%m/%d/%y")
 
     print('update in fetch')
     try:

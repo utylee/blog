@@ -57,3 +57,9 @@ tbl_item_set = sa.Table('item_set', metadata,
         sa.Column('itemname_list', sa.String(512)),
         sa.Column('edited_time', sa.String(128)))
 
+# wow_server_info 테이블입니다
+tbl_wow_server_info = sa.Table('wow_server_info', metadata,
+        sa.Column('server', sa.String(128)),
+        sa.Column('dumped_time', sa.String(128)),
+        sa.Column('region', sa.String(128)),
+        sa.Column('info', sa.Text))
