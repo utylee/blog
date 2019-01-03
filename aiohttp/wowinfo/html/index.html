@@ -34,9 +34,23 @@
 							document.getElementById("moneysilver"+i).innerHTML = data[Object.keys(data)[i]].silver;
 							document.getElementById("moneycopper"+i).innerHTML = data[Object.keys(data)[i]].copper;
 							document.getElementById("min_seller"+i).innerHTML = data[Object.keys(data)[i]].min_seller;
+							/*
+							if(eval('chLine'+i)){
+								eval('chLine' + i).data = data[Object.keys(data)[i]].min_chain / 10000;
+								eval('chLine' + i).update();
+							}
+							*/
+							## 아직chLine이 미처 생성되지 않았을 경우 exception이 발생해 이상동작이 발생하는듯 
+							try {
+								if(eval('chLine'+i)){
+									eval('chLine' + i).data = data[Object.keys(data)[i]].min_chain / 10000;
+									eval('chLine' + i).update();
+								}
+							}
+							catch(error) {
+							}
 						}
-						document.getElementById("update_time").innerHTML = t
-
+						document.getElementById("update_time").innerHTML = t;
 					});
 				}
 			}
@@ -44,20 +58,26 @@
 
 		// jQuery document ready 를 대신하는 자바스크립트입니다 다만 익스플로러 9이하에선 안된다는 말도 있네요
 		document.addEventListener("DOMContentLoaded", function(){
+			setupWebSocket();
 			// innerHTML
 			document.getElementById("designed_by").innerHTML = "designed by utylee studios 2019 /&nbsp;";
 			document.getElementById("gathered_from").innerHTML = "item images gathered from wowhead.com /&nbsp; ";
 			document.getElementById("dumped_at").innerHTML = "${server} DB dumped at &nbsp;";
 			// websocket을 만듭니다
-			setupWebSocket();
 			// 차트객체 chart.js 6개를 생성합니다
-			% for a in ar:
+			% for a in ar.keys():
+				var data_ = [];
+				//alert('${ar[a]['min_chain'][-1]}');
+				
+				% for m_ in ar[a]['min_chain'][-15:]:
+					##data_.push(Math.floor(${m_}/10000));
+					data_.push(${m_}/10000);
+				% endfor
 				var chartData${loop.index} = {
-					labels: ["", "", "", "", "", "", "", "", "", "", \
-							"", "", "", "", "", "", "", ""],
+					labels: ["", "", "", "", "", "", "", "", "", "",\
+							"", "", "", "", ""], //"", "", ""],
 					datasets: [{
-						data: [589, 445, 483, 503, 689, 692, 634, 700, 800, 700, \
-							  900, 700, 800, 500, 400, 300, 700,  800]
+						data: data_
 					}
 					]
 				};
@@ -148,8 +168,8 @@
 					<div style="font-size:12px;margin-top:0px;" align="center">
 					<li class="list-group-item" align="center">
 						<canvas id="chLine${loop.index}"></canvas>
-					<div  align="center" class="badge badge-primary" >시</div>
-					<div  align="center" class="badge badge-secondary text-muted" >일</div>
+					<div  align="center" class="badge badge-primary" >30분</div>
+					<div  align="center" class="badge badge-secondary text-muted" >&nbsp;일&nbsp;</div>
 					</li>
 					</div>
 					</ul>

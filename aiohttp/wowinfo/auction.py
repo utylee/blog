@@ -7,6 +7,7 @@ import pycurl
 from collections import defaultdict
 import math
 import datetime
+import time
 
 
 import sqlalchemy as sa
@@ -49,6 +50,7 @@ async def db_update_from_server(server):
             #load = json.loads(requests.get(url).text)
             '''
             # requests가 아닌 aiohttp.ClientSession get 을 사용한 비동기방식으로 변경합니다
+            start_time = time.time()
             async with aiohttp.ClientSession() as sess:
                 async with sess.get(url) as resp:
                     load = json.loads(await resp.text())
@@ -62,13 +64,15 @@ async def db_update_from_server(server):
             await conn.execute(tbl_wow_server_info.update().where(tbl_wow_server_info.c.server==server).values
                                         (dumped_time=str_now))
 
+            end_time = time.time()
+            elapsed_time = math.floor(end_time - start_time)
             # 받아온 json에 옥션 json 파일의 주소를 포함한 리스폰스를 보내줍니다. 
             print('.다운로드 완료!')
+            print(f'총 {elapsed_time}초 소요')
             print('.파싱을 시작합니다')
             async with aiofiles.open(f'auction-{server}.json', 'r') as f:
                 js = json.loads(await f.read())
-            #js = json.load(content)
-            print(js['auctions'])
+            #print(js['auctions'])
 
             '''
             with open("auction.json", "r") as f:
@@ -252,8 +256,10 @@ async def db_update_from_server(server):
 
             #str_now = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
 
-            print('\n## arranged_auction db에현재 정리된 dict를 삽입하기 시작합니다')
+            print(f'\n## {server} arranged_auction db에현재 정리된 dict를 삽입하기 시작합니다')
             #print(temp_dict.keys())
+            start_time = time.time()
+
 
             for id_ in temp_dict.keys():
                 found = 0
@@ -288,7 +294,17 @@ async def db_update_from_server(server):
                                                         image=''))
                 # 해당 튜플이 있을 경우
                 else:
-                    pass
+                    #먼저 str_chain 을 가져옵니다
+                    async for sel_ in conn.execute(tbl_arranged_auction.select().where(
+                        and_((tbl_arranged_auction.c.server==server),(tbl_arranged_auction.c.item==id_)))):
+                        str_chain = sel_[5]
+                        str_chain = str_chain.split('?', 1)[1] + '?' + str(dict_['min'])
+                    await conn.execute(tbl_arranged_auction.update().where(and_((tbl_arranged_auction.c.server==server),(tbl_arranged_auction.c.item==id_))).values(num=dict_['num'],
+                                                        min=dict_['min'],
+                                                        min_seller=dict_['min_seller'],
+                                                        min_chain=str_chain,
+                                                        edited_time=str_now,
+                                                        image=''))
                 '''
                     await conn.execute(tbl_arranged_auction.update().values(server=server,
                                                         item=id_,
@@ -314,6 +330,15 @@ async def db_update_from_server(server):
                 for l in my_item:
                     print(l)
         #return await deco_dictset(result_dict_set)
+        end_time = time.time()
+        elapsed_time = math.floor(end_time - start_time)
+        elapsed_min = 0
+        if(elapsed_time > 60):
+            elapsed_min = math.floor(elapsed_time / 60)
+        elapsed_time = math.floor(end_time - start_time)
+        print(f'서버 {server}에 대한 삽입 정리 프로세스 종료')
+        print(f'총 {elapsed_time} 초({elapsed_min}분)가 소요되었습니다')
+        
         return 
 
 
@@ -441,7 +466,8 @@ async def get_decoed_item_set(server, setname):
                     dict_[name_]['num'] = tuple_[2]
                     dict_[name_]['min'] = tuple_[3]
                     dict_[name_]['min_seller'] = tuple_[4]
-                    dict_[name_]['min_chain'] = tuple_[5]
+                    dict_[name_]['min_chain'] = tuple_[5].split('?')
+                    #print(dict_[name_]['min_chain'])
                     dict_[name_]['edited_time'] = tuple_[6]
                     dict_[name_]['image'] = image_path
 

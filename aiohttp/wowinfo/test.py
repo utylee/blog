@@ -15,7 +15,8 @@ locale = 'ko_KR'
 
 # 서버 선택
 server = '아즈샤라'
-currentset = '격아약초세트1'
+#currentset = '격아약초세트1'
+currentset = 'defaultset'
 
 # 관심 아이템들 목록
 pin_items = ['하늘 골렘', '아쿤다의 이빨', '닻풀', # 심해 가방', '사술매듭 가방'
@@ -23,7 +24,7 @@ pin_items = ['하늘 골렘', '아쿤다의 이빨', '닻풀', # 심해 가방',
 #pin_items = ['살아있는 강철', '하늘 골렘']
 
 # fetch 실행 주기 :5분
-interval = 1200 #초
+interval = 1800 #초
 ws = 0
 ar = {} 
 
@@ -46,7 +47,7 @@ async def update(request):
     global ar
     global server
     global currentset
-    #print("/update handler came in")
+    print("/update handler came in")
     #print(ar)
     
     #ar = await get_decoed_item_set(server, currentset)
@@ -119,6 +120,8 @@ async def main_proc(intv):
                 serverlist.append(r[0])
 
     await fetch_auction()
+    
+    serverlist = ['아즈샤라']
     # 주기마다 반복합니다
     while True:
         loop = asyncio.get_event_loop()
@@ -144,15 +147,16 @@ async def fetch_auction():
 
     print('update in fetch')
     try:
+        print('ws: send update string')
         await ws.send_str('update')
     except:
-        pass
+        print('ws send err!!!!')
 
 def init_data():
     global ar
 
 
-    ar = {'사술매듭 가방': {'num': 10, 'min': 1379999900, 'min_seller': '밀림왕세나씨'}, 
+    ar = {'사술매듭 가방': {'num': 10, 'min': 1379999900, 'min_seller': '밀림왕세나씨', 'min_chain':'0'}, 
                 '심해 가방': {'num': 300, 'min': 18000000, 'min_seller': '인중개박살'}, 
                 '호화로운 모피': {'num': 158, 'min': 4000, 'min_seller': '우렝밀렵'}, 
                 '하늘 골렘': {'num': 173, 'min': 18560000, 'min_seller': '남미왕'}, 
@@ -160,6 +164,10 @@ def init_data():
                 '민첩의 전투 물약': {'num': 25, 'min': 3505000, 'min_seller': 'Spit'}}
     for a in ar.keys():
         ar[a]['image'] = 'inv_tailoring_hexweavebag.jpg'
+        min_chain = []
+        for c_ in range(0, 1440):
+            min_chain.append(0)
+        ar[a]['min_chain'] = min_chain 
         ar[a]['gold'] = 0
         ar[a]['silver'] =0
         ar[a]['copper'] =0
