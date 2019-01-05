@@ -25,3 +25,14 @@
 	z-index: 10;
 }
 
+.scrollable-menu {
+    max-height: 120px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.scrollable-menu-auto {
+	height:auto;
+    max-height: 120px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}

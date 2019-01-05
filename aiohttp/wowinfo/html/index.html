@@ -1,8 +1,14 @@
 <%inherit file="base.html"/>
 
 <%block name="script">
+	<link rel="stylesheet" type="text/css" href="../static/css/add.css">
 	<script type="text/javascript" charset="utf-8">
-		var socket;
+		// 차트에서 포인트 갯수를 정의합니다
+		window.chart_column_num = 24;
+		window.cur_itemset = '${current_itemset}';
+		//var cur_itemset = "defaultset";
+		window.socket = 0;
+		//alert('haha');
 		function setupWebSocket(){
 			this.socket = new WebSocket('ws://'+window.location.host+'/ws');
 			this.socket.onopen = function(){
@@ -19,10 +25,14 @@
 					//alert('update');
 					
 					// /update 페이지에 접속하고 서버에서 해당페이지는 데이터를 json형태로 반납합니다
+						
+					//$.getJSON('/update', update_page(data));
 					$.getJSON('/update', function(data) {
 						//alert(Object.keys(data).length);
 						// data 갯수, 즉 6회동안 각 요소 갱신을 반복합니다
 						t = data.time;
+						itemsets = data.itemsets;
+						//alert(t);
 						data = data.ar;
 						//alert(t);
 						for (i=0;i < Object.keys(data).length;i++) {
@@ -34,27 +44,161 @@
 							document.getElementById("moneysilver"+i).innerHTML = data[Object.keys(data)[i]].silver;
 							document.getElementById("moneycopper"+i).innerHTML = data[Object.keys(data)[i]].copper;
 							document.getElementById("min_seller"+i).innerHTML = data[Object.keys(data)[i]].min_seller;
-							/*
-							if(eval('chLine'+i)){
-								eval('chLine' + i).data = data[Object.keys(data)[i]].min_chain / 10000;
-								eval('chLine' + i).update();
-							}
-							*/
+							
+							//if(eval('chLine'+i)){
+							//	eval('chLine' + i).data = data[Object.keys(data)[i]].min_chain / 10000;
+							//	eval('chLine' + i).update();
+							//}
 							## 아직chLine이 미처 생성되지 않았을 경우 exception이 발생해 이상동작이 발생하는듯 
 							try {
-								if(eval('chLine'+i)){
-									eval('chLine' + i).data = data[Object.keys(data)[i]].min_chain / 10000;
-									eval('chLine' + i).update();
+								if(eval('chart'+i)){
+									min_chain_ = data[Object.keys(data)[i]].min_chain;
+									//alert(min_chain_[min_chain_.length - 1]);
+									//eval('chLine' + i).data = min_chain_[min_chain_.length - 1] / 10000;
+									var data_ = [],
+										len_ = min_chain_.length;
+									//alert(min_chain_[0]);
+									for (j=len_ - chart_column_num;j<=len_ - 1;j++){
+									//for (i=0;i<=3;i++){
+										data_.push(min_chain_[j] / 10000);
+									}
+									var labels_ = [];
+									for(l_=0;l_<chart_column_num;l_++){
+										labels_.push("");
+									}
+									//alert(data_[0]);
+									//eval('chLine' + i).data = min_chain_.slice(,min_chain_.length - 1) / 10000);
+									//eval('chart' + i).data = full_data_; 
+									//eval('chart' + i).data.datasets[0].data = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; 
+									eval('chart'+i).data.labels = labels_;
+									eval('chart'+i).data.datasets[0].data = data_;
+									eval('chart'+i).update();
+									//alert('엄지척');
+									////eval('chLine' + i).addData = data_; 
+									//eval('chLine' + i).update();
 								}
 							}
 							catch(error) {
 							}
 						}
+
+						// itemsets 이름들을 작업합니다 ex)) 격아약초1, 하늘골렘재료
+						// 먼저 itemsets에서 cur_itemset 은 제거합니다. 타이틀로 이미 쓰이므로
+						//alert(cur_itemset);
+						/*
+						var index = itemsets.indexOf(cur_itemset);
+						//alert(index);
+						if(index > -1){
+							itemsets.splice(index, 1);
+						}
+						*/
+
+						// 이후 각 드롭다운 항목들을 교체해줍니다
+						for(it=0;it<itemsets.length;it++){
+						//for(it=0;it<2;it++){
+							if(document.getElementById("itemlist"+it)){
+								if(document.getElementById("itemlist"+it).innerHTML != cur_itemset){
+									document.getElementById("itemlist"+it).innerHTML = itemsets[it];
+								}
+							}
+						}
+
+						document.getElementById("button_itemset").innerHTML = cur_itemset;
 						document.getElementById("update_time").innerHTML = t;
+						alert('엄지척');
 					});
 				}
 			}
 		}	
+		function change_itemset(itemset){
+			var temp_itemset = cur_itemset;
+			cur_itemset = itemset;
+			for(it=0;it<itemsets.length;it++){
+				if(document.getElementById("itemlist"+it)){
+					if(document.getElementById("itemlist"+it).innerHTML != cur_itemset){
+						document.getElementById("itemlist"+it).innerHTML = itemsets[it];
+					}
+				}
+			}
+			document.getElementById("button_itemset").innerHTML = cur_itemset;
+		}
+		/*
+		function update_page(data){
+			//alert(Object.keys(data).length);
+			// data 갯수, 즉 6회동안 각 요소 갱신을 반복합니다
+			t = data.time;
+			itemsets = data.itemsets;
+			//alert(t);
+			data = data.ar;
+			//alert(t);
+			for (i=0;i < Object.keys(data).length;i++) {
+				//$("#moneygold" + i).text(data.gold);
+				document.getElementById("image"+i).setAttribute("style", "background-image: url('${imageroot}/" + data[Object.keys(data)[i]].image + "')"); 
+				document.getElementById("itemname"+i).innerHTML = Object.keys(data)[i];
+				document.getElementById("num"+i).innerHTML = data[Object.keys(data)[i]].num;
+				document.getElementById("moneygold"+i).innerHTML = data[Object.keys(data)[i]].gold;
+				document.getElementById("moneysilver"+i).innerHTML = data[Object.keys(data)[i]].silver;
+				document.getElementById("moneycopper"+i).innerHTML = data[Object.keys(data)[i]].copper;
+				document.getElementById("min_seller"+i).innerHTML = data[Object.keys(data)[i]].min_seller;
+				
+				//if(eval('chLine'+i)){
+				//	eval('chLine' + i).data = data[Object.keys(data)[i]].min_chain / 10000;
+				//	eval('chLine' + i).update();
+				//}
+				## 아직chLine이 미처 생성되지 않았을 경우 exception이 발생해 이상동작이 발생하는듯 
+				try {
+					if(eval('chart'+i)){
+						min_chain_ = data[Object.keys(data)[i]].min_chain;
+						//alert(min_chain_[min_chain_.length - 1]);
+						//eval('chLine' + i).data = min_chain_[min_chain_.length - 1] / 10000;
+						var data_ = [],
+							len_ = min_chain_.length;
+						//alert(min_chain_[0]);
+						for (j=len_ - chart_column_num;j<=len_ - 1;j++){
+						//for (i=0;i<=3;i++){
+							data_.push(min_chain_[j] / 10000);
+						}
+						var labels_ = [];
+						for(l_=0;l_<chart_column_num;l_++){
+							labels_.push("");
+						}
+						//alert(data_[0]);
+						//eval('chLine' + i).data = min_chain_.slice(,min_chain_.length - 1) / 10000);
+						//eval('chart' + i).data = full_data_; 
+						//eval('chart' + i).data.datasets[0].data = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; 
+						eval('chart'+i).data.labels = labels_;
+						eval('chart'+i).data.datasets[0].data = data_;
+						eval('chart'+i).update();
+						//alert('엄지척');
+						////eval('chLine' + i).addData = data_; 
+						//eval('chLine' + i).update();
+					}
+				}
+				catch(error) {
+				}
+			}
+
+			// itemsets 이름들을 작업합니다 ex)) 격아약초1, 하늘골렘재료
+			// 먼저 itemsets에서 cur_itemset 은 제거합니다. 타이틀로 이미 쓰이므로
+			//alert(cur_itemset);
+			var index = itemsets.indexOf(cur_itemset);
+			//alert(index);
+			if(index > -1){
+				itemsets.splice(index, 1);
+			}
+
+			// 이후 각 드롭다운 항목들을 교체해줍니다
+			//for(it=0;it<itemsets.length;it++){
+			for(it=0;it<2;it++){
+				if(document.getElementById("itemlist"+it))
+					document.getElementById("itemlist"+it).innerHTML = itemsets[it];
+			}
+
+			document.getElementById("button_itemset").innerHTML = cur_itemset;
+			document.getElementById("update_time").innerHTML = t;
+			alert('엄지척');
+		}
+		*/
 
 		// jQuery document ready 를 대신하는 자바스크립트입니다 다만 익스플로러 9이하에선 안된다는 말도 있네요
 		document.addEventListener("DOMContentLoaded", function(){
@@ -66,41 +210,54 @@
 			// websocket을 만듭니다
 			// 차트객체 chart.js 6개를 생성합니다
 			% for a in ar.keys():
-				var data_ = [];
-				//alert('${ar[a]['min_chain'][-1]}');
-				
-				% for m_ in ar[a]['min_chain'][-15:]:
-					##data_.push(Math.floor(${m_}/10000));
-					data_.push(${m_}/10000);
-				% endfor
-				var chartData${loop.index} = {
-					labels: ["", "", "", "", "", "", "", "", "", "",\
-							"", "", "", "", ""], //"", "", ""],
-					datasets: [{
-						data: data_
-					}
-					]
-				};
+			var data_ = [];
+			//alert('${ar[a]['min_chain'][-1]}');
+			
+			##% for m_ in ar[a]['min_chain'][-15:]:
+				####data_.push(Math.floor(${m_}/10000));
+				##data_.push(${m_}/10000);
+			##% endfor
+			var cur_min_chain = ${ar[a]['min_chain']};
+			for(ii = cur_min_chain.length - chart_column_num;ii <= cur_min_chain.length - 1; ii++){
+				data_.push(cur_min_chain[ii]/10000);
+			}
 
-				var chLine${loop.index} = document.getElementById("chLine${loop.index}");
-				if(chLine${loop.index}) {
-					new Chart(chLine${loop.index}, {
-						type: 'line',
-						data: chartData${loop.index},
-						options: {
-							scales: {
-								yAxes: [{
-									ticks: {
-										beginAtZero: false
-									}
-								}]
-							},
-							legend: {
-								display: false
-							}
-						}
-					});
+			var labels_ = [];
+			for(l_=0;l_<chart_column_num;l_++){
+				labels_.push("");
+			}
+			window.chartData${loop.index} = {
+			//var chartData${loop.index} = {
+				/*
+				labels: ["", "", "", "", "", "", "", "", "", "",\
+						"", "", "", "", ""], //"", "", ""],
+						*/
+				labels: labels_,
+				datasets: [{
+					data: data_
 				}
+				]
+			};
+
+			window.chLine${loop.index} = document.getElementById("chLine${loop.index}");
+			if(chLine${loop.index}) {
+				window.chart${loop.index} = new Chart(chLine${loop.index}, {
+					type: 'line',
+					data: chartData${loop.index},
+					options: {
+						scales: {
+							yAxes: [{
+								ticks: {
+									beginAtZero: false
+								}
+							}]
+						},
+						legend: {
+							display: false
+						}
+					}
+				});
+			}
 			% endfor
 		});
 	</script>
@@ -118,17 +275,21 @@
 	<div class="row" style="width:50%;height:8%;margin:0 auto;">
 		<div class="btn-group col my-auto">
 			<button class="btn btn-secondary btn-lg btn-block text-muted" type="button">
-			<span class="icon-checkcircle" >아즈샤라</span></button>
+			<span class="icon-checkcircle" ><del datetime="2019-01-05T00:06:50 +0900">아즈샤라</del></span></button>
 			<div class="btn-group">
 				<button class="btn btn-secondary text-muted dropdown-toggle"></button>
 			</div>
 		</div>
-		<div class="btn-group col my-auto">
-			<button class="btn btn-secondary btn-lg btn-block text-muted" type="button">
-				<span class="glyphicon glyphicon-list"></span>격아약초세트
+		<div class="col my-auto">
+			<div class="dropdown">
+			<button id="button_itemset" class="btn btn-secondary btn-lg btn-block text-muted dropdown-toggle" type="button" data-toggle="dropdown">
+				${current_itemset}
 			</button>
-			<div class="btn-group">
-				<button class="btn btn-secondary dropdown-toggle text-muted"></button>
+			<div class="dropdown-menu scrollable-menu-auto" style="width:100%">
+				% for i in itemsets:
+				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center" href="#" onclick="change_itemset('${i}');">${i}</a>
+				% endfor
+			</div>
 			</div>
 		</div>
 	</div>
@@ -168,8 +329,9 @@
 					<div style="font-size:12px;margin-top:0px;" align="center">
 					<li class="list-group-item" align="center">
 						<canvas id="chLine${loop.index}"></canvas>
-					<div  align="center" class="badge badge-primary" >30분</div>
-					<div  align="center" class="badge badge-secondary text-muted" >&nbsp;일&nbsp;</div>
+					<div  align="center" class="badge badge-primary" >12시간</div>
+					<div  align="center" class="badge badge-secondary text-muted" >1일</div>
+					<div  align="center" class="badge badge-secondary text-muted" >30일</div>
 					</li>
 					</div>
 					</ul>
