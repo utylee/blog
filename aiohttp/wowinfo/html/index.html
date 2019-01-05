@@ -8,6 +8,7 @@
 		window.cur_itemset = '${current_itemset}';
 		//var cur_itemset = "defaultset";
 		window.socket = 0;
+		window.itemsets = [];
 		//alert('haha');
 		function setupWebSocket(){
 			this.socket = new WebSocket('ws://'+window.location.host+'/ws');
@@ -22,12 +23,13 @@
 			this.socket.onmessage = function(msg){
 				if (msg.data == 'update'){
 					// 업데이트 신호가 들어오면 해당 div를 갱신합니다
-					//alert('update');
 					
 					// /update 페이지에 접속하고 서버에서 해당페이지는 데이터를 json형태로 반납합니다
 						
-					//$.getJSON('/update', update_page(data));
-					$.getJSON('/update', function(data) {
+					$.getJSON('/update/' + cur_itemset, function(data){update_page(data);});
+					//$.getJSON('/update', function(data){update_page(data);});
+					/*
+					$.getJSON('/update/' + cur_itemset, function(data) {
 						//alert(Object.keys(data).length);
 						// data 갯수, 즉 6회동안 각 요소 갱신을 반복합니다
 						t = data.time;
@@ -82,35 +84,41 @@
 							}
 						}
 
-						// itemsets 이름들을 작업합니다 ex)) 격아약초1, 하늘골렘재료
-						// 먼저 itemsets에서 cur_itemset 은 제거합니다. 타이틀로 이미 쓰이므로
-						//alert(cur_itemset);
-						/*
-						var index = itemsets.indexOf(cur_itemset);
-						//alert(index);
-						if(index > -1){
-							itemsets.splice(index, 1);
-						}
-						*/
-
-						// 이후 각 드롭다운 항목들을 교체해줍니다
+						// 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
+						document.getElementById("div_itemlist").innerHTML = ""; 
 						for(it=0;it<itemsets.length;it++){
-						//for(it=0;it<2;it++){
-							if(document.getElementById("itemlist"+it)){
-								if(document.getElementById("itemlist"+it).innerHTML != cur_itemset){
-									document.getElementById("itemlist"+it).innerHTML = itemsets[it];
-								}
+							// cur_itemset이 아닌 항목들만 추가합니다
+							//alert(itemsets[it]);
+							if(itemsets[it] != cur_itemset){
+								document.getElementById("div_itemlist").innerHTML += "<a id='itemlist" + it +"' class='dropdown-item text-center' href='#' onclick='change_itemset(\"" + itemsets[it] + "\");'>" + itemsets[it] + "</a>";
+							//alert(document.getElementById("div_itemlist").innerHTML);
 							}
 						}
 
 						document.getElementById("button_itemset").innerHTML = cur_itemset;
 						document.getElementById("update_time").innerHTML = t;
-						alert('엄지척');
+						//alert('엄지척');
 					});
+					*/
 				}
 			}
 		}	
 		function change_itemset(itemset){
+			// 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
+			cur_itemset = itemset;
+			document.getElementById("div_itemlist").innerHTML = ""; 
+			for(it=0;it<itemsets.length;it++){
+				// cur_itemset이 아닌 항목들만 추가합니다
+				if(itemsets[it] != itemset){
+					document.getElementById("div_itemlist").innerHTML += "<a id='itemlist" + it +"' class='dropdown-item text-center' href='#' onclick='change_itemset(\"" + itemsets[it] + "\");'>" + itemsets[it] + "</a>";
+				}
+			}
+
+			document.getElementById("button_itemset").innerHTML = itemset;
+
+			$.getJSON('/update/' + itemset, function(data){update_page(data);});
+
+			/*
 			var temp_itemset = cur_itemset;
 			cur_itemset = itemset;
 			for(it=0;it<itemsets.length;it++){
@@ -121,16 +129,15 @@
 				}
 			}
 			document.getElementById("button_itemset").innerHTML = cur_itemset;
+			*/
 		}
-		/*
+
 		function update_page(data){
 			//alert(Object.keys(data).length);
 			// data 갯수, 즉 6회동안 각 요소 갱신을 반복합니다
 			t = data.time;
 			itemsets = data.itemsets;
-			//alert(t);
 			data = data.ar;
-			//alert(t);
 			for (i=0;i < Object.keys(data).length;i++) {
 				//$("#moneygold" + i).text(data.gold);
 				document.getElementById("image"+i).setAttribute("style", "background-image: url('${imageroot}/" + data[Object.keys(data)[i]].image + "')"); 
@@ -141,10 +148,6 @@
 				document.getElementById("moneycopper"+i).innerHTML = data[Object.keys(data)[i]].copper;
 				document.getElementById("min_seller"+i).innerHTML = data[Object.keys(data)[i]].min_seller;
 				
-				//if(eval('chLine'+i)){
-				//	eval('chLine' + i).data = data[Object.keys(data)[i]].min_chain / 10000;
-				//	eval('chLine' + i).update();
-				//}
 				## 아직chLine이 미처 생성되지 않았을 경우 exception이 발생해 이상동작이 발생하는듯 
 				try {
 					if(eval('chart'+i)){
@@ -178,27 +181,22 @@
 				}
 			}
 
-			// itemsets 이름들을 작업합니다 ex)) 격아약초1, 하늘골렘재료
-			// 먼저 itemsets에서 cur_itemset 은 제거합니다. 타이틀로 이미 쓰이므로
-			//alert(cur_itemset);
-			var index = itemsets.indexOf(cur_itemset);
-			//alert(index);
-			if(index > -1){
-				itemsets.splice(index, 1);
-			}
-
-			// 이후 각 드롭다운 항목들을 교체해줍니다
-			//for(it=0;it<itemsets.length;it++){
-			for(it=0;it<2;it++){
-				if(document.getElementById("itemlist"+it))
-					document.getElementById("itemlist"+it).innerHTML = itemsets[it];
+			// 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
+			document.getElementById("div_itemlist").innerHTML = ""; 
+			for(it=0;it<itemsets.length;it++){
+				// cur_itemset이 아닌 항목들만 추가합니다
+				//alert(itemsets[it]);
+				if(itemsets[it] != cur_itemset){
+					document.getElementById("div_itemlist").innerHTML += "<a id='itemlist" + it +"' class='dropdown-item text-center' href='#' onclick='change_itemset(\"" + itemsets[it] + "\");'>" + itemsets[it] + "</a>";
+				//alert(document.getElementById("div_itemlist").innerHTML);
+				}
 			}
 
 			document.getElementById("button_itemset").innerHTML = cur_itemset;
 			document.getElementById("update_time").innerHTML = t;
-			alert('엄지척');
+			//alert('엄지척');
 		}
-		*/
+
 
 		// jQuery document ready 를 대신하는 자바스크립트입니다 다만 익스플로러 9이하에선 안된다는 말도 있네요
 		document.addEventListener("DOMContentLoaded", function(){
@@ -285,7 +283,7 @@
 			<button id="button_itemset" class="btn btn-secondary btn-lg btn-block text-muted dropdown-toggle" type="button" data-toggle="dropdown">
 				${current_itemset}
 			</button>
-			<div class="dropdown-menu scrollable-menu-auto" style="width:100%">
+			<div id="div_itemlist" class="dropdown-menu scrollable-menu-auto" style="width:100%">
 				% for i in itemsets:
 				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center" href="#" onclick="change_itemset('${i}');">${i}</a>
 				% endfor

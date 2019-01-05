@@ -47,9 +47,17 @@ async def update(request):
     global ar
     global server
     global currentset
-    print("/update handler came in")
+    itemset = ''
+    print('/update handler came in')
+
+    itemset = request.match_info['itemset']
+    print(f':itemset = {itemset}')
+
+    if currentset != itemset:
+        currentset = itemset
+        ar = await get_decoed_item_set(server, currentset)
+
     #print(ar)
-    
     #ar = await get_decoed_item_set(server, currentset)
     data = {}
     itemsets = []
@@ -67,6 +75,7 @@ async def update(request):
     data['ar'] = ar
     #data['itemsets'] = itemsets
     data['itemsets'] = await get_itemsets()
+    #data['currentset'] = currentset 
 
     return web.json_response(data)
 
@@ -101,7 +110,7 @@ async def init():
 
     app.router.add_static('/static', 'static')
     app.router.add_get('/', handle)
-    app.router.add_get('/update', update)
+    app.router.add_get('/update/{itemset}', update)
 
     # 웹소켓 핸들러도 get을 통해 정의해줘야합니다
     ws = app.router.add_get('/ws', ws_handle)
