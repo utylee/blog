@@ -52,7 +52,7 @@ async def update(request):
     
     #ar = await get_decoed_item_set(server, currentset)
     data = {}
-    data['ar'] = ar
+    itemsets = []
 
     async with create_engine(user='postgres',
                             database='auction_db',
@@ -61,17 +61,28 @@ async def update(request):
         async with engine.acquire() as conn:
             async for r in conn.execute(tbl_wow_server_info.select().where(tbl_wow_server_info.c.server==server)):
                 data['time'] = r[1]
+            #async for r in conn.execute(tbl_item_set.select()):
+                #itemsets.append(r[0])
+
+    data['ar'] = ar
+    #data['itemsets'] = itemsets
+    data['itemsets'] = await get_itemsets()
 
     return web.json_response(data)
-    #return web.json_response(ar)
 
 @aiohttp_mako.template('index.html')
 async def handle(request):
     #return web.Response(text='fuck')
     global ar
     global server
+    global currentset
+    
+    itemsets = await get_itemsets()
+    itemsets.remove(currentset)
 
-    return {'name': '7', 'imageroot': '../static/images/' ,'ar':ar, 'server':server}
+
+    return {'name': '7', 'imageroot': '../static/images/' ,'ar':ar, 'server':server,
+                    'itemsets': itemsets, 'current_itemset':currentset}
 
 async def init():
     global interval
@@ -163,5 +174,16 @@ def init_data():
         ar[a]['gold'] = 0
         ar[a]['silver'] =0
         ar[a]['copper'] =0
+
+async def get_itemsets():
+    itemset_names = []
+    async with create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.211',
+                            password='sksmsqnwk11') as engine:
+        async with engine.acquire() as conn:
+            async for r in conn.execute(tbl_item_set.select()):
+                itemset_names.append(r[0])
+    return itemset_names
 
 web.run_app(init(),port=7777)

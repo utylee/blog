@@ -34,21 +34,11 @@ async def db_update_from_server(server):
                             host='192.168.0.211',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
-            #await conn.execute(tbl.insert().values(bid=4444))
-
             #battle dev api 로서 api key를 사용해 일단 json 주소를 전송받습니다
+            print('json주소를 받아옵니다')
             url = 'https://kr.api.battle.net/wow/auction/data/{}?locale={}&apikey={}'.format(server, locale, myapi)
 
-            #return
             # .loads 함수인 것을 봅니다. s가 없는 load 함수는 파일포인터를 받더군요
-            print('json주소를 받아옵니다')
-            '''
-            loop = asyncio.get_event_loop()
-            future = loop.run_in_executor(None, requests.get, url)
-            response = await future
-            load =json.loads(response.text)
-            #load = json.loads(requests.get(url).text)
-            '''
             # requests가 아닌 aiohttp.ClientSession get 을 사용한 비동기방식으로 변경합니다
             start_time = time.time()
             async with aiohttp.ClientSession() as sess:
@@ -74,12 +64,6 @@ async def db_update_from_server(server):
                 js = json.loads(await f.read())
             #print(js['auctions'])
 
-            '''
-            with open("auction.json", "r") as f:
-                js = json.load(f)
-                #print(js['auctions'])
-            '''
-
             target_item_name = "하늘 골렘"
             #target_item_name = "얼어붙은 보주"
             #target_item_name = "호화로운 모피"
@@ -99,18 +83,7 @@ async def db_update_from_server(server):
             #target_item_name = "진철주괴"
             #target_item_name = "유령무쇠 주괴"
 
-
-            '''
-            target_item_id = await get_item_id(conn, target_item_name)
-
-            item_id_list = []
-            for ll in item_list:
-                id_ = await get_item_id(conn, ll)
-                item_id_list.append(id_)
-            '''
-
             # 저장된 파일을 읽은 후 한줄씩 탐색합니다
-            golems = []
             sellers = []
             min_seller = ''
             i = 0
@@ -126,42 +99,6 @@ async def db_update_from_server(server):
 
             for l in js['auctions']:
                 num = 0
-                '''
-                # 프로그레션을 표시합니다
-                pct = int(num * 100 / total)
-                print('{}번쨰- [{}%]'.format(num, pct))
-                '''
-                #해당 item넘버를 통해 item name을 받아옵니다
-                # 로컬 테이블을 먼저 검색해보고 없는 아이템이라면 블리자드 dev웹을 통해 가져옵니다
-                item = l['item']
-                name = ''
-
-                '''
-                result = 0
-                async for r in conn.execute(tbl_items.select().where(tbl_items.c.id==int(item))):
-                    #print(r[1])
-                    name = r[1]
-                    result = 1
-                #해당 아이템이 로컬 테이블에 없다면 받아온 후 로컬 테이블에 저정합니다
-                if result == 0:
-                    print('### item no. {} 이 로컬에 없기에 battlenet dev를 통해 이름을 가져옵니다...'.format(int(item)))
-                    name = get_item(item)
-                    print(name)
-                    await conn.execute(tbl_items.insert().values(id=int(item), name=name))
-
-                #item name 을 포함하여 현재 행을 DB에 삽입합니다
-                await conn.execute(tbl_auctions.insert().values(item_name=name,
-                                                    auc=l['auc'],
-                                                    item=l['item'],
-                                                    owner=l['owner'],
-                                                    owner_realm=l['ownerRealm'],
-                                                    bid=l['bid'],
-                                                    buyout=l['buyout'],
-                                                    quantity=l['quantity'],
-                                                    timeleft=l['timeLeft'],
-                                                    datetime='000'))
-                '''
-                # 해당아이템에 대한 딕트-리스트가 존재하지 않을경우
                 cur = int(l['item'])
                 price = 0
                 if l['buyout'] == 0:
@@ -169,6 +106,7 @@ async def db_update_from_server(server):
                 else:
                     price = int(l['buyout'] / int(l['quantity'])) # 묶음 가격을 감안하지 못해서 추가합니다
 
+                # 해당아이템에 대한 딕트-리스트가 존재하지 않을경우
                 if temp_dict.get(cur) is None:
                     temp_name = ''
                     #temp_name = await get_item_name(conn, cur)
@@ -183,80 +121,17 @@ async def db_update_from_server(server):
                         temp_dict[cur]['min'] = price
                         temp_dict[cur]['min_seller'] = l['owner']
 
-                '''
-                # 각 아이템의 리스트를 작성합니다
-                if l['item'] in item_id_list:
-                    #d = json.dumps(l, ensure_ascii = False) #ensure_ascii는 유니코드 출력의 한글 문제를 해결해줍니다
-                    #i += 1
-                    #print('{}\n{}'.format(l['item'], item_id_list.index(l['item'])))
-                    item_name = item_list[item_id_list.index(l['item'])]
-                    if result_dict_set[item_name].get('num') is not None:
-                        #num = int(result_dict_set[item_name]['num']) + 1
-                        result_dict_set[item_name]['num'] = result_dict_set[item_name]['num'] + l['quantity']
-                    else:
-                        result_dict_set[item_name]['num'] = l['quantity'] 
-                        #num = 1
-
-                    #print('{}\n{}\n{}\n\n'.format(l,item_name, result_dict_set))
-                    #sellers.append(l['owner'])
-                    price = l['buyout'] / int(l['quantity']) # 묶음 가격을 감안하지 못해서 추가합니다
-
-                    # 간혹 즉구가없이 경매가만 올리는 유저가 있어 계산에 오류가 생기길래 추가했습니다
-                    #if price == 0:
-                    if l['buyout'] == 0:
-                        price = l['bid'] / int(l['quantity'])
-
-                    #if min == 0:
-                    if result_dict_set[item_name].get('min') is None:
-                        #min = int(price)
-                        #min_seller = l['owner']
-                        result_dict_set[item_name]['min'] = int(price)
-                        result_dict_set[item_name]['min_seller'] = l['owner']
-                    else:
-                        #if int(price) < min:
-                        if int(price) < result_dict_set[item_name]['min']:
-                            #min = int(price) 
-                            #min_seller = l['owner']
-                            result_dict_set[item_name]['min'] = int(price)
-                            result_dict_set[item_name]['min_seller'] = l['owner']
-
-                    if max == 0:
-                        max = int(price)
-                    else:
-                        if int(price) > max:
-                            max = int(price) 
-
-                    sum += price
-                    
-                    #result_dict_set[item_name] = {'min' : min, 'min_seller' : min_seller, 'num' : num}
-                '''
-
                 # 내가 경매에 부친 물건이 있는지 표시합니다
-                '''
-                if l['owner'] in name_list:
-                    #print('헤헤헤')
-                    mine = []
-                    mine.append(get_item_name(l['item']))
-                    mine.append(get_item_name(l['item']))
-                    mine.append(l['owner'])
-                    mine.append(int(l['buyout']/10000))
-                    #print(get_item(l['item']))
-                    my_item.append(mine)
-                    '''
-
-
-            #print(result_dict_set)
             #print(temp_dict)
             ## 각 item 반복작업 종료
-
 
             # arranged_auction db에 삽입 프로세스 by 만들어진 temp_dict를 통해
             #
             #
 
-            #str_now = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
+            now__ = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
 
-            print(f'\n## {server} arranged_auction db에현재 정리된 dict를 삽입하기 시작합니다')
+            print(f'\n## {now__} : {server} db에현재 정리된 데이터를 삽입하기 시작합니다')
             #print(temp_dict.keys())
             start_time = time.time()
 
@@ -264,9 +139,8 @@ async def db_update_from_server(server):
             for id_ in temp_dict.keys():
                 found = 0
                 dict_ = temp_dict[id_]
-                #print(dict_)
+                str_chain = ''
                 
-                #async for r in conn.execute(tbl_arranged_auction.select().where((tbl_arranged_auction.c.server==server))):
                 async for r in conn.execute(tbl_arranged_auction.select().where(and_((tbl_arranged_auction.c.server==server),(tbl_arranged_auction.c.item==id_)))):
                     #print(r)
                     found = 1
@@ -279,7 +153,6 @@ async def db_update_from_server(server):
                     # min_chain 초기스트링만들기
                     # 30분씩 하루 48 데이터, 그것을 30배(한달치) 한 1440개의 데이터를 보관하기로 합니다
                     #1439개의 0을 ?로 구분하고 마지막은 현재 최저가 min을 넣어놓습니다
-                    str_chain = ''
                     for i_ in range(0, 1439):
                         str_chain = str_chain + '0?'
                     str_chain = str_chain + str(dict_['min'])
@@ -305,30 +178,7 @@ async def db_update_from_server(server):
                                                         min_chain=str_chain,
                                                         edited_time=str_now,
                                                         image=''))
-                '''
-                    await conn.execute(tbl_arranged_auction.update().values(server=server,
-                                                        item=id_,
-                                                        num=dict_['num'],
-                                                        min=dict_['min'],
-                                                        min_seller=dict_['min_seller'],
-                                                        min_chain=str_chain,
-                                                        edited_time=str_now,
-                                                        image='']
-                                                        '''
 
-
-            '''
-            print("\n** 총 {}개의 {}이(가) 올라와 있습니다".format(i, target_item_name))
-            print("최소/최대가격은 각각 {} / {} 골드입니다".format(int(min/10000), int(max/10000)))
-            print("평균가격은 {}골드입니다".format(int((sum/i)/10000)))
-            print("{}".format(set(sellers)))
-            '''
-
-            if len(my_item) > 0:
-                print('------------------------------------------------')
-                print('** 내아이템들:')
-                for l in my_item:
-                    print(l)
         #return await deco_dictset(result_dict_set)
         end_time = time.time()
         elapsed_time = math.floor(end_time - start_time)
@@ -345,8 +195,6 @@ async def db_update_from_server(server):
 # battle dev 로부터 아이템을 가져옵니다
 async def get_item(id):
     # requests를 비동기형 aiohttp 의 clientssion get 으로 대치합니다
-    #r = requests.get('https://kr.api.battle.net/wow/item/{}?locale={}&apikey={}'.format(id, locale, myapi))
-    #js = json.loads(r.text)
     async with aiohttp.ClientSession() as sess:
         async with sess.get('https://kr.api.battle.net/wow/item/{}?locale={}&apikey={}'.format(id, locale, myapi)) as resp:
             js = json.loads(await resp.text())
@@ -367,16 +215,6 @@ async def get_item_id(conn, name):
     async for r in conn.execute(tbl_items.select().where(tbl_items.c.name==name)):
         id = r[0]
         result = 1
-
-    '''
-    # item이라는 변수가 없습니다
-    #해당 아이템이 로컬 테이블에 없다면 받아온 후 로컬 테이블에 저정합니다
-    if result == 0:
-        print('### item no. {} 이 로컬에 없기에 battlenet dev를 통해 이름을 가져옵니다...'.format(int(item)))
-        name = get_item(item) #item
-        print(name)
-        await conn.execute(tbl_items.insert().values(id=int(item), name=name))
-    '''
 
     return id 
 
