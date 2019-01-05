@@ -70,14 +70,6 @@ async def handle(request):
     #return web.Response(text='fuck')
     global ar
     global server
-    '''
-    ar = [{'name':'사술매듭 가방', 'price': [30,20,40], 'image':'inv_tailoring_hexweavebag.jpg'},
-        {'name':'하늘 골렘', 'price': [150000,20,40], 'image':'ability_mount_shreddermount.jpg'},
-        {'name':'심해 가방', 'price': [150000,20,40], 'image':'inv_tailoring_80_deepseabag.jpg'},
-        {'name':'유령무쇠 주괴', 'price': [150000,20,40], 'image':'inv_ingot_ghostiron.jpg'},
-        {'name':'호화로운 모피', 'price': [150000,20,40], 'image':'inv_misc_nativebeastfur.jpg'},
-        {'name':'살아있는 강철', 'price': [30,20,40], 'image':'inv_ingot_livingsteel.jpg'}]
-        '''
 
     return {'name': '7', 'imageroot': '../static/images/' ,'ar':ar, 'server':server}
 
