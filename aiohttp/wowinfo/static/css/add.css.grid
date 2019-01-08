@@ -1,96 +1,22 @@
 html, body{
-	/*
-	border : solid yellow 2px;
-	*/
 	width: 100%;
-	text-align: center;
 }
 .my-container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-.my-header {
-	display:flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	margin: 5px;
-	height: 100%;
-	align-content: center;
-	justify-content: center;
-}
-.my-header > div {
-	width: 300px;
-	height: 70px;
-	padding: 8px;
-	flex-wrap: wrap;
-}
-.my-header > div > button {
-	height: 100%;
-	font-size: 1.2rem;
-}
-.my-header > div > div {
-	font-size: 1.2rem;
-}
-.my-main {
-	display:flex;
-	flex-direction: row;
-	flex-wrap : wrap;
-	justify-content: center;
-	margin: 20px;
-}
-.my-main > div {
-	width: 280px;
-	margin: 10px;
-}
-
-@media all and (min-width: 900px) {
-	.my-main {
-		display:flex;
-		width: 900px;
-		flex-direction: row;
-	}
-	.my-main > div {
-	}
-}
-*/
-
-.my-footer {
-	display:flex;
-	flex-direction: row;
-	padding: 10px;
-}
-
-
-/*
-.my-container {
-	display: flex;
+	display: grid;
 	height:100%;
-	
 	grid-row-gap: 25px;
 	grid-template-rows: 15px 90px auto 60px;
 	justify-content: center;
 	align-content: center;
 }
-.my-header {
-	display: flex;
+.my-header-container {
+	display: grid;
 	grid-gap: 20px;
 	grid-template-columns: minmax(0px, 400px) auto minmax(0px,400px);
 	justify-items: space-evenly;
 	align-content: center;
 	margin: 5px 5px;
 }
-
-.my-header > .space {
-
-	flex: 1 1 200px;
-}
-.my-header > .menu {
-	flex: 1 1 400px;
-
-}
-
 .my-header-menus {
 	display: grid;
 	grid-gap: 20px;
@@ -115,8 +41,6 @@ html, body{
 	grid-template-columns: 1fr 1fr 1fr;
 	align-content: center;
 }
-*/
-
 .badge-radio {
     display: inline-block;
     padding: 0.25em 0.4em;
@@ -185,13 +109,13 @@ html, body{
 }
 
 .scrollable-menu {
-    max-height: 180px;
+    max-height: 120px;
     overflow-x: hidden;
     overflow-y: auto;
 }
 .scrollable-menu-auto {
 	height:auto;
-    max-height: 180px;
+    max-height: 120px;
     overflow-x: hidden;
     overflow-y: auto;
 }

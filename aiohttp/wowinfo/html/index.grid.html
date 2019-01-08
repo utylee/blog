@@ -1,8 +1,8 @@
 <%inherit file="base.html"/>
 
 <%block name="script">
-	<link rel="stylesheet" href="../static/css/add.css">
-	<script charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../static/css/add.css">
+	<script type="text/javascript" charset="utf-8">
 		// 차트에서 포인트 갯수를 정의합니다
 		window.chart_column_num = 24;
 		window.cur_itemset = '${current_itemset}';
@@ -167,42 +167,67 @@
 </%block>
 
 <%block name="content">
+## vertical 100% 가 안되는 문제의 유일한 해결법이었습니다. 고생했습니다
+##<div style="height: 100vh">
+##<div class="container h-100">
 <div class="my-container" >
+	## 최상단 여백---------------------------------------------------------------
+	##<div class="row" style="height:2%"></div>
+	<div></div>
 
 	## ---------------------------------------------------------------
 	## 상단 row
+	##<div class="row" style="width:50%;height:8%;margin:0 auto;">
+	##<div class="my-header-container">
 	<div class="my-header">
+		<div class="space"></div>
+		<div class="menu">
 		## 아즈샤라 서버
-		<div class="dropdown" >
-			<button  class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle" type="button" data-toggle="dropdown" >
-				<span class="icon-checkcircle" >아즈샤라</span>
-			</button>
-		</div>
+		##<div class="btn-group col my-auto">
+		##<div >
+			<div class="dropdown" >
+				<button  class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle" type="button" data-toggle="dropdown" >
+					<span class="icon-checkcircle" >아즈샤라</span>
+				</button>
+			</div>
+		##</div>
 		## 아이템 세트 셀렉트 
-		<div class="dropdown" >
-			<button id="button_itemset" class="btn btn-secondary btn-block text-muted dropdown-toggle" type="button" data-toggle="dropdown">
-				${current_itemset}
-			</button>
-			<div id="div_itemlist" class="dropdown-menu scrollable-menu" style="width:100%">
-				% for i in itemsets:
-				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center" href="#" onclick="change_itemset('${i}');">${i}</a>
-				% endfor
+		##<div class="col my-auto">
+		<div class="menu">
+			<div class="dropdown" >
+				<button id="button_itemset" class="btn btn-secondary btn-block text-muted dropdown-toggle" type="button" data-toggle="dropdown">
+					${current_itemset}
+				</button>
+				<div id="div_itemlist" class="dropdown-menu scrollable-menu-auto" style="width:100%">
+					% for i in itemsets:
+					<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center" href="#" onclick="change_itemset('${i}');">${i}</a>
+					% endfor
+				</div>
 			</div>
 		</div>
+		##</div>
+		<div class="space"></div>
 	</div>
+		</div>
 
 	## ---------------------------------------------------------------
 	## ---------------------------------------------------------------
 	## 메인 row
-	<div class="my-main">
+	##<div class="row" style="width:70%;height:80%; margin:0 auto;">
+	<div class="my-content-container">
+		<div></div>
+		<div class="my-card-container" >
 			% for a in ar.keys():
-			<div class="card" >
+			##<div class="col my-auto" >
+			<div class="card" style="max-width:14rem">
+			##<div class="card" >
 				<div class="card-img-top bg-secondary"  >
 					<center>
 						<%doc>
 						border를 img태그를 이용하고 아이템이미지를 div의 백그라운드로 거꾸로 사용해서
 						border가 잘리는문제를 해결하였습니다
 						</%doc>
+						##<div id="image${loop.index}" class="iconlarge" style="background-image: url('${'../static/images/' + ar[a]['image']}')">
 						<div id="image${loop.index}" class="iconlarge" style="background-image: url('${imageroot + ar[a]['image']}')">
 							<img src="../static/css/images/border.png"/>
 						</div>
@@ -245,19 +270,31 @@
 					</div>
 					</ul>
 				</div>
+				##<div class="card-footer text-muted"><h6>3 days ago</h6></div>
 			</div>
-			% endfor
+		% endfor
+			</div>
+		<div></div>
 	</div>
+
+
 
 	## ---------------------------------------------------------------
 	## bottom row
-	<div class="my-footer">
+	##<div class="row" style="width:100%;height:10%;margin:0 auto;" >
+	<div class="my-footer-container">
+		##<div class="col" style="width:2%"></div>
+		##<div class="col my-auto" align="center">
+		<div></div>
 		<div >
 			<span id="designed_by" class="text-secondary "></span>
 			<span id="gathered_from" class="text-secondary "></span>
 			<span id="dumped_at" class="text-secondary "></span>
 			<span id="update_time" class="text-primary "></span>
 		</div>
+		<div></div>
+		##<div class="col" style="width:2%"></div>
 	</div>
+</div>
 </div>
 </%block>
