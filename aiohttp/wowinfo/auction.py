@@ -280,8 +280,8 @@ async def get_item_set(conn, setname):
     #async for r in conn.execute(tbl_item_set.select(tbl_item_set.c.itemname_list).where(tbl_item_set.c.set_name==setname)) :
     async for r in conn.execute(tbl_item_set.select().where(tbl_item_set.c.set_name==setname)) :
         itemlist = r[1].split(',')
-        print(itemlist)
 
+    print(itemlist)
     return itemlist
 
 async def get_decoed_item_set(server, setname):
@@ -299,7 +299,7 @@ async def get_decoed_item_set(server, setname):
                 async for image_ in conn.execute(tbl_images.select().where(tbl_images.c.item_name==name_)):
                     image_path = image_[1]
                 async for tuple_ in conn.execute(tbl_arranged_auction.select().where(and_((tbl_arranged_auction.c.item==id_),(tbl_arranged_auction.c.server==server)))):
-                    print('name_:{}'.format(name_))
+                    #print('name_:{}'.format(name_))
                     dict_[name_] = {}
                     dict_[name_]['num'] = tuple_[2]
                     dict_[name_]['min'] = tuple_[3]

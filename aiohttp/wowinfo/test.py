@@ -5,6 +5,7 @@ import sqlalchemy as sa
 from aiopg.sa import create_engine
 from auction import get_decoed_item_set, db_update_from_server
 import datetime
+import time
 from db_tableinfo import *
 '''
 metadata = sa.MetaData()
@@ -16,7 +17,7 @@ locale = 'ko_KR'
 # 서버 선택
 server = '아즈샤라'
 #currentset = '격아약초세트1'
-currentset = 'defaultset'
+currentset = '기본구성'
 
 # 관심 아이템들 목록
 pin_items = ['하늘 골렘', '아쿤다의 이빨', '닻풀', # 심해 가방', '사술매듭 가방'
@@ -46,10 +47,26 @@ async def ws_handle(request):
 async def update(request):
     global ar
     global server
-    global currentset
-    print("/update handler came in")
+    #global currentset
+    itemset = ''
+    print('/update handler came in')
+
+    itemset = request.match_info['itemset']
+    print(f':itemset = {itemset}')
+
+    '''
+    if currentset != itemset:
+        currentset = itemset
+        ar = await get_decoed_item_set(server, currentset)
+    '''
+    # 굳이 글로벌로 균일하게 갖고 있는 것은 말이 안됩니다. 사용자가 원하는 상황마다 그대로 전달해줘야합니다
+    start_time = time.time()
+    array = await get_decoed_item_set(server, itemset)
+    finished_time = time.time()
+    proc_time = round(finished_time - start_time, 3)
+    print(f'fetch elapsed time: {proc_time} 초')
+
     #print(ar)
-    
     #ar = await get_decoed_item_set(server, currentset)
     data = {}
     itemsets = []
@@ -64,9 +81,11 @@ async def update(request):
             #async for r in conn.execute(tbl_item_set.select()):
                 #itemsets.append(r[0])
 
-    data['ar'] = ar
+    #data['ar'] = ar
     #data['itemsets'] = itemsets
+    data['ar'] = array
     data['itemsets'] = await get_itemsets()
+    #data['currentset'] = currentset 
 
     return web.json_response(data)
 
@@ -78,10 +97,14 @@ async def handle(request):
     global currentset
     
     itemsets = await get_itemsets()
-    itemsets.remove(currentset)
+    #itemsets.remove(currentset)
+    array = await get_decoed_item_set(server, currentset)
 
-
+    '''
     return {'name': '7', 'imageroot': '../static/images/' ,'ar':ar, 'server':server,
+                    'itemsets': itemsets, 'current_itemset':currentset}
+    '''
+    return {'name': '7', 'imageroot': '../static/images/' ,'ar':array, 'server':server,
                     'itemsets': itemsets, 'current_itemset':currentset}
 
 async def init():
@@ -101,7 +124,7 @@ async def init():
 
     app.router.add_static('/static', 'static')
     app.router.add_get('/', handle)
-    app.router.add_get('/update', update)
+    app.router.add_get('/update/{itemset}', update)
 
     # 웹소켓 핸들러도 get을 통해 정의해줘야합니다
     ws = app.router.add_get('/ws', ws_handle)
@@ -144,9 +167,7 @@ async def fetch_auction():
     global currentset
     global server
 
-    #result_dict = await proc(item_list)
-    #ar = await proc(server,item_list)
-    ar = await get_decoed_item_set(server, currentset)
+    #ar = await get_decoed_item_set(server, currentset)
 
     print('update in fetch')
     try:

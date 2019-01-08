@@ -1,5 +1,4 @@
 import sqlalchemy as sa
-from aiopg.sa import create_engine
 
 metadata = sa.MetaData()
 
