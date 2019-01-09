@@ -24,7 +24,6 @@ html, body{
 	width: 300px;
 	height: 70px;
 	padding: 8px;
-	flex-wrap: wrap;
 }
 .my-header > div > button {
 	height: 100%;
@@ -47,14 +46,9 @@ html, body{
 
 @media all and (min-width: 900px) {
 	.my-main {
-		display:flex;
 		width: 900px;
-		flex-direction: row;
-	}
-	.my-main > div {
 	}
 }
-*/
 
 .my-footer {
 	display:flex;
@@ -62,60 +56,6 @@ html, body{
 	padding: 10px;
 }
 
-
-/*
-.my-container {
-	display: flex;
-	height:100%;
-	
-	grid-row-gap: 25px;
-	grid-template-rows: 15px 90px auto 60px;
-	justify-content: center;
-	align-content: center;
-}
-.my-header {
-	display: flex;
-	grid-gap: 20px;
-	grid-template-columns: minmax(0px, 400px) auto minmax(0px,400px);
-	justify-items: space-evenly;
-	align-content: center;
-	margin: 5px 5px;
-}
-
-.my-header > .space {
-
-	flex: 1 1 200px;
-}
-.my-header > .menu {
-	flex: 1 1 400px;
-
-}
-
-.my-header-menus {
-	display: grid;
-	grid-gap: 20px;
-	grid-template-columns: repeat(auto-fit, minmax(14rem, 18rem));
-	margin: 10px 10px;
-}
-.my-content-container {
-	display: grid;
-	grid-gap: 5px;
-	grid-template-columns: minmax(0px, 200px) auto minmax(0px,200px);
-	justify-items: space-evenly;
-}
-.my-card-container {
-	display: grid;
-	grid-gap: 20px;
-	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-	justify-items: center;
-}
-.my-footer-container {
-	display: grid;
-	grid-gap: 20px;
-	grid-template-columns: 1fr 1fr 1fr;
-	align-content: center;
-}
-*/
 
 .badge-radio {
     display: inline-block;
