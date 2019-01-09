@@ -1,0 +1,1576 @@
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190065,name=PBrowser::Msg_UpdateDimensions) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11487, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11487, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11487, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300046,name=PContent::Msg_LoadProcessScript) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11487, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11487, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11726, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11726, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11726, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300046,name=PContent::Msg_LoadProcessScript) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11726, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11726, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190065,name=PBrowser::Msg_UpdateDimensions) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30001A,name=PContent::Msg_RegisterChromeItem) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30001A,name=PContent::Msg_RegisterChromeItem) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11726, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300113,name=PContent::Msg_AsyncMessage) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30001A,name=PContent::Msg_RegisterChromeItem) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30001A,name=PContent::Msg_RegisterChromeItem) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11726, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300113,name=PContent::Msg_AsyncMessage) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30001A,name=PContent::Msg_RegisterChromeItem) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30001A,name=PContent::Msg_RegisterChromeItem) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11726, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300113,name=PContent::Msg_AsyncMessage) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190065,name=PBrowser::Msg_UpdateDimensions) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11976, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11976, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11976, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300046,name=PContent::Msg_LoadProcessScript) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11976, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11976, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190065,name=PBrowser::Msg_UpdateDimensions) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30001A,name=PContent::Msg_RegisterChromeItem) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30001A,name=PContent::Msg_RegisterChromeItem) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11976, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300113,name=PContent::Msg_AsyncMessage) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30001A,name=PContent::Msg_RegisterChromeItem) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30001A,name=PContent::Msg_RegisterChromeItem) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11976, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300113,name=PContent::Msg_AsyncMessage) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30001A,name=PContent::Msg_RegisterChromeItem) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30001A,name=PContent::Msg_RegisterChromeItem) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11976, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300113,name=PContent::Msg_AsyncMessage) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300046,name=PContent::Msg_LoadProcessScript) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190001,name=PBrowser::Msg_AsyncMessage) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11976, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 11976, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Child][MessageChannel] Error: (msgtype=0xFFF7,name=<unknown IPC msg name>) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 12397, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 12397, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 12397, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190001,name=PBrowser::Msg_AsyncMessage) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300046,name=PContent::Msg_LoadProcessScript) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190001,name=PBrowser::Msg_AsyncMessage) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 12397, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 12397, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546022523823	geckodriver	INFO	geckodriver 0.19.0
+1546022523830	geckodriver	INFO	Listening on 127.0.0.1:7615
+1546022524071	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.fetP5I4K13P3"
+*** You are running in headless mode.
+1546022524900	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546022524901	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+1546022525147	Marionette	DEBUG	Received observer notification profile-after-change
+1546022525468	Marionette	DEBUG	Received observer notification command-line-startup
+1546022525468	Marionette	DEBUG	Received observer notification nsPref:changed
+1546022525468	Marionette	DEBUG	Init aborted (running=false, enabled=true, finalUIStartup=false)
+1546022526521	Marionette	DEBUG	Received observer notification toplevel-window-ready
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 12706, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546022528369	Marionette	DEBUG	Received observer notification sessionstore-windows-restored
+1546022528375	Marionette	DEBUG	Waiting for delayed startup...
+1546022528798	Marionette	DEBUG	Setting recommended pref app.update.disabledForTesting to true
+1546022528799	Marionette	DEBUG	Setting recommended pref security.turn_off_all_security_so_that_viruses_can_take_over_this_computer to true
+1546022528801	Marionette	DEBUG	Setting recommended pref browser.contentblocking.introCount to 99
+1546022528805	Marionette	DEBUG	Setting recommended pref browser.urlbar.suggest.searches to false
+1546022528809	Marionette	DEBUG	Setting recommended pref datareporting.policy.dataSubmissionPolicyAccepted to false
+1546022528809	Marionette	DEBUG	Setting recommended pref dom.disable_beforeunload to true
+1546022528810	Marionette	DEBUG	Setting recommended pref toolkit.cosmeticAnimations.enabled to false
+1546022528901	Marionette	INFO	Listening on port 7620
+1546022528913	Marionette	DEBUG	Remote service is active
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+1546022529005	Marionette	DEBUG	Accepted connection 0 from 127.0.0.1:7637
+1546022529022	Marionette	TRACE	0 -> [0,1,"newSession",{"acceptInsecureCerts":true,"browserName":"firefox","capabilities":{"desiredCapabilities":{"acceptInsecureCerts":true,"browserName":"firefox"}}}]
+1546022529022	Marionette	TRACE	0 <- [1,1,{"error":"unknown command","message":"newSession","stacktrace":"WebDriverError@chrome://marionette/content/error.js:178: ... et@chrome://marionette/content/server.js:236:8\n_onJSONObjectReady/<@chrome://marionette/content/transport.js:490:9\n"},null]
+1546022537651	geckodriver	INFO	geckodriver 0.19.0
+1546022537658	geckodriver	INFO	Listening on 127.0.0.1:7652
+1546022537855	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.pm6iTH12mTL1"
+*** You are running in headless mode.
+1546022538648	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546022538649	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+1546022538889	Marionette	DEBUG	Received observer notification profile-after-change
+1546022539211	Marionette	DEBUG	Received observer notification command-line-startup
+1546022539211	Marionette	DEBUG	Received observer notification nsPref:changed
+1546022539211	Marionette	DEBUG	Init aborted (running=false, enabled=true, finalUIStartup=false)
+1546022540331	Marionette	DEBUG	Received observer notification toplevel-window-ready
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 12907, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190065,name=PBrowser::Msg_UpdateDimensions) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546022542139	Marionette	DEBUG	Received observer notification sessionstore-windows-restored
+1546022542139	Marionette	DEBUG	Waiting for delayed startup...
+1546022542431	Marionette	DEBUG	Setting recommended pref app.update.disabledForTesting to true
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+1546022542433	Marionette	DEBUG	Setting recommended pref security.turn_off_all_security_so_that_viruses_can_take_over_this_computer to true
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+1546022542434	Marionette	DEBUG	Setting recommended pref browser.contentblocking.introCount to 99
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+1546022542435	Marionette	DEBUG	Setting recommended pref browser.urlbar.suggest.searches to false
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+1546022542436	Marionette	DEBUG	Setting recommended pref datareporting.policy.dataSubmissionPolicyAccepted to false
+1546022542436	Marionette	DEBUG	Setting recommended pref dom.disable_beforeunload to true
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+1546022542436	Marionette	DEBUG	Setting recommended pref toolkit.cosmeticAnimations.enabled to false
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+1546022542543	Marionette	INFO	Listening on port 7657
+1546022542543	Marionette	DEBUG	Remote service is active
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+1546022542784	Marionette	DEBUG	Accepted connection 0 from 127.0.0.1:7671
+1546022542787	Marionette	TRACE	0 -> [0,1,"newSession",{"acceptInsecureCerts":true,"browserName":"firefox","capabilities":{"desiredCapabilities":{"acceptInsecureCerts":true,"browserName":"firefox"}}}]
+1546022542788	Marionette	TRACE	0 <- [1,1,{"error":"unknown command","message":"newSession","stacktrace":"WebDriverError@chrome://marionette/content/error.js:178: ... et@chrome://marionette/content/server.js:236:8\n_onJSONObjectReady/<@chrome://marionette/content/transport.js:490:9\n"},null]
+1546022567392	geckodriver	INFO	geckodriver 0.19.0
+1546022567399	geckodriver	INFO	Listening on 127.0.0.1:7711
+1546022567586	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.2KVs8xceokYe"
+*** You are running in headless mode.
+1546022568350	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546022568351	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+1546022568596	Marionette	DEBUG	Received observer notification profile-after-change
+1546022568934	Marionette	DEBUG	Received observer notification command-line-startup
+1546022568934	Marionette	DEBUG	Received observer notification nsPref:changed
+1546022568934	Marionette	DEBUG	Init aborted (running=false, enabled=true, finalUIStartup=false)
+1546022570313	Marionette	DEBUG	Received observer notification toplevel-window-ready
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 13118, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546022572104	Marionette	DEBUG	Received observer notification sessionstore-windows-restored
+1546022572104	Marionette	DEBUG	Waiting for delayed startup...
+1546022572306	Marionette	DEBUG	Setting recommended pref app.update.disabledForTesting to true
+1546022572307	Marionette	DEBUG	Setting recommended pref security.turn_off_all_security_so_that_viruses_can_take_over_this_computer to true
+1546022572308	Marionette	DEBUG	Setting recommended pref browser.contentblocking.introCount to 99
+1546022572309	Marionette	DEBUG	Setting recommended pref browser.urlbar.suggest.searches to false
+1546022572309	Marionette	DEBUG	Setting recommended pref datareporting.policy.dataSubmissionPolicyAccepted to false
+1546022572309	Marionette	DEBUG	Setting recommended pref dom.disable_beforeunload to true
+1546022572310	Marionette	DEBUG	Setting recommended pref toolkit.cosmeticAnimations.enabled to false
+1546022572402	Marionette	INFO	Listening on port 7716
+1546022572414	Marionette	DEBUG	Remote service is active
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+1546022572579	Marionette	DEBUG	Accepted connection 0 from 127.0.0.1:7731
+1546022572614	Marionette	TRACE	0 -> [0,1,"newSession",{"acceptInsecureCerts":true,"browserName":"firefox","capabilities":{"desiredCapabilities":{"acceptInsecureCerts":true,"browserName":"firefox"}}}]
+1546022572615	Marionette	TRACE	0 <- [1,1,{"error":"unknown command","message":"newSession","stacktrace":"WebDriverError@chrome://marionette/content/error.js:178: ... et@chrome://marionette/content/server.js:236:8\n_onJSONObjectReady/<@chrome://marionette/content/transport.js:490:9\n"},null]
+1546022617717	geckodriver	INFO	geckodriver 0.19.0
+1546022617723	geckodriver	INFO	Listening on 127.0.0.1:7812
+1546022617912	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-profile" "/tmp/rust_mozprofile.fAG4CZz1kpY5"
+*** You are running in headless mode.
+1546022618679	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546022618679	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+1546022618904	Marionette	DEBUG	Received observer notification profile-after-change
+1546022619226	Marionette	DEBUG	Received observer notification command-line-startup
+1546022619226	Marionette	DEBUG	Received observer notification nsPref:changed
+1546022619226	Marionette	DEBUG	Init aborted (running=false, enabled=true, finalUIStartup=false)
+1546022620389	Marionette	DEBUG	Received observer notification toplevel-window-ready
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 13331, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546022622136	Marionette	DEBUG	Received observer notification sessionstore-windows-restored
+1546022622137	Marionette	DEBUG	Waiting for delayed startup...
+1546022622343	Marionette	DEBUG	Setting recommended pref app.update.disabledForTesting to true
+1546022622344	Marionette	DEBUG	Setting recommended pref security.turn_off_all_security_so_that_viruses_can_take_over_this_computer to true
+1546022622345	Marionette	DEBUG	Setting recommended pref browser.contentblocking.introCount to 99
+1546022622348	Marionette	DEBUG	Setting recommended pref browser.urlbar.suggest.searches to false
+1546022622349	Marionette	DEBUG	Setting recommended pref datareporting.policy.dataSubmissionPolicyAccepted to false
+1546022622349	Marionette	DEBUG	Setting recommended pref dom.disable_beforeunload to true
+1546022622349	Marionette	DEBUG	Setting recommended pref toolkit.cosmeticAnimations.enabled to false
+1546022622437	Marionette	INFO	Listening on port 7817
+1546022622477	Marionette	DEBUG	Remote service is active
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+console.error: 
+  [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: resource://activity-stream/lib/DownloadsManager.jsm :: init :: line 44"  data: no]: init@resource://activity-stream/lib/DownloadsManager.jsm:44:5
+postInit@resource://activity-stream/lib/HighlightsFeed.jsm:60:5
+handler@resource://gre/modules/EventEmitter.jsm:94:11
+emit@resource://gre/modules/EventEmitter.jsm:149:11
+init@resource://activity-stream/lib/SectionsManager.jsm:119:5
+observe@resource://gre/modules/AsyncShutdown.jsm:541:9
+
+WARNING: At least one completion condition is taking too long to complete. Conditions: [{"name":"Extension shutdown: webcompat@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: screenshots@mozilla.org","state":{"state":"Startup: Run manifest: asyncEmitManifestEntry(\"background\")"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: formautofill@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]}] Barrier: profile-change-teardown
+JavaScript error: jar:file:///usr/lib/firefox/browser/omni.ja!/components/nsBrowserGlue.js, line 1393: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]
+1546022640998	addons.productaddons	WARN	Failed downloading XML, status: 0, reason: error
+1546022641001	addons.productaddons	WARN	Failed downloading via XHR, status: 0, reason: error
+FATAL ERROR: AsyncShutdown timeout in profile-change-teardown Conditions: [{"name":"Extension shutdown: webcompat@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: screenshots@mozilla.org","state":{"state":"Startup: Run manifest: asyncEmitManifestEntry(\"background\")"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: formautofill@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]}] At least one completion condition failed to complete within a reasonable amount of time. Causing a crash to ensure that we do not leave the user with an unresponsive process draining resources.
+[Parent 13331, Main Thread] ###!!! ABORT: file resource://gre/modules/addons/XPIProvider.jsm, line 2211
+[Parent 13331, Main Thread] ###!!! ABORT: file resource://gre/modules/addons/XPIProvider.jsm, line 2211
+ExceptionHandler::GenerateDump cloned child ExceptionHandler::WaitForContinueSignal waiting for continue signal...
+13536
+ExceptionHandler::SendContinueSignalToChild sent continue signal to child
+1546022691312	geckodriver	INFO	geckodriver 0.19.0
+1546022691318	geckodriver	INFO	Listening on 127.0.0.1:8002
+1546022691505	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "--headless" "-profile" "/tmp/rust_mozprofile.BiPeX0WyGfLZ"
+*** You are running in headless mode.
+1546022692263	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546022692263	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+1546022692493	Marionette	DEBUG	Received observer notification profile-after-change
+1546022692813	Marionette	DEBUG	Received observer notification command-line-startup
+1546022692813	Marionette	DEBUG	Received observer notification nsPref:changed
+1546022692814	Marionette	DEBUG	Init aborted (running=false, enabled=true, finalUIStartup=false)
+1546022694014	Marionette	DEBUG	Received observer notification toplevel-window-ready
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 13567, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190065,name=PBrowser::Msg_UpdateDimensions) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546022695782	Marionette	DEBUG	Received observer notification sessionstore-windows-restored
+1546022695783	Marionette	DEBUG	Waiting for delayed startup...
+1546022695988	Marionette	DEBUG	Setting recommended pref app.update.disabledForTesting to true
+1546022695988	Marionette	DEBUG	Setting recommended pref security.turn_off_all_security_so_that_viruses_can_take_over_this_computer to true
+1546022695989	Marionette	DEBUG	Setting recommended pref browser.contentblocking.introCount to 99
+1546022695990	Marionette	DEBUG	Setting recommended pref browser.urlbar.suggest.searches to false
+1546022695991	Marionette	DEBUG	Setting recommended pref datareporting.policy.dataSubmissionPolicyAccepted to false
+1546022695991	Marionette	DEBUG	Setting recommended pref dom.disable_beforeunload to true
+1546022695991	Marionette	DEBUG	Setting recommended pref toolkit.cosmeticAnimations.enabled to false
+1546022696079	Marionette	INFO	Listening on port 8007
+1546022696079	Marionette	DEBUG	Remote service is active
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+console.error: 
+  [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: resource://activity-stream/lib/DownloadsManager.jsm :: init :: line 44"  data: no]: init@resource://activity-stream/lib/DownloadsManager.jsm:44:5
+postInit@resource://activity-stream/lib/HighlightsFeed.jsm:60:5
+handler@resource://gre/modules/EventEmitter.jsm:94:11
+emit@resource://gre/modules/EventEmitter.jsm:149:11
+init@resource://activity-stream/lib/SectionsManager.jsm:119:5
+observe@resource://gre/modules/AsyncShutdown.jsm:541:9
+
+WARNING: At least one completion condition is taking too long to complete. Conditions: [{"name":"Extension shutdown: webcompat@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: screenshots@mozilla.org","state":{"state":"Startup: Run manifest: asyncEmitManifestEntry(\"background\")"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: formautofill@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]}] Barrier: profile-change-teardown
+JavaScript error: jar:file:///usr/lib/firefox/browser/omni.ja!/components/nsBrowserGlue.js, line 1393: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]
+1546022714646	addons.productaddons	WARN	Failed downloading XML, status: 0, reason: error
+1546022714651	addons.productaddons	WARN	Failed downloading via XHR, status: 0, reason: error
+FATAL ERROR: AsyncShutdown timeout in profile-change-teardown Conditions: [{"name":"Extension shutdown: webcompat@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: screenshots@mozilla.org","state":{"state":"Startup: Run manifest: asyncEmitManifestEntry(\"background\")"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: formautofill@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]}] At least one completion condition failed to complete within a reasonable amount of time. Causing a crash to ensure that we do not leave the user with an unresponsive process draining resources.
+[Parent 13567, Main Thread] ###!!! ABORT: file resource://gre/modules/addons/XPIProvider.jsm, line 2211
+[Parent 13567, Main Thread] ###!!! ABORT: file resource://gre/modules/addons/XPIProvider.jsm, line 2211
+ExceptionHandler::GenerateDump cloned child ExceptionHandler::WaitForContinueSignal waiting for continue signal...
+13771
+ExceptionHandler::SendContinueSignalToChild sent continue signal to child
+1546023458842	geckodriver	INFO	geckodriver 0.19.0
+1546023458849	geckodriver	INFO	Listening on 127.0.0.1:9303
+1546023459050	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-profile" "/tmp/rust_mozprofile.TJDEwBuNXg5o"
+*** You are running in headless mode.
+1546023459819	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546023459819	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+1546023460096	Marionette	DEBUG	Received observer notification profile-after-change
+1546023460769	Marionette	DEBUG	Received observer notification command-line-startup
+1546023460769	Marionette	DEBUG	Received observer notification nsPref:changed
+1546023460769	Marionette	DEBUG	Init aborted (running=false, enabled=true, finalUIStartup=false)
+1546023462627	Marionette	DEBUG	Received observer notification toplevel-window-ready
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 13927, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546023464682	Marionette	DEBUG	Received observer notification sessionstore-windows-restored
+1546023464683	Marionette	DEBUG	Waiting for delayed startup...
+1546023464954	Marionette	DEBUG	Setting recommended pref app.update.disabledForTesting to true
+1546023464955	Marionette	DEBUG	Setting recommended pref security.turn_off_all_security_so_that_viruses_can_take_over_this_computer to true
+1546023464956	Marionette	DEBUG	Setting recommended pref browser.contentblocking.introCount to 99
+1546023464957	Marionette	DEBUG	Setting recommended pref browser.urlbar.suggest.searches to false
+1546023464958	Marionette	DEBUG	Setting recommended pref datareporting.policy.dataSubmissionPolicyAccepted to false
+1546023464958	Marionette	DEBUG	Setting recommended pref dom.disable_beforeunload to true
+1546023464958	Marionette	DEBUG	Setting recommended pref toolkit.cosmeticAnimations.enabled to false
+1546023465043	Marionette	INFO	Listening on port 9309
+1546023465043	Marionette	DEBUG	Remote service is active
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+1546023465183	Marionette	DEBUG	Accepted connection 0 from 127.0.0.1:9327
+1546023465292	Marionette	TRACE	0 -> [0,1,"newSession",{"acceptInsecureCerts":true,"browserName":"firefox","capabilities":{"desiredCapabilities":{"acceptInsecureCerts":true,"browserName":"firefox"}}}]
+1546023465293	Marionette	TRACE	0 <- [1,1,{"error":"unknown command","message":"newSession","stacktrace":"WebDriverError@chrome://marionette/content/error.js:178: ... et@chrome://marionette/content/server.js:236:8\n_onJSONObjectReady/<@chrome://marionette/content/transport.js:490:9\n"},null]
+1546023483234	geckodriver	INFO	geckodriver 0.19.0
+1546023483241	geckodriver	INFO	Listening on 127.0.0.1:9363
+1546023483433	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-profile" "/tmp/rust_mozprofile.xFebFeYNxfw2"
+*** You are running in headless mode.
+1546023484203	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546023484203	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+1546023484440	Marionette	DEBUG	Received observer notification profile-after-change
+1546023484772	Marionette	DEBUG	Received observer notification command-line-startup
+1546023484772	Marionette	DEBUG	Received observer notification nsPref:changed
+1546023484772	Marionette	DEBUG	Init aborted (running=false, enabled=true, finalUIStartup=false)
+1546023485780	Marionette	DEBUG	Received observer notification toplevel-window-ready
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 14158, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546023487527	Marionette	DEBUG	Received observer notification sessionstore-windows-restored
+1546023487528	Marionette	DEBUG	Waiting for delayed startup...
+1546023487820	Marionette	DEBUG	Setting recommended pref app.update.disabledForTesting to true
+1546023487820	Marionette	DEBUG	Setting recommended pref security.turn_off_all_security_so_that_viruses_can_take_over_this_computer to true
+1546023487822	Marionette	DEBUG	Setting recommended pref browser.contentblocking.introCount to 99
+1546023487823	Marionette	DEBUG	Setting recommended pref browser.urlbar.suggest.searches to false
+1546023487824	Marionette	DEBUG	Setting recommended pref datareporting.policy.dataSubmissionPolicyAccepted to false
+1546023487824	Marionette	DEBUG	Setting recommended pref dom.disable_beforeunload to true
+1546023487824	Marionette	DEBUG	Setting recommended pref toolkit.cosmeticAnimations.enabled to false
+1546023487908	Marionette	INFO	Listening on port 9368
+1546023487909	Marionette	DEBUG	Remote service is active
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+console.error: 
+  [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: resource://activity-stream/lib/DownloadsManager.jsm :: init :: line 44"  data: no]: init@resource://activity-stream/lib/DownloadsManager.jsm:44:5
+postInit@resource://activity-stream/lib/HighlightsFeed.jsm:60:5
+handler@resource://gre/modules/EventEmitter.jsm:94:11
+emit@resource://gre/modules/EventEmitter.jsm:149:11
+init@resource://activity-stream/lib/SectionsManager.jsm:119:5
+observe@resource://gre/modules/AsyncShutdown.jsm:541:9
+
+WARNING: At least one completion condition is taking too long to complete. Conditions: [{"name":"Extension shutdown: webcompat@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: screenshots@mozilla.org","state":{"state":"Startup: Run manifest: asyncEmitManifestEntry(\"background\")"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: formautofill@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]}] Barrier: profile-change-teardown
+JavaScript error: jar:file:///usr/lib/firefox/browser/omni.ja!/components/nsBrowserGlue.js, line 1393: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]
+1546023506420	addons.productaddons	WARN	Failed downloading XML, status: 0, reason: error
+1546023506426	addons.productaddons	WARN	Failed downloading via XHR, status: 0, reason: error
+1546023570128	geckodriver	INFO	geckodriver 0.19.0
+1546023570134	geckodriver	INFO	Listening on 127.0.0.1:9561
+1546023570323	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-profile" "/tmp/rust_mozprofile.hzjmS3bQsoDn"
+*** You are running in headless mode.
+1546023571068	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546023571068	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+1546023571289	Marionette	DEBUG	Received observer notification profile-after-change
+1546023571627	Marionette	DEBUG	Received observer notification command-line-startup
+1546023571628	Marionette	DEBUG	Received observer notification nsPref:changed
+1546023571628	Marionette	DEBUG	Init aborted (running=false, enabled=true, finalUIStartup=false)
+1546023572702	Marionette	DEBUG	Received observer notification toplevel-window-ready
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 14389, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190065,name=PBrowser::Msg_UpdateDimensions) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546023574436	Marionette	DEBUG	Received observer notification sessionstore-windows-restored
+1546023574436	Marionette	DEBUG	Waiting for delayed startup...
+1546023574642	Marionette	DEBUG	Setting recommended pref app.update.disabledForTesting to true
+1546023574658	Marionette	DEBUG	Setting recommended pref security.turn_off_all_security_so_that_viruses_can_take_over_this_computer to true
+1546023574659	Marionette	DEBUG	Setting recommended pref browser.contentblocking.introCount to 99
+1546023574660	Marionette	DEBUG	Setting recommended pref browser.urlbar.suggest.searches to false
+1546023574660	Marionette	DEBUG	Setting recommended pref datareporting.policy.dataSubmissionPolicyAccepted to false
+1546023574660	Marionette	DEBUG	Setting recommended pref dom.disable_beforeunload to true
+1546023574661	Marionette	DEBUG	Setting recommended pref toolkit.cosmeticAnimations.enabled to false
+1546023574746	Marionette	INFO	Listening on port 9567
+1546023574746	Marionette	DEBUG	Remote service is active
+1546023574756	Marionette	DEBUG	Accepted connection 0 from 127.0.0.1:9581
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+1546023574817	Marionette	TRACE	0 -> [0,1,"newSession",{"acceptInsecureCerts":true,"browserName":"firefox","capabilities":{"desiredCapabilities":{"acceptInsecureCerts":true,"browserName":"firefox"}}}]
+1546023574818	Marionette	TRACE	0 <- [1,1,{"error":"unknown command","message":"newSession","stacktrace":"WebDriverError@chrome://marionette/content/error.js:178: ... et@chrome://marionette/content/server.js:236:8\n_onJSONObjectReady/<@chrome://marionette/content/transport.js:490:9\n"},null]
+1546023726218	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.mUAOpi65LJ2b"
+*** You are running in headless mode.
+1546023726971	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546023726972	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 14666, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546023730636	Marionette	INFO	Listening on port 9843
+1546023730658	Marionette	WARN	TLS certificate errors will be ignored for this session
+
+###!!! [Child][MessageChannel] Error: (msgtype=0xFFF7,name=<unknown IPC msg name>) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+console.error: 
+  [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: resource://activity-stream/lib/DownloadsManager.jsm :: init :: line 44"  data: no]: init@resource://activity-stream/lib/DownloadsManager.jsm:44:5
+postInit@resource://activity-stream/lib/HighlightsFeed.jsm:60:5
+handler@resource://gre/modules/EventEmitter.jsm:94:11
+emit@resource://gre/modules/EventEmitter.jsm:149:11
+init@resource://activity-stream/lib/SectionsManager.jsm:119:5
+observe@resource://gre/modules/AsyncShutdown.jsm:541:9
+
+WARNING: At least one completion condition is taking too long to complete. Conditions: [{"name":"Extension shutdown: webcompat@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: screenshots@mozilla.org","state":{"state":"Startup: Run manifest: asyncEmitManifestEntry(\"background\")"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: formautofill@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]}] Barrier: profile-change-teardown
+JavaScript error: jar:file:///usr/lib/firefox/browser/omni.ja!/components/nsBrowserGlue.js, line 1393: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]
+FATAL ERROR: AsyncShutdown timeout in profile-change-teardown Conditions: [{"name":"Extension shutdown: webcompat@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: screenshots@mozilla.org","state":{"state":"Startup: Run manifest: asyncEmitManifestEntry(\"background\")"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: formautofill@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]}] At least one completion condition failed to complete within a reasonable amount of time. Causing a crash to ensure that we do not leave the user with an unresponsive process draining resources.
+[Parent 14666, Main Thread] ###!!! ABORT: file resource://gre/modules/addons/XPIProvider.jsm, line 2211
+[Parent 14666, Main Thread] ###!!! ABORT: file resource://gre/modules/addons/XPIProvider.jsm, line 2211
+ExceptionHandler::GenerateDump cloned child ExceptionHandler::WaitForContinueSignal waiting for continue signal...
+14990
+ExceptionHandler::SendContinueSignalToChild sent continue signal to child
+1546023923445	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.Aqjv8HgFnv3z"
+*** You are running in headless mode.
+1546023924193	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546023924193	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 15004, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190065,name=PBrowser::Msg_UpdateDimensions) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 15004, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+1546023927943	Marionette	INFO	Listening on port 10197
+console.error: 
+  [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: resource://activity-stream/lib/DownloadsManager.jsm :: init :: line 44"  data: no]: init@resource://activity-stream/lib/DownloadsManager.jsm:44:5
+postInit@resource://activity-stream/lib/HighlightsFeed.jsm:60:5
+handler@resource://gre/modules/EventEmitter.jsm:94:11
+emit@resource://gre/modules/EventEmitter.jsm:149:11
+init@resource://activity-stream/lib/SectionsManager.jsm:119:5
+observe@resource://gre/modules/AsyncShutdown.jsm:541:9
+
+1546023960069	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.7VAALoMM7eq0"
+1546023960979	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546023960979	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 15234, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546023964835	Marionette	INFO	Listening on port 10281
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+1546023965133	Marionette	WARN	TLS certificate errors will be ignored for this session
+console.error: 
+  [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: resource://activity-stream/lib/DownloadsManager.jsm :: init :: line 44"  data: no]: init@resource://activity-stream/lib/DownloadsManager.jsm:44:5
+postInit@resource://activity-stream/lib/HighlightsFeed.jsm:60:5
+handler@resource://gre/modules/EventEmitter.jsm:94:11
+emit@resource://gre/modules/EventEmitter.jsm:149:11
+init@resource://activity-stream/lib/SectionsManager.jsm:119:5
+observe@resource://gre/modules/AsyncShutdown.jsm:541:9
+
+WARNING: At least one completion condition is taking too long to complete. Conditions: [{"name":"Extension shutdown: webcompat@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: screenshots@mozilla.org","state":{"state":"Startup: Run manifest: asyncEmitManifestEntry(\"background\")"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: formautofill@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]}] Barrier: profile-change-teardown
+JavaScript error: jar:file:///usr/lib/firefox/browser/omni.ja!/components/nsBrowserGlue.js, line 1393: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]
+
+(/usr/lib/firefox/firefox:15364): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (자원이 일시적으로 사용 불가능함) on X server localhost:0.0.
+
+
+(firefox:15234): Gdk-WARNING **: firefox: Fatal IO error 11 (자원이 일시적으로 사용 불가능함) on X server localhost:0.0.
+
+1546057230298	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.DE0OImau04qd"
+libGL error: No matching fbConfigs or visuals found
+libGL error: failed to load driver: swrast
+1546057232787	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546057232794	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 2551, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190065,name=PBrowser::Msg_UpdateDimensions) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546057238678	Marionette	INFO	Listening on port 4326
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+console.error: 
+  [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: resource://activity-stream/lib/DownloadsManager.jsm :: init :: line 44"  data: no]: init@resource://activity-stream/lib/DownloadsManager.jsm:44:5
+postInit@resource://activity-stream/lib/HighlightsFeed.jsm:60:5
+handler@resource://gre/modules/EventEmitter.jsm:94:11
+emit@resource://gre/modules/EventEmitter.jsm:149:11
+init@resource://activity-stream/lib/SectionsManager.jsm:119:5
+observe@resource://gre/modules/AsyncShutdown.jsm:541:9
+
+WARNING: At least one completion condition is taking too long to complete. Conditions: [{"name":"Extension shutdown: webcompat@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: screenshots@mozilla.org","state":{"state":"Startup: Run manifest: asyncEmitManifestEntry(\"background\")"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: formautofill@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]}] Barrier: profile-change-teardown
+JavaScript error: jar:file:///usr/lib/firefox/browser/omni.ja!/components/nsBrowserGlue.js, line 1393: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]
+1546057704555	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.igVIoGOLREpz"
+*** You are running in headless mode.
+1546057705439	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546057705439	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 2983, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190065,name=PBrowser::Msg_UpdateDimensions) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546057709153	Marionette	INFO	Listening on port 4954
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+console.error: 
+  [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: resource://activity-stream/lib/DownloadsManager.jsm :: init :: line 44"  data: no]: init@resource://activity-stream/lib/DownloadsManager.jsm:44:5
+postInit@resource://activity-stream/lib/HighlightsFeed.jsm:60:5
+handler@resource://gre/modules/EventEmitter.jsm:94:11
+emit@resource://gre/modules/EventEmitter.jsm:149:11
+init@resource://activity-stream/lib/SectionsManager.jsm:119:5
+observe@resource://gre/modules/AsyncShutdown.jsm:541:9
+
+WARNING: At least one completion condition is taking too long to complete. Conditions: [{"name":"Extension shutdown: webcompat@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: screenshots@mozilla.org","state":{"state":"Startup: Run manifest: asyncEmitManifestEntry(\"background\")"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: formautofill@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]}] Barrier: profile-change-teardown
+JavaScript error: jar:file:///usr/lib/firefox/browser/omni.ja!/components/nsBrowserGlue.js, line 1393: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]
+1546057742477	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.Y1kVKD9GQZHx"
+1546057743426	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546057743426	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 3204, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546057747642	Marionette	INFO	Listening on port 5041
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+console.error: 
+  [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: resource://activity-stream/lib/DownloadsManager.jsm :: init :: line 44"  data: no]: init@resource://activity-stream/lib/DownloadsManager.jsm:44:5
+postInit@resource://activity-stream/lib/HighlightsFeed.jsm:60:5
+handler@resource://gre/modules/EventEmitter.jsm:94:11
+emit@resource://gre/modules/EventEmitter.jsm:149:11
+init@resource://activity-stream/lib/SectionsManager.jsm:119:5
+observe@resource://gre/modules/AsyncShutdown.jsm:541:9
+
+WARNING: At least one completion condition is taking too long to complete. Conditions: [{"name":"Extension shutdown: webcompat@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: screenshots@mozilla.org","state":{"state":"Startup: Run manifest: asyncEmitManifestEntry(\"background\")"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: formautofill@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]}] Barrier: profile-change-teardown
+1546058816769	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.K53Rp7yl3Loz"
+1546062270838	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.jriMmljrWgIm"
+*** You are running in headless mode.
+1546062271833	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546062271833	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 4237, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546062276024	Marionette	INFO	Listening on port 3507
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+console.error: 
+  [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: resource://activity-stream/lib/DownloadsManager.jsm :: init :: line 44"  data: no]: init@resource://activity-stream/lib/DownloadsManager.jsm:44:5
+postInit@resource://activity-stream/lib/HighlightsFeed.jsm:60:5
+handler@resource://gre/modules/EventEmitter.jsm:94:11
+emit@resource://gre/modules/EventEmitter.jsm:149:11
+init@resource://activity-stream/lib/SectionsManager.jsm:119:5
+observe@resource://gre/modules/AsyncShutdown.jsm:541:9
+
+1546062293797	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.cu9GxTJkYIfX"
+*** You are running in headless mode.
+1546062294614	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546062294614	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 4498, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546062298422	Marionette	INFO	Listening on port 3559
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+console.error: 
+  [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: resource://activity-stream/lib/DownloadsManager.jsm :: init :: line 44"  data: no]: init@resource://activity-stream/lib/DownloadsManager.jsm:44:5
+postInit@resource://activity-stream/lib/HighlightsFeed.jsm:60:5
+handler@resource://gre/modules/EventEmitter.jsm:94:11
+emit@resource://gre/modules/EventEmitter.jsm:149:11
+init@resource://activity-stream/lib/SectionsManager.jsm:119:5
+observe@resource://gre/modules/AsyncShutdown.jsm:541:9
+
+WARNING: At least one completion condition is taking too long to complete. Conditions: [{"name":"Extension shutdown: webcompat@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: screenshots@mozilla.org","state":{"state":"Startup: Run manifest: asyncEmitManifestEntry(\"background\")"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: formautofill@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]}] Barrier: profile-change-teardown
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300046,name=PContent::Msg_LoadProcessScript) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190001,name=PBrowser::Msg_AsyncMessage) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 4753, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 4753, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+[Child 4891, MediaPlayback #2] WARNING: 7fb57dfc73d0 OpenCubeb() failed to init cubeb: file /build/firefox-h0evE3/firefox-64.0+build3/dom/media/AudioStream.cpp, line 397
+[Child 4891, MediaPlayback #2] WARNING: Decoder=7fb579142400 [OnMediaSinkAudioError]: file /build/firefox-h0evE3/firefox-64.0+build3/dom/media/MediaDecoderStateMachine.cpp, line 3793
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 4988, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 4988, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 4988, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190001,name=PBrowser::Msg_AsyncMessage) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300046,name=PContent::Msg_LoadProcessScript) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190001,name=PBrowser::Msg_AsyncMessage) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 4988, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 4988, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 5172, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 5172, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 5172, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300046,name=PContent::Msg_LoadProcessScript) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 5172, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 5172, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+[Child 5310, MediaPlayback #2] WARNING: 7fbeb8de4980 OpenCubeb() failed to init cubeb: file /build/firefox-h0evE3/firefox-64.0+build3/dom/media/AudioStream.cpp, line 397
+[Child 5310, MediaPlayback #2] WARNING: Decoder=7fbeb829ec00 [OnMediaSinkAudioError]: file /build/firefox-h0evE3/firefox-64.0+build3/dom/media/MediaDecoderStateMachine.cpp, line 3793
+1546062583365	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.IMFSlp74MSVL"
+1546062584218	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546062584218	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 5486, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+[Parent 5486, Gecko_IOThread] WARNING: pipe error: 파이프가 깨어짐: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 736
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300020,name=PContent::Msg_PreferenceUpdate) Channel error: cannot send/recv
+
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+1546062588959	Marionette	FATAL	Remote protocol server failed to start: [Exception... "Component returned failure code: 0xc1f30001 (NS_ERROR_NOT_INITIALIZED) [nsIServerSocket.asyncListen]"  nsresult: "0xc1f30001 (NS_ERROR_NOT_INITIALIZED)"  location: "JS frame :: chrome://marionette/content/server.js :: set acceptConnections :: line 93"  data: no] Stack trace: set acceptConnections()@server.js:93
+start()@server.js:119
+init/<()@jar:file:///usr/lib/firefox/omni.ja!/components/marionette.js:459
+observe()@resource://gre/modules/AsyncShutdown.jsm:541
+console.error: 
+  [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: resource://activity-stream/lib/DownloadsManager.jsm :: init :: line 44"  data: no]: init@resource://activity-stream/lib/DownloadsManager.jsm:44:5
+postInit@resource://activity-stream/lib/HighlightsFeed.jsm:60:5
+handler@resource://gre/modules/EventEmitter.jsm:94:11
+emit@resource://gre/modules/EventEmitter.jsm:149:11
+init@resource://activity-stream/lib/SectionsManager.jsm:119:5
+observe@resource://gre/modules/AsyncShutdown.jsm:541:9
+
+WARNING: At least one completion condition is taking too long to complete. Conditions: [{"name":"Extension shutdown: webcompat@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: screenshots@mozilla.org","state":{"state":"Startup: Run manifest: asyncEmitManifestEntry(\"background\")"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: formautofill@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]}] Barrier: profile-change-teardown
+1546062810232	geckodriver	INFO	geckodriver 0.19.0
+1546062810239	geckodriver	INFO	Listening on 127.0.0.1:4354
+1546062810418	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.sNTVny8ytwAl"
+1546062811282	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546062811283	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+1546062811505	Marionette	DEBUG	Received observer notification profile-after-change
+1546062811844	Marionette	DEBUG	Received observer notification command-line-startup
+1546062811844	Marionette	DEBUG	Received observer notification nsPref:changed
+1546062811844	Marionette	DEBUG	Init aborted (running=false, enabled=true, finalUIStartup=false)
+1546062813207	Marionette	DEBUG	Received observer notification toplevel-window-ready
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 5758, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546062815089	Marionette	DEBUG	Received observer notification sessionstore-windows-restored
+1546062815089	Marionette	DEBUG	Waiting for delayed startup...
+1546062815303	Marionette	DEBUG	Setting recommended pref app.update.disabledForTesting to true
+1546062815304	Marionette	DEBUG	Setting recommended pref security.turn_off_all_security_so_that_viruses_can_take_over_this_computer to true
+1546062815305	Marionette	DEBUG	Setting recommended pref browser.contentblocking.introCount to 99
+1546062815306	Marionette	DEBUG	Setting recommended pref browser.urlbar.suggest.searches to false
+1546062815307	Marionette	DEBUG	Setting recommended pref datareporting.policy.dataSubmissionPolicyAccepted to false
+1546062815307	Marionette	DEBUG	Setting recommended pref dom.disable_beforeunload to true
+1546062815307	Marionette	DEBUG	Setting recommended pref toolkit.cosmeticAnimations.enabled to false
+1546062815393	Marionette	INFO	Listening on port 4359
+1546062815394	Marionette	DEBUG	Remote service is active
+A content process crashed and MOZ_CRASHREPORTER_SHUTDOWN is set, shutting down
+JavaScript error: resource://activity-stream/lib/ActivityStreamPrefs.jsm, line 29: NS_ERROR_ILLEGAL_VALUE: Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIPrefBranch.removeObserver]
+console.error: 
+  [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: resource://activity-stream/lib/DownloadsManager.jsm :: init :: line 44"  data: no]: init@resource://activity-stream/lib/DownloadsManager.jsm:44:5
+postInit@resource://activity-stream/lib/HighlightsFeed.jsm:60:5
+handler@resource://gre/modules/EventEmitter.jsm:94:11
+emit@resource://gre/modules/EventEmitter.jsm:149:11
+init@resource://activity-stream/lib/SectionsManager.jsm:119:5
+observe@resource://gre/modules/AsyncShutdown.jsm:541:9
+
+WARNING: At least one completion condition is taking too long to complete. Conditions: [{"name":"Extension shutdown: webcompat@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: screenshots@mozilla.org","state":{"state":"Startup: Run manifest: asyncEmitManifestEntry(\"background\")"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]},{"name":"Extension shutdown: formautofill@mozilla.org","state":{"state":"Startup: Run manifest"},"filename":"resource://gre/modules/addons/XPIProvider.jsm","lineNumber":2211,"stack":["resource://gre/modules/addons/XPIProvider.jsm:startup/<:2211","resource://gre/modules/AsyncShutdown.jsm:observe:541","resource:///modules/ContentCrashHandlers.jsm:observe:152"]}] Barrier: profile-change-teardown
+JavaScript error: jar:file:///usr/lib/firefox/browser/omni.ja!/components/nsBrowserGlue.js, line 1393: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIAppShellService.hiddenDOMWindow]
+1546062833951	addons.productaddons	WARN	Failed downloading XML, status: 0, reason: error
+1546062833956	addons.productaddons	WARN	Failed downloading via XHR, status: 0, reason: error
+1546063067298	geckodriver	INFO	geckodriver 0.19.0
+1546063067305	geckodriver	INFO	Listening on 127.0.0.1:4717
+1546063067486	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.e8CGew4QsdvD"
+1546063068419	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: resource://pdf.js/
+1546063068420	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid host permission: about:reader*
+1546063068654	Marionette	DEBUG	Received observer notification profile-after-change
+1546063068977	Marionette	DEBUG	Received observer notification command-line-startup
+1546063068977	Marionette	DEBUG	Received observer notification nsPref:changed
+1546063068977	Marionette	DEBUG	Init aborted (running=false, enabled=true, finalUIStartup=false)
+1546063070222	Marionette	DEBUG	Received observer notification toplevel-window-ready
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30002E,name=PContent::Msg_UpdateSharedData) Channel error: cannot send/recv
+
+[Parent 6013, Main Thread] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-h0evE3/firefox-64.0+build3/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc, line 22
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x30005E,name=PContent::Msg_SetPluginList) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x300053,name=PContent::Msg_GMPsChanged) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190065,name=PBrowser::Msg_UpdateDimensions) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x190084,name=PBrowser::Msg_Destroy) Channel error: cannot send/recv
+
+1546063072142	Marionette	DEBUG	Received observer notification sessionstore-windows-restored
+1546063072142	Marionette	DEBUG	Waiting for delayed startup...
+1546063072323	Marionette	DEBUG	Setting recommended pref app.update.disabledForTesting to true
+1546063072323	Marionette	DEBUG	Setting recommended pref security.turn_off_all_security_so_that_viruses_can_take_over_this_computer to true
+1546063072325	Marionette	DEBUG	Setting recommended pref browser.contentblocking.introCount to 99
+1546063072326	Marionette	DEBUG	Setting recommended pref browser.urlbar.suggest.searches to false
+1546063072327	Marionette	DEBUG	Setting recommended pref datareporting.policy.dataSubmissionPolicyAccepted to false
+1546063072328	Marionette	DEBUG	Setting recommended pref dom.disable_beforeunload to true
+1546063072328	Marionette	DEBUG	Setting recommended pref toolkit.cosmeticAnimations.enabled to false
+1546063072413	Marionette	INFO	Listening on port 4722
+1546063072414	Marionette	DEBUG	Remote service is active
+1546063072425	Marionette	DEBUG	Accepted connection 0 from 127.0.0.1:4737
+1546063072450	Marionette	TRACE	0 -> [0,1,"newSession",{"acceptInsecureCerts":true,"browserName":"firefox","capabilities":{"desiredCapabilities":{"acceptInsecureCerts":true,"browserName":"firefox"}}}]
+1546063072454	Marionette	TRACE	0 <- [1,1,{"error":"unknown command","message":"newSession","stacktrace":"WebDriverError@chrome://marionette/content/error.js:178: ... et@chrome://marionette/content/server.js:236:8\n_onJSONObjectReady/<@chrome://marionette/content/transport.js:490:9\n"},null]

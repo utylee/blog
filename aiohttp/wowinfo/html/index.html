@@ -1,0 +1,263 @@
+<%inherit file="base.html"/>
+
+<%block name="script">
+	<link rel="stylesheet" href="../static/css/add.css">
+	<script charset="utf-8">
+		// 차트에서 포인트 갯수를 정의합니다
+		window.chart_column_num = 24;
+		window.cur_itemset = '${current_itemset}';
+		window.socket = 0;
+		window.itemsets = [];
+		function setupWebSocket(){
+			this.socket = new WebSocket('ws://'+window.location.host+'/ws');
+			this.socket.onopen = function(){
+				socket.send('connect');
+			}
+			this.socket.onclose = function(){
+				setTimeout(setupWebSocket, 1000);
+			}
+			// 서버로부터 update 문자열이 들어왔을 경우
+			this.socket.onmessage = function(msg){
+				if (msg.data == 'update'){
+					// 업데이트 신호가 들어오면 해당 div를 갱신합니다
+					// /update 페이지에 접속하고 서버에서 해당페이지는 데이터를 json형태로 반납합니다
+					$.getJSON('/update/' + cur_itemset, function(data){update_page(data);});
+				}
+			}
+		}	
+		function change_itemset(itemset){
+			// 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
+			cur_itemset = itemset;
+			document.getElementById("div_itemlist").innerHTML = ""; 
+			for(it=0;it<itemsets.length;it++){
+				// cur_itemset이 아닌 항목들만 추가합니다
+				if(itemsets[it] != itemset){
+					document.getElementById("div_itemlist").innerHTML += "<a id='itemlist" + it +"' class='dropdown-item text-center' href='#' onclick='change_itemset(\"" + itemsets[it] + "\");'>" + itemsets[it] + "</a>";
+				}
+			}
+			document.getElementById("button_itemset").innerHTML = itemset;
+			$.getJSON('/update/' + itemset, function(data){update_page(data);});
+		}
+
+		function update_page(data){
+			//alert(Object.keys(data).length);
+			// data 갯수, 즉 6회동안 각 요소 갱신을 반복합니다
+			t = data.time;
+			itemsets = data.itemsets;
+			data = data.ar;
+			for (i=0;i < Object.keys(data).length;i++) {
+				//$("#moneygold" + i).text(data.gold);
+				document.getElementById("image"+i).setAttribute("style", "background-image: url('${imageroot}/" + data[Object.keys(data)[i]].image + "')"); 
+				document.getElementById("itemname"+i).innerHTML = Object.keys(data)[i];
+				document.getElementById("num"+i).innerHTML = data[Object.keys(data)[i]].num;
+				document.getElementById("moneygold"+i).innerHTML = data[Object.keys(data)[i]].gold;
+				document.getElementById("moneysilver"+i).innerHTML = data[Object.keys(data)[i]].silver;
+				document.getElementById("moneycopper"+i).innerHTML = data[Object.keys(data)[i]].copper;
+				document.getElementById("min_seller"+i).innerHTML = data[Object.keys(data)[i]].min_seller;
+				
+				## 아직chLine이 미처 생성되지 않았을 경우 exception이 발생해 이상동작이 발생하는듯 
+				try {
+					if(eval('chart'+i)){
+						min_chain_ = data[Object.keys(data)[i]].min_chain;
+						//alert(min_chain_[min_chain_.length - 1]);
+						//eval('chLine' + i).data = min_chain_[min_chain_.length - 1] / 10000;
+						var data_ = [],
+							len_ = min_chain_.length;
+						//alert(min_chain_[0]);
+						for (j=len_ - chart_column_num;j<=len_ - 1;j++){
+						//for (i=0;i<=3;i++){
+							data_.push(min_chain_[j] / 10000);
+						}
+						var labels_ = [];
+						for(l_=0;l_<chart_column_num;l_++){
+							labels_.push("");
+						}
+						//alert(data_[0]);
+						//eval('chLine' + i).data = min_chain_.slice(,min_chain_.length - 1) / 10000);
+						//eval('chart' + i).data = full_data_; 
+						//eval('chart' + i).data.datasets[0].data = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; 
+						eval('chart'+i).data.labels = labels_;
+						eval('chart'+i).data.datasets[0].data = data_;
+						eval('chart'+i).update();
+						//alert('엄지척');
+						////eval('chLine' + i).addData = data_; 
+						//eval('chLine' + i).update();
+					}
+				}
+				catch(error) {
+				}
+			}
+
+			// 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
+			document.getElementById("div_itemlist").innerHTML = ""; 
+			for(it=0;it<itemsets.length;it++){
+				// cur_itemset이 아닌 항목들만 추가합니다
+				//alert(itemsets[it]);
+				if(itemsets[it] != cur_itemset){
+					document.getElementById("div_itemlist").innerHTML += "<a id='itemlist" + it +"' class='dropdown-item text-center' href='#' onclick='change_itemset(\"" + itemsets[it] + "\");'>" + itemsets[it] + "</a>";
+				//alert(document.getElementById("div_itemlist").innerHTML);
+				}
+			}
+
+			document.getElementById("button_itemset").innerHTML = cur_itemset;
+			document.getElementById("update_time").innerHTML = t;
+			//alert('엄지척');
+		}
+
+		// jQuery document ready 를 대신하는 자바스크립트입니다 다만 익스플로러 9이하에선 안된다는 말도 있네요
+		document.addEventListener("DOMContentLoaded", function(){
+			setupWebSocket();
+			// innerHTML
+			document.getElementById("designed_by").innerHTML = "designed by utylee studios 2019 /&nbsp;";
+			document.getElementById("gathered_from").innerHTML = "item images gathered from wowhead.com /&nbsp; ";
+			document.getElementById("dumped_at").innerHTML = "${server} DB dumped at &nbsp;";
+			// websocket을 만듭니다
+			// 차트객체 chart.js 6개를 생성합니다
+			% for a in ar.keys():
+			var data_ = [];
+			//alert('${ar[a]['min_chain'][-1]}');
+			
+			##% for m_ in ar[a]['min_chain'][-15:]:
+				####data_.push(Math.floor(${m_}/10000));
+				##data_.push(${m_}/10000);
+			##% endfor
+			var cur_min_chain = ${ar[a]['min_chain']};
+			for(ii = cur_min_chain.length - chart_column_num;ii <= cur_min_chain.length - 1; ii++){
+				data_.push(cur_min_chain[ii]/10000);
+			}
+
+			var labels_ = [];
+			for(l_=0;l_<chart_column_num;l_++){
+				labels_.push("");
+			}
+			window.chartData${loop.index} = {
+				/*
+				labels: ["", "", "", "", "", "", "", "", "", "",\
+						"", "", "", "", ""], //"", "", ""],
+						*/
+				labels: labels_,
+				datasets: [{
+					data: data_
+				}
+				]
+			};
+
+			window.chLine${loop.index} = document.getElementById("chLine${loop.index}");
+			if(chLine${loop.index}) {
+				window.chart${loop.index} = new Chart(chLine${loop.index}, {
+					type: 'line',
+					data: chartData${loop.index},
+					options: {
+						scales: {
+							yAxes: [{
+								ticks: {
+									beginAtZero: false
+								}
+							}]
+						},
+						legend: {
+							display: false
+						}
+					}
+				});
+			}
+			% endfor
+		});
+	</script>
+</%block>
+
+<%block name="content">
+<div class="my-container" >
+
+	## ---------------------------------------------------------------
+	## 상단 row
+	<div class="my-header">
+		## 아즈샤라 서버
+		<div class="dropdown" >
+			<button  class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle" type="button" data-toggle="dropdown" >
+				<span class="icon-checkcircle" >아즈샤라</span>
+			</button>
+		</div>
+		## 아이템 세트 셀렉트 
+		<div class="dropdown" >
+			<button id="button_itemset" class="btn btn-secondary btn-block text-muted dropdown-toggle" type="button" data-toggle="dropdown">
+				${current_itemset}
+			</button>
+			<div id="div_itemlist" class="dropdown-menu scrollable-menu" style="width:100%">
+				% for i in itemsets:
+				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center" href="#" onclick="change_itemset('${i}');">${i}</a>
+				% endfor
+			</div>
+		</div>
+	</div>
+
+	## ---------------------------------------------------------------
+	## ---------------------------------------------------------------
+	## 메인 row
+	<div class="my-main">
+			% for a in ar.keys():
+			<div class="card" >
+				<div class="card-img-top bg-secondary"  >
+					<center>
+						<%doc>
+						border를 img태그를 이용하고 아이템이미지를 div의 백그라운드로 거꾸로 사용해서
+						border가 잘리는문제를 해결하였습니다
+						</%doc>
+						<div id="image${loop.index}" class="iconlarge" style="background-image: url('${imageroot + ar[a]['image']}')">
+							<img src="../static/css/images/border.png"/>
+						</div>
+					</center>
+				</div>
+
+				<div class="card-body " >
+					<div class="card-title" align="center"  ><span id="itemname${loop.index}" style="font-size:1.2rem">${a}</span><span id="num${loop.index}" class="badge badge-success badge-pill" >${ar[a]['num']}</span></div>
+					<ul class="list-group list-group-flush">
+					<li class="list-group-item">
+					<p class="card-text" align="center">
+					<span id="moneygold${loop.index}" class="moneygold">${int(ar[a]['gold'])}</span>
+					<span id="moneysilver${loop.index}" class="moneysilver">${int(ar[a]['silver'])}</span>
+					<span id="moneycopper${loop.index}" class="moneycopper">${int(ar[a]['copper'])}</span>
+					<br>
+					<span id="min_seller${loop.index}" class="badge badge-secondary text-muted" >${ar[a]['min_seller']}</span>
+					</p>
+					</li>
+					<div style="font-size:12px;margin-top:0px;" align="center">
+						##차트
+						<li class="list-group-item" align="center">
+							<canvas id="chLine${loop.index}"></canvas>
+						##주기선택
+							##<div align="center" class="btn-block btn-group-sm btn-group-toggle center" style="transform:scale(0.6);" data-toggle="buttons">
+							<div align="center" class="btn-group btn-group-toggle center"  data-toggle="buttons">
+								<label class="btn-badge btn-secondary active">
+									<input type="radio" name="options" id="option1" autocomplete="off" checked="">12시
+								</label>
+								<label class="btn-badge btn-sm btn-secondary text-muted">
+									<input type="radio" name="options" id="option2" autocomplete="off">1일
+								</label>
+								<label class="btn-badge btn-sm btn-secondary text-muted">
+									<input type="radio" name="options" id="option3" autocomplete="off">30일
+								</label>
+							</div>
+							##<div class="badge badge-primary" >12시간</div>
+							##<div class="badge badge-secondary text-muted" >1일</div>
+							##<div class="badge badge-secondary text-muted" >30일</div>
+						</li>
+					</div>
+					</ul>
+				</div>
+			</div>
+			% endfor
+	</div>
+
+	## ---------------------------------------------------------------
+	## bottom row
+	<div class="my-footer">
+		<div >
+			<span id="designed_by" class="text-secondary "></span>
+			<span id="gathered_from" class="text-secondary "></span>
+			<span id="dumped_at" class="text-secondary "></span>
+			<span id="update_time" class="text-primary "></span>
+		</div>
+	</div>
+</div>
+</%block>

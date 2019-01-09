@@ -1,0 +1,121 @@
+html, body{
+	width: 100%;
+}
+.my-container {
+	display: grid;
+	height:100%;
+	grid-row-gap: 25px;
+	grid-template-rows: 15px 90px auto 60px;
+	justify-content: center;
+	align-content: center;
+}
+.my-header-container {
+	display: grid;
+	grid-gap: 20px;
+	grid-template-columns: minmax(0px, 400px) auto minmax(0px,400px);
+	justify-items: space-evenly;
+	align-content: center;
+	margin: 5px 5px;
+}
+.my-header-menus {
+	display: grid;
+	grid-gap: 20px;
+	grid-template-columns: repeat(auto-fit, minmax(14rem, 18rem));
+	margin: 10px 10px;
+}
+.my-content-container {
+	display: grid;
+	grid-gap: 5px;
+	grid-template-columns: minmax(0px, 200px) auto minmax(0px,200px);
+	justify-items: space-evenly;
+}
+.my-card-container {
+	display: grid;
+	grid-gap: 20px;
+	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	justify-items: center;
+}
+.my-footer-container {
+	display: grid;
+	grid-gap: 20px;
+	grid-template-columns: 1fr 1fr 1fr;
+	align-content: center;
+}
+.badge-radio {
+    display: inline-block;
+    padding: 0.25em 0.4em;
+        padding-top: 0.25em;
+        padding-right: 0.4em;
+        padding-bottom: 0.25em;
+        padding-left: 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}
+.btn-badge {
+    display: inline-block;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+    padding: 0.25rem 0.4rem;
+    font-size: 75%;
+    line-height: 1;
+    border-radius: 0.5rem;
+    -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+}
+.moneygold {
+	padding-right:15px;
+	background: no-repeat right center;
+	background-image: url(images/icons/money-gold.gif);
+}
+.moneysilver {
+	padding-right:15px;
+	background: no-repeat right center;
+	background-image: url(images/icons/money-silver.gif);
+}
+.moneycopper {
+	padding-right:15px;
+	background: no-repeat right center;
+	background-image: url(images/icons/money-copper.gif);
+}
+.icon-checkcircle {
+	padding-left:2rem;
+	background: no-repeat left center ;
+	background-size:1.3rem;
+	background-image: url(images/icons/Icon-checkCircleGreen.png);
+}
+.iconlarge {
+	background: no-repeat center;
+	position: relative;
+	z-index: 10;
+}
+
+.scrollable-menu {
+    max-height: 120px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.scrollable-menu-auto {
+	height:auto;
+    max-height: 120px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
