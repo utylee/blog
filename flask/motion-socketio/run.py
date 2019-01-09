@@ -8,7 +8,8 @@ import mimetypes
 app = Flask(__name__)   
 socketio = SocketIO(app)
 filenames = deque(maxlen = 4)
-img_root = r'/home/pi/media/3001/21-motion2/'
+#img_root = r'/home/pi/media/3001/21-motion2/'
+img_root = r'/home/pi/media/4001/21-motion2/'
 
 def init():
     print('initing')
