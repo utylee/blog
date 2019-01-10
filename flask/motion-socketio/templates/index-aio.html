@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+<%block name="script">
+	<script charset="utf-8">
+		window.i = -1;
+		window.socket = 0;
+		function setupWebSocket(){
+			this.socket = new WebSocket('ws://'+window.location.host+'/ws');
+			this.socket.onopen = function(){
+				socket.send('connect');
+			}
+			this.socket.onclose = function(){
+				setTimeout(setupWebSocket, 1000);
+			}
+			// 서버로부터 update 문자열이 들어왔을 경우
+			this.socket.onmessage = function(msg){
+				if (msg.data == 'update'){
+					update();
+			}
+		}
+		function update(){
+			if(i == -1){
+				$("#img1").attr('src', '{{ url_for("image1", n = 0) }}');
+				$("#img2").attr('src', '{{ url_for("image2", n = 0) }}');
+				$("#img3").attr('src', '{{ url_for("image3", n = 0) }}');
+				$("#img4").attr('src', '{{ url_for("image4", n = 0) }}');
+			}
+			else{
+				$("#img1").attr('src', '{{ url_for("image1", n = 1) }}');
+				$("#img2").attr('src', '{{ url_for("image2", n = 1) }}');
+				$("#img3").attr('src', '{{ url_for("image3", n = 1) }}');
+				$("#img4").attr('src', '{{ url_for("image4", n = 1) }}');
+			}
+
+			i = i*-1;
+		}
+
+ 
+		document.addEventListener("DOMContentLoaded", function() { 
+			i = -1; 
+			namespace = '/motion';
+			var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+
+			$("img").attr('width', $(window).width()/2 - 20);
+			$("img").hover(function(){
+				$(this).css('cursor', 'pointer');
+			});
+		
+			socket.on('update', function(msg){
+				if(i == -1){
+					$("#img1").attr('src', '{{ url_for("image1", n = 0) }}');
+					$("#img2").attr('src', '{{ url_for("image2", n = 0) }}');
+					$("#img3").attr('src', '{{ url_for("image3", n = 0) }}');
+					$("#img4").attr('src', '{{ url_for("image4", n = 0) }}');
+				}
+				else{
+					$("#img1").attr('src', '{{ url_for("image1", n = 1) }}');
+					$("#img2").attr('src', '{{ url_for("image2", n = 1) }}');
+					$("#img3").attr('src', '{{ url_for("image3", n = 1) }}');
+					$("#img4").attr('src', '{{ url_for("image4", n = 1) }}');
+				}
+
+				i = i*-1;
+			});
+
+			// 이미지 클릭시 비디오 재생페이지를 로드합니다
+			
+			$("#img1").click(function(){
+				window.location.href='{{ url_for("image1", n = 99) }}'
+			});
+			$("#img2").click(function(){
+				window.location.href='{{ url_for("image2", n = 99) }}'
+			});
+			$("#img3").click(function(){
+				window.location.href='{{ url_for("image3", n = 99) }}'
+			});
+			$("#img4").click(function(){
+				window.location.href='{{ url_for("image4", n = 99) }}'
+			});
+			/*
+			$("video").ended(function() {
+				window.location.href = '{{ url_for('index') }}'
+			});
+			$("video").on("ended", function() {
+				alert('ended!!');
+				window.location.href = '{{ url_for('index') }}';
+			});
+			*/
+		});
+	</script>
+</%block>
+<%block name="content">
+	<div id="log">
+	</div>
+	<table width=300 border='0'>
+		<tr border='0'>
+			<td width=100>
+				<img id="img1" src="" alt="">
+			</td>
+			<td width=100>
+				<img id="img2" src="" alt="">
+			</td>
+		</tr>
+		<tr border='0'>
+			<td width=100>
+				<img id="img3" src="" alt="">
+			</td>
+			<td width=100>
+				<img id="img4" src="" alt="">
+			</td>
+		</tr>
+	</table>
+</%block>
