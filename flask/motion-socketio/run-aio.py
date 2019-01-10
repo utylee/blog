@@ -1,5 +1,5 @@
-from flask import Flask, render_template, Response, redirect, url_for, request
-from flask_socketio import SocketIO, emit
+#from flask import Flask, render_template, Response, redirect, url_for, request
+#from flask_socketio import SocketIO, emit
 from collections import deque
 import glob, os.path, re, time
 import mimetypes
@@ -176,8 +176,11 @@ def disconnect():
     print('client disconnected')
 
 
+'''
 if __name__ == "__main__":
     init()
     #socketio.run(app, host='0.0.0.0', port='5000')
     socketio.run(app, host='0.0.0.0', port='5001')
+    '''
 
+web.run_app(init(),port=5001)

@@ -4,13 +4,16 @@
 
 from aiohttp import web
 import aiohttp_mako
+import time
 
 async def calc():
+    t = time() / 60
     pass
 
 
 @aiohttp_mako.template('index.html')
 async def handle(request):
+    calc()
 
     return {} 
 
