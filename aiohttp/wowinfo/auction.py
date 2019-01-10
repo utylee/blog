@@ -41,7 +41,8 @@ async def db_update_from_server(server):
             # .loads 함수인 것을 봅니다. s가 없는 load 함수는 파일포인터를 받더군요
             # requests가 아닌 aiohttp.ClientSession get 을 사용한 비동기방식으로 변경합니다
             start_time = time.time()
-            async with aiohttp.ClientSession() as sess:
+            # ssl 체크에서 에러가 나서 ssl 체크를 빼주는 옵션을 찾아서 넣어주었습니다
+            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as sess:
                 async with sess.get(url) as resp:
                     load = json.loads(await resp.text())
                     js_url = load['files'][0]['url']
