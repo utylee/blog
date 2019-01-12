@@ -55,6 +55,14 @@ async def main():
     else:
         return js['name']
         '''
+    async with create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.211',
+                            password='sksmsqnwk11') as engine:
+        async with engine.acquire() as conn:
+            id_ = 25055
+            async for tuple_ in conn.execute(tbl_items.select().where(tbl_items.c.id==id_)):
+                await conn.execute(tuple_.update().values(icon_name='허허허'))
 
 
 

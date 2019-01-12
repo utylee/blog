@@ -67,6 +67,9 @@ async def db_update_from_server(server):
             # .loads 함수인 것을 봅니다. s가 없는 load 함수는 파일포인터를 받더군요
             # requests가 아닌 aiohttp.ClientSession get 을 사용한 비동기방식으로 변경합니다
             start_time = time.time()
+            dump_ts = 0             # 블리자드서버 경매데이터 덤프 시각 timestamp
+            dump_ts_str = ''        # 블리자드서버 경매데이터 덤프 시각 timestamp 스트링
+
             # ssl 체크에서 에러가 나서 ssl 체크를 빼주는 옵션을 찾아서 넣어주었습니다
             async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as sess:
             #async with aiohttp.ClientSession() as sess:
@@ -74,23 +77,28 @@ async def db_update_from_server(server):
                     print(await resp.text())
                     load = json.loads(await resp.text())
                     js_url = load['files'][0]['url']
-                    ts = int(load['files'][0]['lastModified']) / 1000
-                    str_now = datetime.datetime.fromtimestamp(ts).strftime('%H:%M-%m/%d/%y')
+                    dump_ts = round(int(load['files'][0]['lastModified']) / 1000)
+                    #str_now = datetime.datetime.fromtimestamp(ts).strftime('%H:%M-%m/%d/%y')
+                    dump_ts_str = datetime.datetime.fromtimestamp(dump_ts).strftime('%H:%M-%m/%d/%y')
+                    print(f'덤프시각:{dump_ts}, {dump_ts_str}')
                 async with sess.get(js_url) as resp:
                     print('주소:{} \n로부터 json 덤프 파일을 다운로드합니다...\n'.format(js_url))
                     async with aiofiles.open(f'auction-{server}.json', 'wb') as f:
                         await f.write(await resp.read())
             # 덤프 시각을 db에 기록합니다
             #str_now = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
-            print(f'dumped_time:{str_now}')
+            print(f'dumped_time:{dump_ts_str}')
             await conn.execute(tbl_wow_server_info.update().where(tbl_wow_server_info.c.server==server).values
-                                        (dumped_time=str_now))
+                                        (dumped_time=dump_ts_str))
 
             end_time = time.time()
-            elapsed_time = math.floor(end_time - start_time)
+            elapsed_time = round(end_time - start_time)
+            # 가격 삽입시 30분 단위로 몇 번 지났는지 확인하기 위한 변수
+            #elapsed_quot_for_chain = round((dump_ts - start_time) / 1800)
             # 받아온 json에 옥션 json 파일의 주소를 포함한 리스폰스를 보내줍니다. 
             print('.다운로드 완료!')
-            print(f'총 {elapsed_time}초 소요')
+            print(f'다운로드에 총 {elapsed_time}초 소요')
+            #print(f'서버 덤프시각에 비해 [30분단위]{elapsed_quot_for_chain}회가 경과하였습니다({dump_ts_str})')
             print('.파싱을 시작합니다')
             async with aiofiles.open(f'auction-{server}.json', 'r') as f:
                 js = json.loads(await f.read())
@@ -167,8 +175,6 @@ async def db_update_from_server(server):
 
 
 
-
-
             # arranged_auction db에 삽입 프로세스 by 만들어진 temp_dict를 통해
             #
             #
@@ -204,20 +210,51 @@ async def db_update_from_server(server):
                                                         min=dict_['min'],
                                                         min_seller=dict_['min_seller'],
                                                         min_chain=str_chain,
-                                                        edited_time=str_now,
+                                                        edited_time=dump_ts_str,
+                                                        edited_timestamp=dump_ts,
                                                         image=dict_['image']))
                 # 해당 튜플이 있을 경우
                 else:
+                    do_ = 0       # 튜플 업데이트 여부를 결정합니다.시간이 30분 이내면 삽입하지 않습니다
                     # str_chain 을 가져온 후 새 가격을 추가해줍니다
                     async for sel_ in conn.execute(tbl_arranged_auction.select().where(
-                        and_((tbl_arranged_auction.c.server==server),(tbl_arranged_auction.c.item==id_)))):
+                            and_((tbl_arranged_auction.c.server==server),(tbl_arranged_auction.c.item==id_)))):
+                        last_timestamp = sel_[7]
+                        cur_timestamp = round(time.time())
+                        q_ = 0
+                        if(last_timestamp is not None):
+                            q_ = round((cur_timestamp - last_timestamp) / 1800) - 1 #반올림
+                        #print(f'q_: {q_}')
                         str_chain = sel_[5]
-                        str_chain = str_chain.split('?', 1)[1] + '?' + str(dict_['min'])
+                        l_chain = str_chain.split('?')
+                        l_chain_len = len(l_chain)
+                        if(l_chain_len != 1440):
+                            print('!!! 가격 chain 개수가 맞지 않습니다. --> id: {}, {} 개'.format(id_,len(l_chain)))
+                            print('!!!  마지막 5개 값:{}'.format(l_chain[-5:]))
+                            print('!!!  (잠재적위험) 자동수정1440개로 조정합니다')
+                            l_chain = l_chain[l_chain_len - 1440:]
+                        # 텀이 길어 빈 30분횟수가 있을 경우
+                        if (q_ > 0):
+                            last_cell = l_chain[-1]
+                            # 30분 경과 횟수만큼 반복하여 마지막 값을 추가합니다
+                            for _ in range(0, q_):
+                                l_chain.append(last_cell)
+                            str_chain = '?'.join(l_chain[q_+1:]) + '?' + str(dict_['min'])
+                            do_ = 1
+                        # 텀이 30분일 경우 (round 반올림이라 15분(0.5)부터 45분(1.4)까지가 여기에 해당될듯)
+                        elif q_ == 0:
+                            str_chain = str_chain.split('?', 1)[1] + '?' + str(dict_['min'])
+                            do_ = 1
+                    # 30분 이내일 경우는 insert를 패스합니다
+                    if do_ == 0:
+                        continue
+
                     await conn.execute(tbl_arranged_auction.update().where(and_((tbl_arranged_auction.c.server==server),(tbl_arranged_auction.c.item==id_))).values(num=dict_['num'],
                                                         min=dict_['min'],
                                                         min_seller=dict_['min_seller'],
                                                         min_chain=str_chain,
-                                                        edited_time=str_now,
+                                                        edited_time=dump_ts_str,
+                                                        edited_timestamp=dump_ts,
                                                         image=dict_['image']))
 
         #return await deco_dictset(result_dict_set)
@@ -225,8 +262,8 @@ async def db_update_from_server(server):
         elapsed_time = math.floor(end_time - start_time)
         elapsed_min = 0
         if(elapsed_time > 60):
-            elapsed_min = math.floor(elapsed_time / 60)
-        elapsed_time = math.floor(end_time - start_time)
+            elapsed_min = round(elapsed_time / 60)
+        elapsed_time = round(end_time - start_time)
         print(f'서버 {server}에 대한 삽입 정리 프로세스 종료')
         print(f'총 {elapsed_time} 초({elapsed_min}분)가 소요되었습니다')
         
@@ -375,13 +412,15 @@ async def get_decoed_item_set(server, setname):
                     dict_[name_]['min_chain'] = tuple_[5].split('?')
                     #print(dict_[name_]['min_chain'])
                     dict_[name_]['edited_time'] = tuple_[6]
+                    
+                    #dict_[name_]['edited_timestamp'] = int(tuple_[7])#timestamp는 웹에서 사용할 일이 없으므로 빼고 반납합니다
                     #dict_[name_]['image'] = image_path
-                    #img_ = tuple_[7]
-                    #img_url = f'https://wow.zamimg.com/images/wow/icons/large/{tuple_[7]}.jpg'
+                    #img_ = tuple_[8]
+                    #img_url = f'https://wow.zamimg.com/images/wow/icons/large/{tuple_[8]}.jpg'
                     #img_url = f'https://wow.zamimg.com/images/wow/icons/large/{img_}.jpg'
-                    print(f'img_url:{img_url}')
-                    #dict_[name_]['image'] = tuple_[7]
+                    #dict_[name_]['image'] = tuple_[8]
                     dict_[name_]['image'] = img_url
+                    #print(f'icon_name:{img_url}')
 
                     # 골드,실버,카퍼 를 분리해줍니다
                     price = int(tuple_[3])
