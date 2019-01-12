@@ -1,0 +1,27 @@
+html, body {
+}
+.my-container {
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+}
+.my-header {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.my-main {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.my-footer {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+
