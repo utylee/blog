@@ -10,6 +10,8 @@ from db_tableinfo import *
 '''
 metadata = sa.MetaData()
 items = {}
+clientID = 'b934788e2cde4166acb93dcbf558040f'
+new_myapi = 'nMA7eloEh2rHFEiRw9Xs5j0Li6ZaFA5A'
 myapi = 'm5u8gdp6qmhbjkhbht3ax9byp62wench'
 locale = 'ko_KR'
 '''

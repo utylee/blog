@@ -8,6 +8,7 @@
 		window.cur_itemset = '${current_itemset}';
 		window.socket = 0;
 		window.itemsets = [];
+		window.img_host = 'https://wow.zamimg.com/images/wow/icons/large/';
 		function setupWebSocket(){
 			this.socket = new WebSocket('ws://'+window.location.host+'/ws');
 			this.socket.onopen = function(){
@@ -46,8 +47,8 @@
 			itemsets = data.itemsets;
 			data = data.ar;
 			for (i=0;i < Object.keys(data).length;i++) {
-				//$("#moneygold" + i).text(data.gold);
-				document.getElementById("image"+i).setAttribute("style", "background-image: url('${imageroot}/" + data[Object.keys(data)[i]].image + "')"); 
+				//document.getElementById("image"+i).setAttribute("style", "background-image: url('${imageroot}/" + data[Object.keys(data)[i]].image + "')"); 
+				document.getElementById("image"+i).setAttribute("style", "background-image: url('" + img_host + data[Object.keys(data)[i]].image + ".jpg')"); 
 				document.getElementById("itemname"+i).innerHTML = Object.keys(data)[i];
 				document.getElementById("num"+i).innerHTML = data[Object.keys(data)[i]].num;
 				document.getElementById("moneygold"+i).innerHTML = data[Object.keys(data)[i]].gold;
@@ -109,7 +110,7 @@
 			setupWebSocket();
 			// innerHTML
 			document.getElementById("designed_by").innerHTML = "developed and designed by utylee studios 2019 /&nbsp;";
-			document.getElementById("gathered_from").innerHTML = "item images gathered from wowhead.com /&nbsp; ";
+			document.getElementById("gathered_from").innerHTML = "item images hosted by zamimg.com /&nbsp; ";
 			document.getElementById("dumped_at").innerHTML = "${server} DB dumped recently at &nbsp;";
 			// websocket을 만듭니다
 			// 차트객체 chart.js 6개를 생성합니다

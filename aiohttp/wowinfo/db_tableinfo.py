@@ -25,7 +25,8 @@ tbl_auctions = sa.Table('auctions', metadata,
 # item name을 저장한 테이블입니다
 tbl_items = sa.Table('items', metadata,
         sa.Column('id', sa.Integer, primary_key=True),
-        sa.Column('name', sa.String(255)))
+        sa.Column('name', sa.String(255)),
+        sa.Column('icon_name', sa.String(255)))
 
 
 
