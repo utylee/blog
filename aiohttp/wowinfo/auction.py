@@ -229,10 +229,12 @@ async def db_update_from_server(server):
                         l_chain = str_chain.split('?')
                         l_chain_len = len(l_chain)
                         if(l_chain_len != 1440):
-                            print('!!! 가격 chain 개수가 맞지 않습니다. --> id: {}, {} 개'.format(id_,len(l_chain)))
+                            print('!!! 가격 chain 개수가 맞지 않습니다. --> id: {}, {} 개'.format(id_,l_chain_len))
                             print('!!!  마지막 5개 값:{}'.format(l_chain[-5:]))
                             print('!!!  (잠재적위험) 자동수정1440개로 조정합니다')
                             l_chain = l_chain[l_chain_len - 1440:]
+                            str_chain = '?'.join(l_chain)
+                            do_ = 2
                         # 텀이 길어 빈 30분횟수가 있을 경우
                         if (q_ > 0):
                             last_cell = l_chain[-1]
@@ -240,12 +242,18 @@ async def db_update_from_server(server):
                             for _ in range(0, q_):
                                 l_chain.append(last_cell)
                             str_chain = '?'.join(l_chain[q_+1:]) + '?' + str(dict_['min'])
+                            if(do_ == 2):
+                                size_ = len(str_chain.split('?'))
+                                print(f'수정후 사이즈:{size_}')
                             do_ = 1
                         # 텀이 30분일 경우 (round 반올림이라 15분(0.5)부터 45분(1.4)까지가 여기에 해당될듯)
                         elif q_ == 0:
                             str_chain = str_chain.split('?', 1)[1] + '?' + str(dict_['min'])
+                            if(do_ == 2):
+                                size_ = len(str_chain.split('?'))
+                                print(f'수정후 사이즈:{size_}')
                             do_ = 1
-                    # 30분 이내일 경우는 insert를 패스합니다
+                    # 30분 이내일 경우는 insert를 패스합니다. 개수 조정이 필요할 경우에는 인서트합니다
                     if do_ == 0:
                         continue
 
