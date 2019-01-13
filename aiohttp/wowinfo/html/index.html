@@ -9,6 +9,60 @@
 		window.socket = 0;
 		window.itemsets = [];
 		window.img_host = 'https://wow.zamimg.com/images/wow/icons/large/';
+		window.chart_chains = new Array;
+
+		function update_chart(a, b) {
+			if(checked[a] != b){
+				checked[a] = b;
+				min_chain_ = chart_chains[a];
+				//alert(min_chain_[min_chain_.length - 1]);
+				//eval('chLine' + i).data = min_chain_[min_chain_.length - 1] / 10000;
+				var data_ = [],
+					len_ = min_chain_.length;
+				//alert(min_chain_[0]);
+				//30분 주기일 경우
+				if(b == 0){
+					for (let j=len_ - chart_column_num*2;j<=len_ - 1;j++){
+						data_.push(min_chain_[j] / 10000);
+					}
+					var labels_ = [];
+					for(let l_=0;l_<chart_column_num;l_++){
+						labels_.push("");
+					}
+				}
+				//60분 주기일 경우
+				if(b == 1){
+					for (let j=len_ - chart_column_num*2;j<=len_ - 1;j+=2){
+						data_.push(min_chain_[j] / 10000);
+					}
+					var labels_ = [];
+					for(let l_=0;l_<chart_column_num;l_++){
+						labels_.push("");
+					}
+				}
+				//60*24(=1440)분 주기일 경우
+				if(b == 2){
+					for (let j=len_ - chart_column_num*48;j<=len_ - 1;j+=48){
+						data_.push(min_chain_[j] / 10000);
+					}
+					var labels_ = [];
+					for(let l_=0;l_<chart_column_num;l_++){
+						labels_.push("");
+					}
+				}
+				//alert(data_[0]);
+				//eval('chLine' + i).data = min_chain_.slice(,min_chain_.length - 1) / 10000);
+				//eval('chart' + i).data = full_data_; 
+				//eval('chart' + i).data.datasets[0].data = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; 
+				eval('chart'+a).data.labels = labels_;
+				eval('chart'+a).data.datasets[0].data = data_;
+				eval('chart'+a).update();
+				//alert('엄지척');
+				////eval('chLine' + i).addData = data_; 
+			}
+
+			//alert(a + ',' + b);
+		}
 		function setupWebSocket(){
 			this.socket = new WebSocket('ws://'+window.location.host+'/ws');
 			this.socket.onopen = function(){
@@ -30,7 +84,7 @@
 			// 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
 			cur_itemset = itemset;
 			document.getElementById("div_itemlist").innerHTML = ""; 
-			for(it=0;it<itemsets.length;it++){
+			for(let it=0;it<itemsets.length;it++){
 				// cur_itemset이 아닌 항목들만 추가합니다
 				if(itemsets[it] != itemset){
 					document.getElementById("div_itemlist").innerHTML += "<a id='itemlist" + it +"' class='dropdown-item text-center' href='#' onclick='change_itemset(\"" + itemsets[it] + "\");'>" + itemsets[it] + "</a>";
@@ -46,7 +100,7 @@
 			t = data.time;
 			itemsets = data.itemsets;
 			data = data.ar;
-			for (i=0;i < Object.keys(data).length;i++) {
+			for (let i=0;i < Object.keys(data).length;i++) {
 				//document.getElementById("image"+i).setAttribute("style", "background-image: url('${imageroot}/" + data[Object.keys(data)[i]].image + "')"); 
 				document.getElementById("image"+i).setAttribute("style", "background-image: url('" + img_host + data[Object.keys(data)[i]].image + ".jpg')"); 
 				document.getElementById("itemname"+i).innerHTML = Object.keys(data)[i];
@@ -55,22 +109,28 @@
 				document.getElementById("moneysilver"+i).innerHTML = data[Object.keys(data)[i]].silver;
 				document.getElementById("moneycopper"+i).innerHTML = data[Object.keys(data)[i]].copper;
 				document.getElementById("min_seller"+i).innerHTML = data[Object.keys(data)[i]].min_seller;
+
+				//실제로 클릭액션을 해야하는 클래스라 안먹힙니다
+				//document.getElementById("lb"+i+"0").checked = 1; 
+				document.getElementById("lb"+i+"0").click();
 				
 				## 아직chLine이 미처 생성되지 않았을 경우 exception이 발생해 이상동작이 발생하는듯 
 				try {
 					if(eval('chart'+i)){
-						min_chain_ = data[Object.keys(data)[i]].min_chain;
+						//min_chain_ = data[Object.keys(data)[i]].min_chain;
+						chart_chains[i] = data[Object.keys(data)[i]].min_chain;
+						min_chain_ = chart_chains[i];
 						//alert(min_chain_[min_chain_.length - 1]);
 						//eval('chLine' + i).data = min_chain_[min_chain_.length - 1] / 10000;
 						var data_ = [],
 							len_ = min_chain_.length;
 						//alert(min_chain_[0]);
-						for (j=len_ - chart_column_num;j<=len_ - 1;j++){
+						for (let j=len_ - chart_column_num;j<=len_ - 1;j++){
 						//for (i=0;i<=3;i++){
 							data_.push(min_chain_[j] / 10000);
 						}
 						var labels_ = [];
-						for(l_=0;l_<chart_column_num;l_++){
+						for(let l_=0;l_<chart_column_num;l_++){
 							labels_.push("");
 						}
 						//alert(data_[0]);
@@ -91,7 +151,7 @@
 
 			// 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
 			document.getElementById("div_itemlist").innerHTML = ""; 
-			for(it=0;it<itemsets.length;it++){
+			for(let it=0;it<itemsets.length;it++){
 				// cur_itemset이 아닌 항목들만 추가합니다
 				//alert(itemsets[it]);
 				if(itemsets[it] != cur_itemset){
@@ -102,11 +162,29 @@
 
 			document.getElementById("button_itemset").innerHTML = cur_itemset;
 			document.getElementById("update_time").innerHTML = t;
+
+			/*
+			var lbs = document.getElementsByTagName("label");
+			alert(lbs.length);
+			for(let i=0;i<lbs.length;i++) {
+
+			}
+			*/
 			//alert('엄지척');
-		}
+		} //function update_page() ends
 
 		// jQuery document ready 를 대신하는 자바스크립트입니다 다만 익스플로러 9이하에선 안된다는 말도 있네요
 		document.addEventListener("DOMContentLoaded", function(){
+			window.checked = new Array;
+		
+			for (let uu=0;uu<6;uu++) {
+				checked[uu] = 0;
+				document.getElementById('lb' + uu + '0').addEventListener('click', function () {update_chart(uu, 0);}, false);
+				document.getElementById('lb' + uu + '1').addEventListener('click', function () {update_chart(uu, 1);}, false);
+				document.getElementById('lb' + uu + '2').addEventListener('click', function () {update_chart(uu, 2);}, false);
+				//document.getElementById('lb' + ii_ + '1').addEventListener('click', update_chart(ii_, 1), true);
+				//document.getElementById('lb' + ii_ + '2').addEventListener('click', update_chart(ii_, 2), true);
+			}
 			setupWebSocket();
 			// innerHTML
 			document.getElementById("designed_by").innerHTML = "developed and designed by utylee studios 2019 /&nbsp;";
@@ -123,12 +201,12 @@
 				##data_.push(${m_}/10000);
 			##% endfor
 			var cur_min_chain = ${ar[a]['min_chain']};
-			for(ii = cur_min_chain.length - chart_column_num;ii <= cur_min_chain.length - 1; ii++){
+			for(let ii = cur_min_chain.length - chart_column_num;ii <= cur_min_chain.length - 1; ii++){
 				data_.push(cur_min_chain[ii]/10000);
 			}
 
 			var labels_ = [];
-			for(l_=0;l_<chart_column_num;l_++){
+			for(let l_=0;l_<chart_column_num;l_++){
 				labels_.push("");
 			}
 			window.chartData${loop.index} = {
@@ -229,13 +307,13 @@
 						##주기선택
 							##<div align="center" class="btn-block btn-group-sm btn-group-toggle center" style="transform:scale(0.6);" data-toggle="buttons">
 							<div align="center" class="btn-group btn-group-toggle center"  data-toggle="buttons">
-								<label class="btn-badge btn-secondary active">
+								<label id="lb${loop.index}0" class="btn btn-outline-primary text-muted active">
 									<input type="radio" name="options" id="option1" autocomplete="off" checked="">12시
 								</label>
-								<label class="btn-badge btn-sm btn-secondary text-muted">
-									<input type="radio" name="options" id="option2" autocomplete="off">1일
+								<label id="lb${loop.index}1" class="btn btn-outline-primary text-muted">
+									<input type="radio" name="options" id="option2" autocomplete="off">24시
 								</label>
-								<label class="btn-badge btn-sm btn-secondary text-muted">
+								<label id="lb${loop.index}2" class="btn btn-outline-primary text-muted">
 									<input type="radio" name="options" id="option3" autocomplete="off">30일
 								</label>
 							</div>
