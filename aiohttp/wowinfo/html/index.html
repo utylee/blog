@@ -22,7 +22,7 @@
 				//alert(min_chain_[0]);
 				//30분 주기일 경우
 				if(b == 0){
-					for (let j=len_ - chart_column_num*2;j<=len_ - 1;j++){
+					for (let j=len_ - chart_column_num;j<=len_ - 1;j++){
 						data_.push(min_chain_[j] / 10000);
 					}
 					var labels_ = [];
@@ -32,7 +32,7 @@
 				}
 				//60분 주기일 경우
 				if(b == 1){
-					for (let j=len_ - chart_column_num*2;j<=len_ - 1;j+=2){
+					for (let j=len_ - chart_column_num*2 + 1;j<=len_ - 1;j+=2){
 						data_.push(min_chain_[j] / 10000);
 					}
 					var labels_ = [];
@@ -42,7 +42,7 @@
 				}
 				//60*24(=1440)분 주기일 경우
 				if(b == 2){
-					for (let j=len_ - chart_column_num*48;j<=len_ - 1;j+=48){
+					for (let j=len_ - chart_column_num*48 + 47;j<=len_ - 1;j+=48){
 						data_.push(min_chain_[j] / 10000);
 					}
 					var labels_ = [];
@@ -252,14 +252,14 @@
 	## 상단 row
 	<div class="my-header">
 		## 아즈샤라 서버
-		<div class="dropdown" >
-			<button  class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle" type="button" data-toggle="dropdown" >
+		<div class="dropdown menu_wide_narrow" >
+			<button  class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown" >
 				<span class="icon-checkcircle" >아즈샤라</span>
 			</button>
 		</div>
 		## 아이템 세트 셀렉트 
-		<div class="dropdown" >
-			<button id="button_itemset" class="btn btn-secondary btn-block text-muted dropdown-toggle" type="button" data-toggle="dropdown">
+		<div class="dropdown menu_wide" >
+			<button id="button_itemset" class="btn btn-secondary btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown">
 				${current_itemset}
 			</button>
 			<div id="div_itemlist" class="dropdown-menu scrollable-menu" style="width:100%">
@@ -267,6 +267,12 @@
 				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center" href="#" onclick="change_itemset('${i}');">${i}</a>
 				% endfor
 			</div>
+		</div>
+		## 로그인 
+		<div class="menu_narrow">
+			<button id="button_login" class="btn btn-info btn-block " type="button">
+				로그인	
+			</button>
 		</div>
 	</div>
 

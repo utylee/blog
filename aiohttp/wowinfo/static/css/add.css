@@ -25,11 +25,58 @@ input[type=radio] {
 	align-content: center;
 	justify-content: center;
 }
-.my-header > div {
+.my-header > .menu_wide {
 	width: 300px;
 	height: 70px;
 	padding: 8px;
 }
+.my-header > .menu_wide_narrow {
+	width: 300px;
+	height: 70px;
+	padding: 8px;
+	white-space: nowrap;
+}
+.my-header > .menu_narrow {
+	width: 150px;
+	height: 70px;
+	padding: 8px;
+}
+.icon-checkcircle {
+	padding-left:2rem;
+	background: no-repeat left center ;
+	background-size:1.3rem;
+	background-image: url(images/icons/Icon-checkCircleGreen.png);
+}
+@media all and (max-width: 626px) {
+	.my-header > .menu_wide_narrow {
+		order: -1;
+		width: 150px;
+	}
+	.my-header > .menu_wide_narrow > button {
+		font-size: 0.9rem;
+	}
+	.icon-checkcircle {
+		padding-left:1.5rem;
+		background-size:1.1rem;
+	}
+	.my-header > .menu_narrow {
+		order: -1;
+	}
+}
+
+@media all and (min-width: 627px) and (max-width: 800px) {
+	.my-header > .menu_wide_narrow {
+		width: 150px;
+	}
+	.my-header > .menu_wide_narrow > button {
+		font-size: 0.9rem;
+	}
+	.icon-checkcircle {
+		padding-left:1.5rem;
+		background-size:1.1rem;
+	}
+}
+
 .my-header > div > button {
 	height: 100%;
 	font-size: 1.2rem;
@@ -125,12 +172,6 @@ input[type=radio] {
 	padding-right:15px;
 	background: no-repeat right center;
 	background-image: url(images/icons/money-copper.gif);
-}
-.icon-checkcircle {
-	padding-left:2rem;
-	background: no-repeat left center ;
-	background-size:1.3rem;
-	background-image: url(images/icons/Icon-checkCircleGreen.png);
 }
 .iconlarge {
 	background: no-repeat center;
