@@ -392,6 +392,47 @@ async def get_item_set(conn, setname):
     print(itemlist)
     return itemlist
 
+async def get_decoed_item(server, name_):
+    dict_ = {}
+    async with create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.211',
+                            password='sksmsqnwk11') as engine:
+        async with engine.acquire() as conn:
+            id_ = await get_item_id(conn, name_) 
+            image_path = ''
+            async for it_ in conn.execute(tbl_items.select().where(tbl_items.c.id==id_)):
+                img_url = it_[2]
+                #img_url = f'https://wow.zamimg.com/images/wow/icons/large/{img_}.jpg'
+            async for tuple_ in conn.execute(tbl_arranged_auction.select().where(and_((tbl_arranged_auction.c.item==id_),(tbl_arranged_auction.c.server==server)))):
+                #print('name_:{}'.format(name_))
+                dict_['name'] = name_ 
+                dict_['num'] = tuple_[2]
+                #dict_['min'] = tuple_[3]
+                dict_['min_seller'] = tuple_[4]
+                dict_['min_chain'] = tuple_[5].split('?')
+                #dict_['edited_time'] = tuple_[6]
+                dict_['image'] = img_url
+                #print(f'icon_name:{img_url}')
+
+                # 골드,실버,카퍼 를 분리해줍니다
+                price = int(tuple_[3])
+
+                if price < 10000:
+                    dict_['gold'] = 0
+                else:
+                    dict_['gold'] = math.floor(price / 10000)
+
+                price = price - dict_['gold'] * 10000
+                if price < 100:
+                    dict_['silver'] = 0
+                else:
+                    dict_['silver'] = math.floor(price / 100)
+
+                dict_['copper'] = price - dict_['silver'] * 100
+
+    return dict_
+
 async def get_decoed_item_set(server, setname):
     dict_ = {}
     async with create_engine(user='postgres',

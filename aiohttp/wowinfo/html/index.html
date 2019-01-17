@@ -10,6 +10,22 @@
 		window.itemsets = [];
 		window.img_host = 'https://wow.zamimg.com/images/wow/icons/large/';
 		window.chart_chains = new Array;
+		window.server = '아즈샤라';
+		function show_item_form(num) {
+			//alert('div-form-item'+num);
+			//alert(document.getElementById('div-form-item'+num).style.display);
+			document.getElementById('div-form-item'+num).style.display = 'flex';
+		}
+		function submit_item_form(num) {
+			//alert('div-form-item'+num);
+			//alert(document.getElementById('div-form-item'+num).style.display);
+			document.getElementById('div-form-item'+num).style.display = 'none';
+			i_name = document.getElementById('input-item'+num).value;
+			if(i_name) {
+				$.getJSON('/update_indiv/' + num + '/' + server + '/' + i_name , \
+							function(data){update_indiv(data);});
+			}
+		}
 
 		function update_chart(a, b) {
 			if(checked[a] != b){
@@ -76,7 +92,7 @@
 				if (msg.data == 'update'){
 					// 업데이트 신호가 들어오면 해당 div를 갱신합니다
 					// /update 페이지에 접속하고 서버에서 해당페이지는 데이터를 json형태로 반납합니다
-					$.getJSON('/update/' + cur_itemset, function(data){update_page(data);});
+					$.getJSON('/update/' + server + '/' + cur_itemset, function(data){update_page(data);});
 				}
 			}
 		}	
@@ -91,9 +107,59 @@
 				}
 			}
 			document.getElementById("button_itemset").innerHTML = itemset;
-			$.getJSON('/update/' + itemset, function(data){update_page(data);});
+			$.getJSON('/update/' + server + '/' + itemset, function(data){update_page(data);});
 		}
 
+		## 개별 아이템 업그레이드 함수입니다
+		function update_indiv(data){
+			var ar = data.indiv_ar;
+			var i = data.num;
+			if(!ar.name) return;
+			document.getElementById("input-item"+i).value = '';
+			document.getElementById("image"+i).setAttribute("style", "background-image: url('" + img_host + ar.image + ".jpg')"); 
+			document.getElementById("itemname"+i).innerHTML = ar.name;
+			document.getElementById("num"+i).innerHTML = ar.num;
+			document.getElementById("moneygold"+i).innerHTML = ar.gold;
+			document.getElementById("moneysilver"+i).innerHTML = ar.silver;
+			document.getElementById("moneycopper"+i).innerHTML = ar.copper;
+			document.getElementById("min_seller"+i).innerHTML = ar.min_seller;
+
+			//실제로 클릭액션을 해야하는 클래스라 안먹힙니다
+			//document.getElementById("lb"+i+"0").checked = 1; 
+			document.getElementById("lb"+i+"0").click();
+			
+			## 아직chLine이 미처 생성되지 않았을 경우 exception이 발생해 이상동작이 발생하는듯 
+			if(eval('chart'+i)){
+				## chart_chain 전역배열변수에 일단 저장을 해야합니다
+				chart_chains[i] = ar.min_chain;  
+				min_chain_ = chart_chains[i];
+				//alert(min_chain_[min_chain_.length - 1]);
+				//eval('chLine' + i).data = min_chain_[min_chain_.length - 1] / 10000;
+				var data_ = [],
+					len_ = min_chain_.length;
+				//alert(min_chain_[0]);
+				for (let j=len_ - chart_column_num;j<=len_ - 1;j++){
+				//for (i=0;i<=3;i++){
+					data_.push(min_chain_[j] / 10000);
+				}
+				var labels_ = [];
+				for(let l_=0;l_<chart_column_num;l_++){
+					labels_.push("");
+				}
+				//alert(data_[0]);
+				//eval('chLine' + i).data = min_chain_.slice(,min_chain_.length - 1) / 10000);
+				//eval('chart' + i).data = full_data_; 
+				//eval('chart' + i).data.datasets[0].data = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; 
+				eval('chart'+i).data.labels = labels_;
+				eval('chart'+i).data.datasets[0].data = data_;
+				eval('chart'+i).update();
+				//alert('엄지척');
+				////eval('chLine' + i).addData = data_; 
+				//eval('chLine' + i).update();
+			}
+		}
+
+		## 전체 6개 아이템 업데이트 함수입니다
 		function update_page(data){
 			//alert(Object.keys(data).length);
 			// data 갯수, 즉 6회동안 각 요소 갱신을 반복합니다
@@ -289,13 +355,27 @@
 						border가 잘리는문제를 해결하였습니다
 						</%doc>
 						<div id="image${loop.index}" class="iconlarge" style="background-image: url('${imageroot + ar[a]['image']}')">
-							<img src="../static/css/images/border.png"/>
+							<a href="javascript:show_item_form(${loop.index});">
+								<img src="../static/css/images/border.png"/>
+							</a>
 						</div>
 					</center>
 				</div>
 
-				<div class="card-body " >
-					<div class="card-title" align="center"  ><span id="itemname${loop.index}" style="font-size:1.2rem">${a}</span><span id="num${loop.index}" class="badge badge-success badge-pill" >${ar[a]['num']}</span></div>
+				<div class="card-body main-item" >
+					## 아이템명 변경 입력 팝업입니다
+					<div id="div-form-item${loop.index}" align="center">
+						<form action="javascript:submit_item_form(${loop.index});" >
+							<input id="input-item${loop.index}" class="form-control" type="text" placeholder="아이템명">
+							<button class="btn btn-info btn-lg" type="submit">
+								확인
+							</button>
+						</form>
+					</div>
+					<div class="card-title" align="center"  >
+						<a href="javascript:show_item_form(${loop.index});"><span id="itemname${loop.index}" style="font-size:1.2rem">${a}</span><span id="num${loop.index}" class="badge badge-success badge-pill" >${ar[a]['num']}</span>
+						</a>
+					</div>
 					<ul class="list-group list-group-flush">
 					<li class="list-group-item">
 					<p class="card-text" align="center">

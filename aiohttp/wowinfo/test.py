@@ -3,7 +3,7 @@ from aiohttp import web
 import aiohttp_mako 
 import sqlalchemy as sa
 from aiopg.sa import create_engine
-from auction import get_decoed_item_set, db_update_from_server
+from auction import get_decoed_item_set, get_decoed_item, db_update_from_server
 import datetime
 import time
 from db_tableinfo import *
@@ -46,6 +46,23 @@ async def ws_handle(request):
 
     return ws
 
+async def update_indiv(request):
+    print('/update_indiv handler came in')
+    pos_no = request.match_info['num']
+    item_name = request.match_info['itemname']
+    srver = request.match_info['server']
+
+    a = time.time()
+    indiv_ar = await get_decoed_item(srver, item_name)
+    b = time.time()
+    sub = round(b - a,2)
+    print(f':{sub}초 소요')
+    data = {}
+    data['indiv_ar'] = indiv_ar 
+    data['num'] = pos_no
+
+    return web.json_response(data)
+
 async def update(request):
     global ar
     global server
@@ -54,6 +71,7 @@ async def update(request):
     print('/update handler came in')
 
     itemset = request.match_info['itemset']
+    srver = request.match_info['server']
     print(f':itemset = {itemset}')
 
     '''
@@ -63,7 +81,7 @@ async def update(request):
     '''
     # 굳이 글로벌로 균일하게 갖고 있는 것은 말이 안됩니다. 사용자가 원하는 상황마다 그대로 전달해줘야합니다
     start_time = time.time()
-    array = await get_decoed_item_set(server, itemset)
+    array = await get_decoed_item_set(srver, itemset)
     finished_time = time.time()
     proc_time = round(finished_time - start_time, 3)
     print(f'fetch elapsed time: {proc_time} 초')
@@ -126,7 +144,8 @@ async def init():
 
     app.router.add_static('/static', 'static')
     app.router.add_get('/', handle)
-    app.router.add_get('/update/{itemset}', update)
+    app.router.add_get('/update/{server}/{itemset}', update)
+    app.router.add_get('/update_indiv/{num}/{server}/{itemname}', update_indiv)
 
     # 웹소켓 핸들러도 get을 통해 정의해줘야합니다
     ws = app.router.add_get('/ws', ws_handle)
