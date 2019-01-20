@@ -11,19 +11,40 @@
 		window.img_host = 'https://wow.zamimg.com/images/wow/icons/large/';
 		window.chart_chains = new Array;
 		window.server = '아즈샤라';
+		window.form_opened = new Array;
+		for (let i=0;i<6;i++) {
+			form_opened[i] = 0;
+		}
 		function show_item_form(num) {
 			//alert('div-form-item'+num);
 			//alert(document.getElementById('div-form-item'+num).style.display);
-			document.getElementById('div-form-item'+num).style.display = 'flex';
+			if(form_opened[num]){
+				closeForm(num);
+			}
+			else {
+				openForm(num);
+			}
 		}
 		function submit_item_form(num) {
 			//alert('div-form-item'+num);
 			//alert(document.getElementById('div-form-item'+num).style.display);
-			document.getElementById('div-form-item'+num).style.display = 'none';
+			closeForm(num);
 			i_name = document.getElementById('input-item'+num).value;
 			if(i_name) {
+				## vanilla js 를 이용해봅니다
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function() {
+					if(this.readyState == 4 && this.status == 200) {
+						var data = JSON.parse(this.responseText);
+						update_indiv(data);
+					}
+				};
+				xhttp.open("GET", '/update_indiv/' + num + '/' + server + '/' + i_name,true);
+				xhttp.send();
+				/*
 				$.getJSON('/update_indiv/' + num + '/' + server + '/' + i_name , \
 							function(data){update_indiv(data);});
+							*/
 			}
 		}
 
@@ -56,8 +77,18 @@
 						labels_.push("");
 					}
 				}
-				//60*24(=1440)분 주기일 경우
+				//60*2분 주기일 경우
 				if(b == 2){
+					for (let j=len_ - chart_column_num*4 + 3;j<=len_ - 1;j+=4){
+						data_.push(min_chain_[j] / 10000);
+					}
+					var labels_ = [];
+					for(let l_=0;l_<chart_column_num;l_++){
+						labels_.push("");
+					}
+				}
+				//60*24(=1440)분 주기일 경우
+				if(b == 3){
 					for (let j=len_ - chart_column_num*48 + 47;j<=len_ - 1;j+=48){
 						data_.push(min_chain_[j] / 10000);
 					}
@@ -73,11 +104,7 @@
 				eval('chart'+a).data.labels = labels_;
 				eval('chart'+a).data.datasets[0].data = data_;
 				eval('chart'+a).update();
-				//alert('엄지척');
-				////eval('chLine' + i).addData = data_; 
 			}
-
-			//alert(a + ',' + b);
 		}
 		function setupWebSocket(){
 			this.socket = new WebSocket('ws://'+window.location.host+'/ws');
@@ -92,7 +119,17 @@
 				if (msg.data == 'update'){
 					// 업데이트 신호가 들어오면 해당 div를 갱신합니다
 					// /update 페이지에 접속하고 서버에서 해당페이지는 데이터를 json형태로 반납합니다
-					$.getJSON('/update/' + server + '/' + cur_itemset, function(data){update_page(data);});
+					// 역시 vanilla js 를 사용해 봅니다
+					var xhttp = new XMLHttpRequest();
+					xhttp.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {
+							var data = JSON.parse(this.responseText);
+							update_page(data);
+						}
+					};
+					xhttp.open("GET", '/update/' + server + '/' + cur_itemset, true);
+					xhttp.send();
+					//$.getJSON('/update/' + server + '/' + cur_itemset, function(data){update_page(data);});
 				}
 			}
 		}	
@@ -107,7 +144,21 @@
 				}
 			}
 			document.getElementById("button_itemset").innerHTML = itemset;
-			$.getJSON('/update/' + server + '/' + itemset, function(data){update_page(data);});
+			## 혹시 아이템 입력창이 열려있을 수 있으므로 모두 닫습니다.
+			for (let i=0;i<6;i++){
+				closeForm(i);
+			}
+			// 역시 vanilla js 로 변경해봅니다
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if(this.readyState == 4 && this.status == 200) {
+					var data = JSON.parse(this.responseText);
+					update_page(data);
+				}
+			};
+			xhttp.open("GET", '/update/' + server + '/' + itemset, true);
+			xhttp.send();
+			//$.getJSON('/update/' + server + '/' + itemset, function(data){update_page(data);});
 		}
 
 		## 개별 아이템 업그레이드 함수입니다
@@ -239,17 +290,37 @@
 			//alert('엄지척');
 		} //function update_page() ends
 
+		function closeForm(num) {
+			document.getElementById('div-form-item'+num).style.display = 'none';
+			document.getElementById('icon-cancel'+num).style.display = 'none';
+			form_opened[num] = 0;
+		}
+		function openForm(num) {
+			document.getElementById('div-form-item'+num).style.display = 'flex';
+			document.getElementById("input-item"+num).focus();
+			document.getElementById('icon-cancel'+num).style.display = 'flex';
+			form_opened[num] = 1;
+		}
 		// jQuery document ready 를 대신하는 자바스크립트입니다 다만 익스플로러 9이하에선 안된다는 말도 있네요
 		document.addEventListener("DOMContentLoaded", function(){
 			window.checked = new Array;
-		
+			window.addEventListener("keydown", function (event) {
+				//alert(event.key);
+				if(event.key == "Escape"){
+					for(let i=0;i<6;i++) {
+						closeForm(i);
+					}
+				}
+			});
 			for (let uu=0;uu<6;uu++) {
 				checked[uu] = 0;
 				document.getElementById('lb' + uu + '0').addEventListener('click', function () {update_chart(uu, 0);}, false);
 				document.getElementById('lb' + uu + '1').addEventListener('click', function () {update_chart(uu, 1);}, false);
 				document.getElementById('lb' + uu + '2').addEventListener('click', function () {update_chart(uu, 2);}, false);
-				//document.getElementById('lb' + ii_ + '1').addEventListener('click', update_chart(ii_, 1), true);
-				//document.getElementById('lb' + ii_ + '2').addEventListener('click', update_chart(ii_, 2), true);
+				document.getElementById('lb' + uu + '3').addEventListener('click', function () {update_chart(uu, 3);}, false);
+				document.getElementById("icon-cancel"+uu).addEventListener('click', function() { \
+					document.getElementById("input-item"+uu).value=''; \
+					document.getElementById("input-item"+uu).focus();}, false);
 			}
 			setupWebSocket();
 			// innerHTML
@@ -366,11 +437,14 @@
 					## 아이템명 변경 입력 팝업입니다
 					<div id="div-form-item${loop.index}" align="center">
 						<form action="javascript:submit_item_form(${loop.index});" >
-							<input id="input-item${loop.index}" class="form-control" type="text" placeholder="아이템명">
-							<button class="btn btn-info btn-lg" type="submit">
+							<input id="input-item${loop.index}" class="form-control" type="text" placeholder="아이템명을 입력하세요">
+							<button class="btn btn-info btn-lg item-confirm" type="submit">
 								확인
 							</button>
 						</form>
+					</div>
+					<div id="icon-cancel${loop.index}" >
+						X		
 					</div>
 					<div class="card-title" align="center"  >
 						<a href="javascript:show_item_form(${loop.index});"><span id="itemname${loop.index}" style="font-size:1.2rem">${a}</span><span id="num${loop.index}" class="badge badge-success badge-pill" >${ar[a]['num']}</span>
@@ -400,12 +474,12 @@
 									<input type="radio" name="options" id="option2" autocomplete="off">24시
 								</label>
 								<label id="lb${loop.index}2" class="btn btn-outline-primary text-muted">
-									<input type="radio" name="options" id="option3" autocomplete="off">30일
+									<input type="radio" name="options" id="option3" autocomplete="off">48시
+								</label>
+								<label id="lb${loop.index}3" class="btn btn-outline-primary text-muted">
+									<input type="radio" name="options" id="option4" autocomplete="off">30일
 								</label>
 							</div>
-							##<div class="badge badge-primary" >12시간</div>
-							##<div class="badge badge-secondary text-muted" >1일</div>
-							##<div class="badge badge-secondary text-muted" >30일</div>
 						</li>
 					</div>
 					</ul>

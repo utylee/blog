@@ -40,6 +40,38 @@ input[type=radio] {
 	font-size: 1.5em;
 	border-radius: 13px;
 }
+.item-confirm {
+	width: 150px;
+}
+
+/*
+input[type=search]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
+}
+
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+*/
+
+/* 텍스트 클리어 버튼을 div로 직접 만들어 봤습니다 */
+#icon-cancel0, #icon-cancel1, #icon-cancel2, #icon-cancel3, #icon-cancel4, #icon-cancel5 {
+	display:none;			/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
+	flex-direction:column;	/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
+	position: absolute;
+	width: 22px;
+	height: 22px;
+	font-size:1.3em;
+	font-weight: bold;
+	text-align:center;
+	border-radius: 6px;
+	background: #dddddd;
+	justify-content:center;
+	align-content:center;
+	margin: 8px 220px;
+	cursor: pointer;
+	z-index:3;
+}
 
 .my-container {
 	display: flex;

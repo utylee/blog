@@ -16,8 +16,6 @@ from aiopg.sa import create_engine
 
 from db_tableinfo import *
 
-
-myapi = 'm5u8gdp6qmhbjkhbht3ax9byp62wench'
 '''
 https://kr.api.blizzard.com/wow/item/152505?locale=ko_KR&access_token=USt2y7pxKKiJ1yLYDjshaEM2k71sXdbCp3
 https://wow.zamimg.com/images/wow/icons/large/inv_misc_herb_riverbud.jpg
@@ -28,7 +26,29 @@ locale = 'ko_KR'
 name_list = ['부자인생', '부자인셍', '부쟈인생', '부쟈인섕','부자인솅','부자인생의소환수','부자인셈']
 my_item = []
 tok = ''
+myapi = 'm5u8gdp6qmhbjkhbht3ax9byp62wench'
+cli = 'b934788e2cde4166acb93dcbf558040f'
+pwd = 'nMA7eloEh2rHFEiRw9Xs5j0Li6ZaFA5A'
+tok_url = 'https://apac.battle.net/oauth/token'  #apac = kr, tw
 
+async def get_oauth():
+    auth = aiohttp.BasicAuth(login=cli, password=pwd)
+    print('OAuth 토큰을 요청합니다')
+    async with aiohttp.ClientSession(auth=auth) as sess:
+        async with sess.get(tok_url,params='grant_type=client_credentials') as resp:
+            tok_load = json.loads(await resp.text())
+            tok = tok_load['access_token']
+    return tok
+
+async def get_wowtoken(tok):
+    wowtok_req_url = f'https://kr.api.blizzard.com/data/wow/token/index?namespace=dynamic-kr&locale={locale}&access_token={tok}'
+
+    async with aiohttp.ClientSession() as sess:
+        async with sess.get(wowtok_req_url) as resp:
+            #print(await resp.text())
+            load = json.loads(await resp.text())
+            price = load['price']
+    return price
 
 #async def proc(server, item_list):
 async def db_update_from_server(server):
@@ -46,18 +66,9 @@ async def db_update_from_server(server):
             #url = 'https://kr.api.battle.net/wow/auction/data/{}?locale={}&apikey={}'.format(server, locale, myapi)
 
             #battlenet dev api 대변혁으로 로그인 방식이 바뀌었습니다 자칭 OAuth 방식
-            cli = 'b934788e2cde4166acb93dcbf558040f'
-            pwd = 'nMA7eloEh2rHFEiRw9Xs5j0Li6ZaFA5A'
-            tok_url = 'https://apac.battle.net/oauth/token'  #apac = kr, tw
             domain = 'kr.api.blizzard.com'
-            locale = 'ko_KR'
-            auth = aiohttp.BasicAuth(login=cli, password=pwd)
             #먼저 토큰을 요청합니다
-            print('OAuth 토큰을 요청합니다')
-            async with aiohttp.ClientSession(auth=auth) as sess:
-                async with sess.get(tok_url,params='grant_type=client_credentials') as resp:
-                    tok_load = json.loads(await resp.text())
-                    tok = tok_load['access_token']
+            tok = await get_oauth()
             '''
             https://us.api.blizzard.com/wow/auction/data/medivh?locale=en_US&access_token=USt2y7pxKKiJ1yLYDjshaEM2k71sXdbCp3
             '''
@@ -70,11 +81,16 @@ async def db_update_from_server(server):
             dump_ts = 0             # 블리자드서버 경매데이터 덤프 시각 timestamp
             dump_ts_str = ''        # 블리자드서버 경매데이터 덤프 시각 timestamp 스트링
 
+
+            # 와우토큰 
+            wowtoken_price = await get_wowtoken(tok)
+            print(f'토큰가격:{wowtoken_price}')
+
             # ssl 체크에서 에러가 나서 ssl 체크를 빼주는 옵션을 찾아서 넣어주었습니다
-            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as sess:
-            #async with aiohttp.ClientSession() as sess:
+            #async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as sess:
+            async with aiohttp.ClientSession() as sess:
                 async with sess.get(req_url) as resp:
-                    print(await resp.text())
+                    #print(await resp.text())
                     load = json.loads(await resp.text())
                     js_url = load['files'][0]['url']
                     dump_ts = round(int(load['files'][0]['lastModified']) / 1000)
@@ -105,24 +121,6 @@ async def db_update_from_server(server):
             #print(js['auctions'])
 
             target_item_name = "하늘 골렘"
-            #target_item_name = "얼어붙은 보주"
-            #target_item_name = "호화로운 모피"
-            #target_item_name = "묘지기의 투구"
-            #target_item_name = "강봉오리"
-            #target_item_name = "해안 마나 물약"
-            #target_item_name = "파멸의 증오"
-            #target_item_name = "야만의 피"
-            target_item_name = "사술매듭 가방"
-            #target_item_name = "심해 가방"
-            #target_item_name = "영웅의 얼어붙은 무구"
-            #target_item_name = "폭풍 은 광석"
-            #target_item_name = "살아있는 강철"
-            #target_item_name = "황천의 근원"
-            #target_item_name = "드레나이 가루"
-            #target_item_name = "폭풍 은 광석"
-            #target_item_name = "진철주괴"
-            #target_item_name = "유령무쇠 주괴"
-
             # 저장된 파일을 읽은 후 한줄씩 탐색합니다
             sellers = []
             min_seller = ''
@@ -135,7 +133,8 @@ async def db_update_from_server(server):
 
             total = len(js['auctions'])
             print('총 {} 개의 경매 아이템이 등록되어있습니다'.format(total))
-            result_dict_set = defaultdict(dict)
+            # wow token 가격도 추가로 마지막에 넣어줍니다
+            js['auctions'].append({'item': 999999, 'buyout': wowtoken_price, 'quantity': 1, 'owner': 'BLIZZARD Ent.'})
 
             for l in js['auctions']:
                 num = 0
@@ -158,7 +157,7 @@ async def db_update_from_server(server):
                     temp_name, temp_image = res_
 
                     #print(temp_name)
-                    temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner']}
+                    #temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner']}
                     temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner'], 'image': temp_image}
                 # 해당아이템 딕트가 이미 존재할 경우
                 else:
@@ -265,7 +264,6 @@ async def db_update_from_server(server):
                                                         edited_timestamp=dump_ts,
                                                         image=dict_['image']))
 
-        #return await deco_dictset(result_dict_set)
         end_time = time.time()
         elapsed_time = math.floor(end_time - start_time)
         elapsed_min = 0
@@ -282,6 +280,8 @@ async def db_update_from_server(server):
 async def get_item(id):
     global tok
     #print(f'토큰:{tok}')
+    if(id == 999999):   #WoW 토큰
+        return ['WoW 토큰', 'wow_token01']
     item_req_url = f'https://kr.api.blizzard.com/wow/item/{id}?locale=ko_KR&access_token={tok}'
     # requests를 비동기형 aiohttp 의 clientssion get 으로 대치합니다
     async with aiohttp.ClientSession() as sess:
