@@ -32,6 +32,7 @@ class NormalSet(Set):
                     id_ = await get_item_id(conn, name_) 
                     image_path = ''
                     async for it_ in conn.execute(tbl_items.select().where(tbl_items.c.id==id_)):
+                        img_url = it_[2]
                         #img_url = f'https://wow.zamimg.com/images/wow/icons/large/{img_}.jpg'
                     async for tuple_ in conn.execute(tbl_arranged_auction.select().where(and_((tbl_arranged_auction.c.item==id_),(tbl_arranged_auction.c.server==server)))):
                         #print('name_:{}'.format(name_))
