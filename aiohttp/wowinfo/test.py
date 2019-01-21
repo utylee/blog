@@ -7,6 +7,7 @@ from auction import get_decoed_item_set, get_decoed_item, db_update_from_server
 import datetime
 import time
 from db_tableinfo import *
+from auction_classes import *
 '''
 metadata = sa.MetaData()
 items = {}
@@ -81,7 +82,9 @@ async def update(request):
     '''
     # 굳이 글로벌로 균일하게 갖고 있는 것은 말이 안됩니다. 사용자가 원하는 상황마다 그대로 전달해줘야합니다
     start_time = time.time()
-    array = await get_decoed_item_set(srver, itemset)
+    set_ = Set(itemset).fork()
+    array = await set_.get_decoed_item_set(srver)
+    #array = await get_decoed_item_set(srver, itemset)
     finished_time = time.time()
     proc_time = round(finished_time - start_time, 3)
     print(f'fetch elapsed time: {proc_time} 초')
@@ -118,7 +121,9 @@ async def handle(request):
     
     itemsets = await get_itemsets()
     #itemsets.remove(currentset)
-    array = await get_decoed_item_set(server, currentset)
+    set_ = Set(currentset).fork()
+    array = await set_.get_decoed_item_set(server)
+    #array = await get_decoed_item_set(server, currentset)
 
     '''
     return {'name': '7', 'imageroot': '../static/images/' ,'ar':ar, 'server':server,

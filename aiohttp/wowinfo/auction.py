@@ -8,9 +8,11 @@ from collections import defaultdict
 import math
 import datetime
 import time
+#from auction_classes import *
 
 
 import sqlalchemy as sa
+from sqlalchemy import select
 from sqlalchemy.sql import and_, or_, not_
 from aiopg.sa import create_engine
 
@@ -81,7 +83,6 @@ async def db_update_from_server(server):
             dump_ts = 0             # 블리자드서버 경매데이터 덤프 시각 timestamp
             dump_ts_str = ''        # 블리자드서버 경매데이터 덤프 시각 timestamp 스트링
 
-
             # 와우토큰 
             wowtoken_price = await get_wowtoken(tok)
             print(f'토큰가격:{wowtoken_price}')
@@ -130,6 +131,13 @@ async def db_update_from_server(server):
             max = 0
             avg = 0
             sum = 0
+
+            #인기 6위를 선별합니다
+            top_six = await worldcup_six(conn, server)
+            #5개만 취해서 기본구성 set를 업데이트합니다
+            for k in top_six.keys():
+                top_six[k] = str(k) + '?' + str(top_six[k])
+            print(f'top_six: {top_six}')
 
             total = len(js['auctions'])
             print('총 {} 개의 경매 아이템이 등록되어있습니다'.format(total))
@@ -187,7 +195,8 @@ async def db_update_from_server(server):
                 dict_ = temp_dict[id_]
                 str_chain = ''
                 
-                async for r in conn.execute(tbl_arranged_auction.select().where(and_((tbl_arranged_auction.c.server==server),(tbl_arranged_auction.c.item==id_)))):
+                #async for r in conn.execute(tbl_arranged_auction.select().where(and_((tbl_arranged_auction.c.server==server),(tbl_arranged_auction.c.item==id_)))):
+                async for r in conn.execute(select([tbl_arranged_auction.c.item]).where(and_((tbl_arranged_auction.c.server==server),(tbl_arranged_auction.c.item==id_)))):
                     #print(r)
                     found = 1
 
@@ -211,7 +220,8 @@ async def db_update_from_server(server):
                                                         min_chain=str_chain,
                                                         edited_time=dump_ts_str,
                                                         edited_timestamp=dump_ts,
-                                                        image=dict_['image']))
+                                                        image=dict_['image'],
+                                                        fame=0))
                 # 해당 튜플이 있을 경우
                 else:
                     do_ = 0       # 튜플 업데이트 여부를 결정합니다.시간이 30분 이내면 삽입하지 않습니다
@@ -263,6 +273,7 @@ async def db_update_from_server(server):
                                                         edited_time=dump_ts_str,
                                                         edited_timestamp=dump_ts,
                                                         image=dict_['image']))
+            #top_six = await worldcup_six(conn)
 
         end_time = time.time()
         elapsed_time = math.floor(end_time - start_time)
@@ -275,6 +286,17 @@ async def db_update_from_server(server):
         
         return 
 
+async def worldcup_six(conn, server):       # server는 받습니다만 실제로 아즈샤라 서버 인기도
+    ret_dict = {}
+    ind = 0
+    async for result in conn.execute(
+            select([tbl_arranged_auction.c.item, tbl_arranged_auction.c.fame])
+            .order_by(sa.desc(tbl_arranged_auction.c.fame)).limit(6)
+            .where(tbl_arranged_auction.c.server=='아즈샤라')):
+        ret_dict[ind] = await get_item_name(conn, result[0])
+        ind += 1
+    #print(ret_dict)
+    return ret_dict
 
 # battle dev 로부터 아이템을 가져옵니다
 async def get_item(id):
@@ -300,12 +322,25 @@ async def get_item(id):
         # 에러날 경우 그냥 널을 리턴해줘봅니다
         except:
             return ['', '']
+  
+# 로컬 db에서 id를 통해 이름을 가져옵니다
+async def get_item_name(conn, id):
+    name = ''
+    result = 0
+    #async for r in conn.execute(tbl_items.select().where(tbl_items.c.name==name)):
+        #id = r[0]
+    async for r in conn.execute(select([tbl_items.c.name]).where(tbl_items.c.id==id)):
+        name = r[0]
+        result = 1
+    return name 
 
 # 로컬 db에서 이름을 통해 id를 가져옵니다
 async def get_item_id(conn, name):
     id = 0
     result = 0
-    async for r in conn.execute(tbl_items.select().where(tbl_items.c.name==name)):
+    #async for r in conn.execute(tbl_items.select().where(tbl_items.c.name==name)):
+        #id = r[0]
+    async for r in conn.execute(select([tbl_items.c.id]).where(tbl_items.c.name==name)):
         id = r[0]
         result = 1
         '''
@@ -317,7 +352,6 @@ async def get_item_id(conn, name):
         print(name)
         await conn.execute(tbl_items.insert().values(id=int(item_id), name=name))
         '''
-
     return id 
 
 # 로컬 db에서 id를 통해 이름를 가져옵니다
@@ -386,6 +420,7 @@ async def get_item_set(conn, setname):
     itemlist = []
 
     #async for r in conn.execute(tbl_item_set.select(tbl_item_set.c.itemname_list).where(tbl_item_set.c.set_name==setname)) :
+    print(f'setname:{setname}');
     async for r in conn.execute(tbl_item_set.select().where(tbl_item_set.c.set_name==setname)) :
         itemlist = r[1].split(',')
 
@@ -414,6 +449,10 @@ async def get_decoed_item(server, name_):
                 #dict_['edited_time'] = tuple_[6]
                 dict_['image'] = img_url
                 #print(f'icon_name:{img_url}')
+                fame = tuple_[9]
+                if fame is None:
+                    fame = 0
+                fame += 1
 
                 # 골드,실버,카퍼 를 분리해줍니다
                 price = int(tuple_[3])
@@ -430,8 +469,11 @@ async def get_decoed_item(server, name_):
                     dict_['silver'] = math.floor(price / 100)
 
                 dict_['copper'] = price - dict_['silver'] * 100
+                # fame 을 1 증가시켜줍니다
+            await conn.execute(tbl_arranged_auction.update().where(and_((tbl_arranged_auction.c.item==id_),(tbl_arranged_auction.c.server==server))).values(fame=fame))
 
     return dict_
+
 
 async def get_decoed_item_set(server, setname):
     dict_ = {}
