@@ -8,15 +8,14 @@ from collections import defaultdict
 import math
 import datetime
 import time
-#from auction_classes import *
-
 
 import sqlalchemy as sa
 from sqlalchemy import select
 from sqlalchemy.sql import and_, or_, not_
 from aiopg.sa import create_engine
 
-from db_tableinfo import *
+#from db_tableinfo import *
+#from auction_classes import Set
 
 '''
 https://kr.api.blizzard.com/wow/item/152505?locale=ko_KR&access_token=USt2y7pxKKiJ1yLYDjshaEM2k71sXdbCp3
@@ -53,7 +52,7 @@ async def get_wowtoken(tok):
     return price
 
 #async def proc(server, item_list):
-async def db_update_from_server(server):
+async def db_update_from_server(server, defaultset):
     global tok
     # 임시 딕셔너리를 만듭니다. 전체 db를 아이템별로 처리합니다
     temp_dict = {}
@@ -132,18 +131,13 @@ async def db_update_from_server(server):
             avg = 0
             sum = 0
 
-            #인기 6위를 선별합니다
-            top_six = await worldcup_six(conn, server)
-            #5개만 취해서 기본구성 set를 업데이트합니다
-            for k in top_six.keys():
-                top_six[k] = str(k) + '?' + str(top_six[k])
-            print(f'top_six: {top_six}')
 
             total = len(js['auctions'])
             print('총 {} 개의 경매 아이템이 등록되어있습니다'.format(total))
             # wow token 가격도 추가로 마지막에 넣어줍니다
             js['auctions'].append({'item': 999999, 'buyout': wowtoken_price, 'quantity': 1, 'owner': 'BLIZZARD Ent.'})
 
+            start_a = time.time()
             for l in js['auctions']:
                 num = 0
                 cur = int(l['item'])
@@ -175,11 +169,20 @@ async def db_update_from_server(server):
                     if (int(temp_dict[cur]['min']) == 0) or (price < temp_dict[cur]['min']):
                         temp_dict[cur]['min'] = price
                         temp_dict[cur]['min_seller'] = l['owner']
+                # sleep을 줘서 점유를 풀어줍니다
+                # 0.05 이상의 값을 줄 경우 어떤 경우에 있으서 transport 에러 워닝이 뜹니다.
+                # sleep을 0으로 하라는 말도 있는데 그렇게 하니 오히려 행이 좀 걸리는 것 같습니다.
+                # 관련 정보 링크https://github.com/aio-libs/aiohttp/issues/1115
+                #await asyncio.sleep(0.01)
 
                 # 내가 경매에 부친 물건이 있는지 표시합니다
             #print(temp_dict)
             ## 각 item 반복작업 종료
-
+            
+            end_a = time.time()
+            elap_a = round(end_a - start_a, 2)
+            elap_a_min = round(elap_a / 60)
+            print(f'JSON 파싱 소요시간: {elap_a} 초({elap_a_min})분')
 
 
             # arranged_auction db에 삽입 프로세스 by 만들어진 temp_dict를 통해
@@ -275,6 +278,23 @@ async def db_update_from_server(server):
                                                         image=dict_['image']))
             #top_six = await worldcup_six(conn)
 
+        #인기 탑5를 선별합니다
+        top_six = {}
+        top_six = await worldcup_six(conn, server)
+        #5개만 취해서 기본구성 set를 업데이트합니다
+        # loop 내에서 y를 통한 dict 아이템 찾을 시 다시 해싱을 하므로 좀 변경해봤습니다
+        for k, v in top_six.items():
+            #top_six[k] = str(k) + '?' + str(top_six[k])
+            top_six[k] = str(k) + '?' + str(v)  # top_six[k]는 v로 바꾸면 변수 변경은 안되더군여
+        top_six.pop(6)        #마지막 아이템을 제거합니다
+        top_six[0] = "0?WoW 토큰"
+        top_six_str = ','.join(top_six.values())
+        print(f'top_six string: {top_six_str}')
+
+        #기본구성 db에 삽입해줍니다
+        await conn.execute(tbl_item_set.update().where(tbl_item_set.c.set_name==defaultset)
+                            .values(itemname_list=top_six_str))
+
         end_time = time.time()
         elapsed_time = math.floor(end_time - start_time)
         elapsed_min = 0
@@ -288,7 +308,7 @@ async def db_update_from_server(server):
 
 async def worldcup_six(conn, server):       # server는 받습니다만 실제로 아즈샤라 서버 인기도
     ret_dict = {}
-    ind = 0
+    ind = 1         # 0번은 후에 WoW 토큰을 위해 남겨두고 1부터 시작합니다
     async for result in conn.execute(
             select([tbl_arranged_auction.c.item, tbl_arranged_auction.c.fame])
             .order_by(sa.desc(tbl_arranged_auction.c.fame)).limit(6)
@@ -415,7 +435,6 @@ async def deco_dictset(data):
 
     return data
 '''
-
 async def get_item_set(conn, setname):
     itemlist = []
 
@@ -427,7 +446,7 @@ async def get_item_set(conn, setname):
     print(itemlist)
     return itemlist
 
-async def get_decoed_item(server, name_):
+async def get_decoed_item(server, itemset_, pos_, name_):
     dict_ = {}
     async with create_engine(user='postgres',
                             database='auction_db',
@@ -469,10 +488,37 @@ async def get_decoed_item(server, name_):
                     dict_['silver'] = math.floor(price / 100)
 
                 dict_['copper'] = price - dict_['silver'] * 100
-                # fame 을 1 증가시켜줍니다
+            # fame 을 1 증가시켜줍니다
             await conn.execute(tbl_arranged_auction.update().where(and_((tbl_arranged_auction.c.item==id_),(tbl_arranged_auction.c.server==server))).values(fame=fame))
 
+            # 현재 itemset의 해당 아이템 칸 값을 새 아이템명으로 변경해줍니다
+            # 별도의 task로 실행시켜 최대한 일단 사용자에게 반응을 먼저하도록 노력합니다
+            set_ = Set(itemset_).fork()
+            await set_.update_itemset(itemset_, pos_, name_)
+
+            #loop = asyncio.get_event_loop()
+            #loop.create_task(update_itemset(itemset_, pos_, name_))
     return dict_
+
+async def update_itemset(itemset_, pos_, name_):
+    async with create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.211',
+                            password='sksmsqnwk11') as engine:
+        async with engine.acquire() as conn:
+            itemset_l = await get_item_set(conn, itemset_)
+            temp_l = []
+            for _ in itemset_l:
+                l_ = _.split('?')
+                if l_[0] == pos_:
+                    l_[1] = name_
+                temp_l.append('?'.join(l_))
+            ret_str = ','.join(temp_l)
+            print(f'indiv_update: ret_str: {ret_str}')
+
+            # itemset 테이블을 업데이트해줍니다
+            await conn.execute(tbl_item_set.update().where(tbl_item_set.c.set_name==itemset_)
+                                .values(itemname_list=ret_str))
 
 
 async def get_decoed_item_set(server, setname):

@@ -3,11 +3,16 @@ from aiohttp import web
 import aiohttp_mako 
 import sqlalchemy as sa
 from aiopg.sa import create_engine
-from auction import get_decoed_item_set, get_decoed_item, db_update_from_server
+#from auction import *
+import auction as au
+#from auction import get_decoed_item_set, get_decoed_item, db_update_from_server
+#from auction_classes import *
+import auction_classes as ac 
+#from auction_classes import Set
 import datetime
 import time
-from db_tableinfo import *
-from auction_classes import *
+#from db_tableinfo import *
+import db_tableinfo as di 
 '''
 metadata = sa.MetaData()
 items = {}
@@ -21,6 +26,8 @@ locale = 'ko_KR'
 server = '아즈샤라'
 #currentset = '격아약초세트1'
 currentset = '기본구성'
+defaultset = '기본구성'
+imageroot = 'https://wow.zamimg.com/images/wow/icons/large/'
 
 # 관심 아이템들 목록
 pin_items = ['하늘 골렘', '아쿤다의 이빨', '닻풀', # 심해 가방', '사술매듭 가방'
@@ -28,6 +35,7 @@ pin_items = ['하늘 골렘', '아쿤다의 이빨', '닻풀', # 심해 가방',
 #pin_items = ['살아있는 강철', '하늘 골렘']
 
 # fetch 실행 주기 :5분
+interval = 1800 #초
 interval = 1800 #초
 ws = 0
 ar = {} 
@@ -52,9 +60,10 @@ async def update_indiv(request):
     pos_no = request.match_info['num']
     item_name = request.match_info['itemname']
     srver = request.match_info['server']
+    item_set = request.match_info['cur_itemset']
 
     a = time.time()
-    indiv_ar = await get_decoed_item(srver, item_name)
+    indiv_ar = await get_decoed_item(srver, item_set, pos_no, item_name)
     b = time.time()
     sub = round(b - a,2)
     print(f':{sub}초 소요')
@@ -83,7 +92,7 @@ async def update(request):
     # 굳이 글로벌로 균일하게 갖고 있는 것은 말이 안됩니다. 사용자가 원하는 상황마다 그대로 전달해줘야합니다
     start_time = time.time()
     set_ = Set(itemset).fork()
-    array = await set_.get_decoed_item_set(srver)
+    dict_ = await set_.get_decoed_item_set(srver)
     #array = await get_decoed_item_set(srver, itemset)
     finished_time = time.time()
     proc_time = round(finished_time - start_time, 3)
@@ -106,7 +115,7 @@ async def update(request):
 
     #data['ar'] = ar
     #data['itemsets'] = itemsets
-    data['ar'] = array
+    data['ar'] = dict_
     data['itemsets'] = await get_itemsets()
     #data['currentset'] = currentset 
 
@@ -118,18 +127,22 @@ async def handle(request):
     global ar
     global server
     global currentset
+    global imageroot
     
     itemsets = await get_itemsets()
     #itemsets.remove(currentset)
+    # default set이냐 아니냐로 분기하기 위함입니다
     set_ = Set(currentset).fork()
-    array = await set_.get_decoed_item_set(server)
+    dict_ = await set_.get_decoed_item_set(server)
+    #array = await set_.get_decoed_item_set(server)
     #array = await get_decoed_item_set(server, currentset)
+    #print(f'dict_:{dict_}')
 
     '''
     return {'name': '7', 'imageroot': '../static/images/' ,'ar':ar, 'server':server,
                     'itemsets': itemsets, 'current_itemset':currentset}
     '''
-    return {'name': '7', 'imageroot': '../static/images/' ,'ar':array, 'server':server,
+    return {'name': '7', 'imageroot': imageroot ,'ar':dict_, 'server':server,
                     'itemsets': itemsets, 'current_itemset':currentset}
 
 async def init():
@@ -150,7 +163,7 @@ async def init():
     app.router.add_static('/static', 'static')
     app.router.add_get('/', handle)
     app.router.add_get('/update/{server}/{itemset}', update)
-    app.router.add_get('/update_indiv/{num}/{server}/{itemname}', update_indiv)
+    app.router.add_get('/update_indiv/{num}/{server}/{cur_itemset}/{itemname}', update_indiv)
 
     # 웹소켓 핸들러도 get을 통해 정의해줘야합니다
     ws = app.router.add_get('/ws', ws_handle)
@@ -171,7 +184,8 @@ async def main_proc(intv):
             async for r in conn.execute(tbl_wow_server_info.select()):
                 serverlist.append(r[0])
 
-    await fetch_auction()
+    # 제거해봅니다. 초기에 굳이 하지 않아도 handle(index.html)가 처리합니다
+    #await fetch_auction()
     
     serverlist = ['아즈샤라']
     # 주기마다 반복합니다
@@ -182,7 +196,7 @@ async def main_proc(intv):
 
 async def timer_proc(serverlist):
     for s_ in serverlist:
-        await db_update_from_server(s_)
+        await db_update_from_server(s_, defaultset)
         await fetch_auction()
 
 async def fetch_auction():

@@ -39,7 +39,8 @@
 						update_indiv(data);
 					}
 				};
-				xhttp.open("GET", '/update_indiv/' + num + '/' + server + '/' + i_name,true);
+				xhttp.open("GET", '/update_indiv/' + num + '/' + server + '/' + cur_itemset + \
+								'/' + i_name,true);
 				xhttp.send();
 				/*
 				$.getJSON('/update_indiv/' + num + '/' + server + '/' + i_name , \
@@ -217,15 +218,18 @@
 			t = data.time;
 			itemsets = data.itemsets;
 			data = data.ar;
+			//alert(data[0]['name']);
+			## sort를 통해 아래와같이 할수도 있지만 이미 html상 해당id들이 정렬된채 생성된 상태라 상관없습니다
 			for (let i=0;i < Object.keys(data).length;i++) {
-				//document.getElementById("image"+i).setAttribute("style", "background-image: url('${imageroot}/" + data[Object.keys(data)[i]].image + "')"); 
-				document.getElementById("image"+i).setAttribute("style", "background-image: url('" + img_host + data[Object.keys(data)[i]].image + ".jpg')"); 
-				document.getElementById("itemname"+i).innerHTML = Object.keys(data)[i];
-				document.getElementById("num"+i).innerHTML = data[Object.keys(data)[i]].num;
-				document.getElementById("moneygold"+i).innerHTML = data[Object.keys(data)[i]].gold;
-				document.getElementById("moneysilver"+i).innerHTML = data[Object.keys(data)[i]].silver;
-				document.getElementById("moneycopper"+i).innerHTML = data[Object.keys(data)[i]].copper;
-				document.getElementById("min_seller"+i).innerHTML = data[Object.keys(data)[i]].min_seller;
+			//Object.keys(data).sort().foreach(function(i) {
+				//alert(i);
+				document.getElementById("image"+i).setAttribute("style", "background-image: url('" + img_host + data[i].image + ".jpg')"); 
+				document.getElementById("itemname"+i).innerHTML = data[i].name;
+				document.getElementById("num"+i).innerHTML = data[i].num;
+				document.getElementById("moneygold"+i).innerHTML = data[i].gold;
+				document.getElementById("moneysilver"+i).innerHTML = data[i].silver;
+				document.getElementById("moneycopper"+i).innerHTML = data[i].copper;
+				document.getElementById("min_seller"+i).innerHTML = data[i].min_seller;
 
 				//실제로 클릭액션을 해야하는 클래스라 안먹힙니다
 				//document.getElementById("lb"+i+"0").checked = 1; 
@@ -235,7 +239,7 @@
 				try {
 					if(eval('chart'+i)){
 						//min_chain_ = data[Object.keys(data)[i]].min_chain;
-						chart_chains[i] = data[Object.keys(data)[i]].min_chain;
+						chart_chains[i] = data[i].min_chain;
 						min_chain_ = chart_chains[i];
 						//alert(min_chain_[min_chain_.length - 1]);
 						//eval('chLine' + i).data = min_chain_[min_chain_.length - 1] / 10000;
@@ -417,7 +421,8 @@
 	## ---------------------------------------------------------------
 	## 메인 row
 	<div class="my-main">
-			% for a in ar.keys():
+			## % for a in ar.keys():
+			% for a, b in sorted(ar.items()):
 			<div class="card" >
 				<div class="card-img-top bg-secondary"  >
 					<center>
@@ -425,8 +430,9 @@
 						border를 img태그를 이용하고 아이템이미지를 div의 백그라운드로 거꾸로 사용해서
 						border가 잘리는문제를 해결하였습니다
 						</%doc>
-						<div id="image${loop.index}" class="iconlarge" style="background-image: url('${imageroot + ar[a]['image']}')">
-							<a href="javascript:show_item_form(${loop.index});">
+						##<div id="image${loop.index}" class="iconlarge" style="background-image: url('${imageroot + ar[a]['image']}')">
+						<div id="image${a}" class="iconlarge" style="background-image: url('${imageroot + b['image']}')">
+							<a href="javascript:show_item_form(${a});">
 								<img src="../static/css/images/border.png"/>
 							</a>
 						</div>
@@ -435,29 +441,29 @@
 
 				<div class="card-body main-item" >
 					## 아이템명 변경 입력 팝업입니다
-					<div id="div-form-item${loop.index}" align="center">
-						<form action="javascript:submit_item_form(${loop.index});" >
-							<input id="input-item${loop.index}" class="form-control" type="text" placeholder="아이템명을 입력하세요">
+					<div id="div-form-item${a}" align="center">
+						<form action="javascript:submit_item_form(${a});" >
+							<input id="input-item${a}" class="form-control" type="text" placeholder="아이템명을 입력하세요">
 							<button class="btn btn-info btn-lg item-confirm" type="submit">
 								확인
 							</button>
 						</form>
 					</div>
-					<div id="icon-cancel${loop.index}" >
+					<div id="icon-cancel${a}" >
 						X		
 					</div>
 					<div class="card-title" align="center"  >
-						<a href="javascript:show_item_form(${loop.index});"><span id="itemname${loop.index}" style="font-size:1.2rem">${a}</span><span id="num${loop.index}" class="badge badge-success badge-pill" >${ar[a]['num']}</span>
+						<a href="javascript:show_item_form(${a});"><span id="itemname${a}" style="font-size:1.2rem">${b['name']}</span><span id="num${a}" class="badge badge-success badge-pill" >${b['num']}</span>
 						</a>
 					</div>
 					<ul class="list-group list-group-flush">
 					<li class="list-group-item">
 					<p class="card-text" align="center">
-					<span id="moneygold${loop.index}" class="moneygold">${int(ar[a]['gold'])}</span>
-					<span id="moneysilver${loop.index}" class="moneysilver">${int(ar[a]['silver'])}</span>
-					<span id="moneycopper${loop.index}" class="moneycopper">${int(ar[a]['copper'])}</span>
+					<span id="moneygold${loop.index}" class="moneygold">${int(b['gold'])}</span>
+					<span id="moneysilver${loop.index}" class="moneysilver">${int(b['silver'])}</span>
+					<span id="moneycopper${loop.index}" class="moneycopper">${int(b['copper'])}</span>
 					<br>
-					<span id="min_seller${loop.index}" class="badge badge-secondary text-muted" >${ar[a]['min_seller']}</span>
+					<span id="min_seller${loop.index}" class="badge badge-secondary text-muted" >${b['min_seller']}</span>
 					</p>
 					</li>
 					<div style="font-size:12px;margin-top:0px;" align="center">
