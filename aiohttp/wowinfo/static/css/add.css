@@ -15,6 +15,7 @@ input[type=radio] {
 	cursor: pointer;
 }
 */
+
 .card-title a {
 	color : #FFFFFF;
 }
@@ -31,16 +32,19 @@ input[type=radio] {
 	position: absolute;
 	z-index: 2;
 	height: 100px ;
-	margin: -15px -15px;
+	/*margin: -15px -15px;*/
+	margin: -15px;
+	left:0px;
 	justify-items: center;
 }
-.form-control {
+.form-control-item {
 	width: 268px;
 	height: 70px;
 	font-size: 1.5em;
 	border-radius: 13px;
 }
 .item-confirm {
+	/*position: absolute;*/
 	width: 150px;
 }
 
@@ -55,7 +59,7 @@ input[type="search"]::-webkit-search-decoration {
 */
 
 /* 텍스트 클리어 버튼을 div로 직접 만들어 봤습니다 */
-#icon-cancel0, #icon-cancel1, #icon-cancel2, #icon-cancel3, #icon-cancel4, #icon-cancel5 {
+#icon-cancel0, #icon-cancel1, #icon-cancel2, #icon-cancel3, #icon-cancel4, #icon-cancel5, #icon-set-cancel {
 	display:none;			/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
 	flex-direction:column;	/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
 	position: absolute;
@@ -71,6 +75,24 @@ input[type="search"]::-webkit-search-decoration {
 	margin: 8px 220px;
 	cursor: pointer;
 	z-index:3;
+}
+#icon-set-cancel {
+	display:none;			/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
+	flex-direction:column;	/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
+	position: absolute;
+	width: 22px;
+	height: 22px;
+	font-size:1.0em;
+	font-weight: bold;
+	text-align:center;
+	border-radius: 6px;
+	background: #dddddd;
+	justify-content:center;
+	align-content:center;
+	margin: 15px ;
+	left: 205px;
+	cursor: pointer;
+	z-index:6;
 }
 
 .my-container {
@@ -88,18 +110,67 @@ input[type="search"]::-webkit-search-decoration {
 	align-content: center;
 	justify-content: center;
 }
-.my-header > .menu_wide {
+.my-header button {
+	height: 100%;
+	font-size: 1.2rem;
+}
+.my-header div {
+	font-size: 1.2rem;
+}
+.temple_btn {
+	position: relative;
+	width: 300px;
+	height: 70px;
+	/*font-size: 1.2rem;*/
+	align-content: center;
+	justify-content: center;
+}
+.menu_wide {
+	position: absolute;
+	width: 300px;
+	padding: 8px;
+	height: 100%;
+	z-index: 20;
+}
+/*.input_wide {*/
+#div-form-itemset {
+	display: none;
+	position: absolute;
+	flex-wrap: nowrap;
+	flex-direction: row;
+	height: 100%;
+	width: 100%;
+	padding: 8px;
+	margin: 0px;
+	/*border-radius: 13px;*/
+	z-index: 50;
+	justify-content: center;
+	align-content: center;
+}
+.form-control-itemset {
+	width: 240px;
+	height: 100%;
+	font-size: 0.9em;
+	padding:10px;
+	border-radius: 3px;
+	border-width: 0px;
+}
+#itemset-confirm {
+	font-size: 1.0rem;
+	margin-top:-4px;
+	padding:0px;
+	width: 36px;
+	height: 45px;
+}
+#icon-set-cancel {
+}
+.menu_wide_narrow {
 	width: 300px;
 	height: 70px;
 	padding: 8px;
+	white-space: nowrap;  /*줄바꿈 안하는 명령이었던 것 같습니다 */
 }
-.my-header > .menu_wide_narrow {
-	width: 300px;
-	height: 70px;
-	padding: 8px;
-	white-space: nowrap;
-}
-.my-header > .menu_narrow {
+.menu_narrow {
 	width: 150px;
 	height: 70px;
 	padding: 8px;
@@ -111,27 +182,27 @@ input[type="search"]::-webkit-search-decoration {
 	background-image: url(images/icons/Icon-checkCircleGreen.png);
 }
 @media all and (max-width: 626px) {
-	.my-header > .menu_wide_narrow {
+	.menu_wide_narrow {
 		order: -1;
 		width: 150px;
 	}
-	.my-header > .menu_wide_narrow > button {
+	.menu_wide_narrow > button {
 		font-size: 0.9rem;
 	}
 	.icon-checkcircle {
 		padding-left:1.5rem;
 		background-size:1.1rem;
 	}
-	.my-header > .menu_narrow {
+	.menu_narrow {
 		order: -1;
 	}
 }
 
 @media all and (min-width: 627px) and (max-width: 800px) {
-	.my-header > .menu_wide_narrow {
+	.menu_wide_narrow {
 		width: 150px;
 	}
-	.my-header > .menu_wide_narrow > button {
+	.menu_wide_narrow > button {
 		font-size: 0.9rem;
 	}
 	.icon-checkcircle {
@@ -140,13 +211,6 @@ input[type="search"]::-webkit-search-decoration {
 	}
 }
 
-.my-header > div > button {
-	height: 100%;
-	font-size: 1.2rem;
-}
-.my-header > div > div {
-	font-size: 1.2rem;
-}
 .my-main {
 	display:flex;
 	flex-direction: row;

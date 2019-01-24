@@ -52,13 +52,14 @@ tbl_arranged_auction = sa.Table('arranged_auction', metadata,
         sa.Column('edited_time', sa.String(128)),
         sa.Column('edited_timestamp', sa.Numeric),
         sa.Column('image', sa.String(255)),
-        sa.Column('fame', sa.BigInteger))
+        sa.Column('fame', sa.Numeric))
 
 # itemset 테이블입니다
 tbl_item_set = sa.Table('item_set', metadata,
         sa.Column('set_name', sa.String(128)),
         sa.Column('itemname_list', sa.String(512)),
-        sa.Column('edited_time', sa.String(128)))
+        sa.Column('edited_time', sa.String(128)),
+        sa.Column('user', sa.String(128)))
 
 # wow_server_info 테이블입니다
 tbl_wow_server_info = sa.Table('wow_server_info', metadata,

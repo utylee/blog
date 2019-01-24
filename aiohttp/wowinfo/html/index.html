@@ -7,6 +7,7 @@
 		window.chart_column_num = 24;
 		window.cur_itemset = '${current_itemset}';
 		window.socket = 0;
+		window.cur_user = 'guest';
 		window.itemsets = [];
 		window.img_host = 'https://wow.zamimg.com/images/wow/icons/large/';
 		window.chart_chains = new Array;
@@ -30,6 +31,7 @@
 			//alert(document.getElementById('div-form-item'+num).style.display);
 			closeForm(num);
 			i_name = document.getElementById('input-item'+num).value;
+			i_name = i_name.trim();
 			if(i_name) {
 				## vanilla js 를 이용해봅니다
 				var xhttp = new XMLHttpRequest();
@@ -39,8 +41,47 @@
 						update_indiv(data);
 					}
 				};
-				xhttp.open("GET", '/update_indiv/' + num + '/' + server + '/' + cur_itemset + \
-								'/' + i_name,true);
+				xhttp.open("GET", '/update_indiv/' + num + '/' + server + '/' + \
+								cur_user + '/' + cur_itemset + '/' + i_name,true);
+				xhttp.send();
+				/*
+				$.getJSON('/update_indiv/' + num + '/' + server + '/' + i_name , \
+							function(data){update_indiv(data);});
+							*/
+			}
+		}
+		function submit_itemset_form(num) {
+			//alert('div-form-item'+num);
+			//alert(document.getElementById('div-form-item'+num).style.display);
+			closeSetForm();
+			var s_name = document.getElementById('input-itemset').value;
+			s_name = s_name.trim();
+			//alert(s_name);
+			if(s_name) {
+				## vanilla js 를 이용해봅니다
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function() {
+					if(this.readyState == 4 && this.status == 200) {
+						var data = JSON.parse(this.responseText);
+						if(data.success == '1') {
+							## 생성성공하였을 경우 처리합니다
+							document.getElementById('input-itemset').value = '';
+							change_itemset(s_name);
+							var xhttp = new XMLHttpRequest();
+							xhttp.onreadystatechange = function() {
+								if (this.readyState == 4 && this.status == 200) {
+									var data = JSON.parse(this.responseText);
+									update_page(data);
+								}
+							};
+							xhttp.open("GET", '/update/' + server + '/' + \
+												cur_user + '/' + s_name, true);
+							xhttp.send();
+						}
+						//update_indiv(data);
+					}
+				};
+				xhttp.open("GET", '/create_itemset/' + cur_user + '/' + s_name, true);
 				xhttp.send();
 				/*
 				$.getJSON('/update_indiv/' + num + '/' + server + '/' + i_name , \
@@ -128,12 +169,18 @@
 							update_page(data);
 						}
 					};
-					xhttp.open("GET", '/update/' + server + '/' + cur_itemset, true);
+					xhttp.open("GET", '/update/' + server + '/' + \
+										cur_user + '/' + cur_itemset, true);
 					xhttp.send();
 					//$.getJSON('/update/' + server + '/' + cur_itemset, function(data){update_page(data);});
 				}
 			}
 		}	
+
+		function create_itemset() {
+			openSetForm();
+		}
+
 		function change_itemset(itemset){
 			// 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
 			cur_itemset = itemset;
@@ -157,7 +204,7 @@
 					update_page(data);
 				}
 			};
-			xhttp.open("GET", '/update/' + server + '/' + itemset, true);
+			xhttp.open("GET", '/update/' + server + '/' + cur_user + '/' + itemset, true);
 			xhttp.send();
 			//$.getJSON('/update/' + server + '/' + itemset, function(data){update_page(data);});
 		}
@@ -211,12 +258,23 @@
 			}
 		}
 
+		## itemsets의 제일 앞에 생성(+)를 삽입해 줍니다
+		function deco_itemsets() {
+			//itemsets.unshift('+');
+			//alert('deco' + itemsets[0]);
+			if(itemsets[0] != '+ 새로 만들기') {
+				itemsets.unshift('+ 새로 만들기');
+				//alert(itemsets[0]);
+			}
+		}
+
 		## 전체 6개 아이템 업데이트 함수입니다
 		function update_page(data){
 			//alert(Object.keys(data).length);
 			// data 갯수, 즉 6회동안 각 요소 갱신을 반복합니다
 			t = data.time;
 			itemsets = data.itemsets;
+			deco_itemsets();
 			data = data.ar;
 			//alert(data[0]['name']);
 			## sort를 통해 아래와같이 할수도 있지만 이미 html상 해당id들이 정렬된채 생성된 상태라 상관없습니다
@@ -272,7 +330,9 @@
 
 			// 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
 			document.getElementById("div_itemlist").innerHTML = ""; 
-			for(let it=0;it<itemsets.length;it++){
+			
+			document.getElementById("div_itemlist").innerHTML += "<a id='itemlist0' class='dropdown-item text-center font-weight-bolder text-info' href='#' onclick='create_itemset();'>" + itemsets[0] + "</a>";
+			for(let it=1;it<itemsets.length;it++){			//0이 아닌 1부터시작 
 				// cur_itemset이 아닌 항목들만 추가합니다
 				//alert(itemsets[it]);
 				if(itemsets[it] != cur_itemset){
@@ -293,6 +353,16 @@
 			*/
 			//alert('엄지척');
 		} //function update_page() ends
+		function openSetForm() {
+			document.getElementById("div-form-itemset").style.display = 'flex';
+			document.getElementById("input-itemset").focus();
+			document.getElementById('icon-set-cancel').style.display = 'flex';
+		}
+
+		function closeSetForm() {
+			document.getElementById("div-form-itemset").style.display = 'none';
+			document.getElementById('icon-set-cancel').style.display = 'none';
+		}
 
 		function closeForm(num) {
 			document.getElementById('div-form-item'+num).style.display = 'none';
@@ -314,6 +384,7 @@
 					for(let i=0;i<6;i++) {
 						closeForm(i);
 					}
+					closeSetForm();
 				}
 			});
 			for (let uu=0;uu<6;uu++) {
@@ -323,9 +394,28 @@
 				document.getElementById('lb' + uu + '2').addEventListener('click', function () {update_chart(uu, 2);}, false);
 				document.getElementById('lb' + uu + '3').addEventListener('click', function () {update_chart(uu, 3);}, false);
 				document.getElementById("icon-cancel"+uu).addEventListener('click', function() { \
-					document.getElementById("input-item"+uu).value=''; \
-					document.getElementById("input-item"+uu).focus();}, false);
+					if(document.getElementById("input-item"+uu).value == '') {
+						closeForm(uu);
+					}
+					else {
+						document.getElementById("input-item"+uu).value=''; 
+						document.getElementById("input-item"+uu).focus();
+					}
+				}, false);
 			}
+			document.getElementById("icon-set-cancel").addEventListener('click', function() { \
+				t = document.getElementById("input-itemset").value; 
+				if(t == '') {
+					closeSetForm();
+				}
+				else {
+					document.getElementById("input-itemset").value=''; 
+					document.getElementById("input-itemset").focus();
+				}
+			}, false);
+				
+			
+
 			setupWebSocket();
 			// innerHTML
 			document.getElementById("designed_by").innerHTML = "developed and designed by utylee studios 2019 /&nbsp;";
@@ -399,15 +489,33 @@
 			</button>
 		</div>
 		## 아이템 세트 셀렉트 
+		<div class="temple_btn">
 		<div class="dropdown menu_wide" >
-			<button id="button_itemset" class="btn btn-secondary btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown">
+			<button id="button_itemset" class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown">
 				${current_itemset}
 			</button>
 			<div id="div_itemlist" class="dropdown-menu scrollable-menu" style="width:100%">
 				% for i in itemsets:
+					% if i == '+':
+				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center text-primary" href="#" onclick="change_itemset('${i}');"><h2>${i}</h2></a>
+					% else:
 				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center" href="#" onclick="change_itemset('${i}');">${i}</a>
+					% endif
 				% endfor
 			</div>
+		</div>
+		<div id="div-form-itemset" class="input_wide" align="center">
+			<form action="javascript:submit_itemset_form();" >
+				<input id="input-itemset" class="form-control-itemset" type="text" placeholder="만들 세트명을 입력하세요">
+				<button id="itemset-confirm" class="btn btn-lg btn-success " type="submit">
+				##<button id="itemset-confirm" class="btn-info " type="submit">
+					확인
+				</button>
+			</form>
+		<div id="icon-set-cancel" >
+			X		
+		</div>
+		</div>
 		</div>
 		## 로그인 
 		<div class="menu_narrow">
@@ -443,7 +551,7 @@
 					## 아이템명 변경 입력 팝업입니다
 					<div id="div-form-item${a}" align="center">
 						<form action="javascript:submit_item_form(${a});" >
-							<input id="input-item${a}" class="form-control" type="text" placeholder="아이템명을 입력하세요">
+							<input id="input-item${a}" class="form-control-item" type="text" placeholder="아이템명을 입력하세요">
 							<button class="btn btn-info btn-lg item-confirm" type="submit">
 								확인
 							</button>

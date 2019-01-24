@@ -1,13 +1,12 @@
-'''
+import math
 import asyncio
 import sqlalchemy as sa
 from aiopg.sa import create_engine
-from auction import get_item_set, get_item_id
 from sqlalchemy import select
 from sqlalchemy.sql import and_, or_, not_
-from db_tableinfo import *
-import math
-'''
+#from auction import get_item_set, get_item_id
+import auction as auc
+import db_tableinfo as db
 
 
 class Set:
@@ -33,7 +32,7 @@ class NormalSet(Set):
                                 host='192.168.0.211',
                                 password='sksmsqnwk11') as engine:
             async with engine.acquire() as conn:
-                itemset_l = await get_item_set(conn, itemset_)
+                itemset_l = await auc.get_item_set(conn, itemset_)
                 temp_l = []
                 for _ in itemset_l:
                     l_ = _.split('?')
@@ -44,7 +43,7 @@ class NormalSet(Set):
                 print(f'indiv_update: ret_str: {ret_str}')
 
                 # itemset 테이블을 업데이트해줍니다
-                await conn.execute(tbl_item_set.update().where(tbl_item_set.c.set_name==itemset_)
+                await conn.execute(db.tbl_item_set.update().where(db.tbl_item_set.c.set_name==itemset_)
                                     .values(itemname_list=ret_str))
 
     async def get_decoed_item_set(self, server):
@@ -54,7 +53,7 @@ class NormalSet(Set):
                                 host='192.168.0.211',
                                 password='sksmsqnwk11') as engine:
             async with engine.acquire() as conn:
-                itemlist = await get_item_set(conn, self.setname)
+                itemlist = await auc.get_item_set(conn, self.setname)
                 #for name_ in itemlist:
                 #itemlist to dict
                 for _ in itemlist:
@@ -64,12 +63,12 @@ class NormalSet(Set):
                     dict_[num_] = {}
                     dict_[num_]['name'] = name_ 
 
-                    id_ = await get_item_id(conn, name_) 
+                    id_ = await auc.get_item_id(conn, name_) 
                     image_path = ''
-                    async for it_ in conn.execute(tbl_items.select().where(tbl_items.c.id==id_)):
+                    async for it_ in conn.execute(db.tbl_items.select().where(db.tbl_items.c.id==id_)):
                         img_url = it_[2]
                         #img_url = f'https://wow.zamimg.com/images/wow/icons/large/{img_}.jpg'
-                    async for tuple_ in conn.execute(tbl_arranged_auction.select().where(and_((tbl_arranged_auction.c.item==id_),(tbl_arranged_auction.c.server==server)))):
+                    async for tuple_ in conn.execute(db.tbl_arranged_auction.select().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==server)))):
                         #print('name_:{}'.format(name_))
                         #dict_[name_] = {}
                         dict_[num_]['num'] = tuple_[2]
@@ -102,8 +101,8 @@ class NormalSet(Set):
 
                         dict_[num_]['copper'] = price - dict_[num_]['silver'] * 100
                     # fame 을 1 증가시켜줍니다
-                    print(f'fame ++1 (id: {id_}, {name_})')
-                    await conn.execute(tbl_arranged_auction.update().where(and_((tbl_arranged_auction.c.item==id_),(tbl_arranged_auction.c.server==server))).values(fame=fame))
+                    print(f'fame ++1({fame}) (id: {id_}, {name_})')
+                    await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==server))).values(fame=fame))
 
         return dict_
 
@@ -119,7 +118,7 @@ class DefaultSet(Set):
                                 host='192.168.0.211',
                                 password='sksmsqnwk11') as engine:
             async with engine.acquire() as conn:
-                itemlist = await get_item_set(conn, self.setname)
+                itemlist = await auc.get_item_set(conn, self.setname)
                 #for name_ in itemlist:
                 #itemlist to dict
                 for _ in itemlist:
@@ -129,12 +128,12 @@ class DefaultSet(Set):
                     dict_[num_] = {}
                     dict_[num_]['name'] = name_ 
 
-                    id_ = await get_item_id(conn, name_) 
+                    id_ = await auc.get_item_id(conn, name_) 
                     image_path = ''
-                    async for it_ in conn.execute(tbl_items.select().where(tbl_items.c.id==id_)):
+                    async for it_ in conn.execute(db.tbl_items.select().where(db.tbl_items.c.id==id_)):
                         img_url = it_[2]
                         #img_url = f'https://wow.zamimg.com/images/wow/icons/large/{img_}.jpg'
-                    async for tuple_ in conn.execute(tbl_arranged_auction.select().where(and_((tbl_arranged_auction.c.item==id_),(tbl_arranged_auction.c.server==server)))):
+                    async for tuple_ in conn.execute(db.tbl_arranged_auction.select().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==server)))):
                         #print('name_:{}'.format(name_))
                         #dict_[name_] = {}
                         dict_[num_]['num'] = tuple_[2]

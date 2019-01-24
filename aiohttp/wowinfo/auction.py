@@ -14,6 +14,8 @@ from sqlalchemy import select
 from sqlalchemy.sql import and_, or_, not_
 from aiopg.sa import create_engine
 
+import db_tableinfo as db
+import auction_classes as a_cl
 #from db_tableinfo import *
 #from auction_classes import Set
 
@@ -104,7 +106,7 @@ async def db_update_from_server(server, defaultset):
             # 덤프 시각을 db에 기록합니다
             #str_now = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
             print(f'dumped_time:{dump_ts_str}')
-            await conn.execute(tbl_wow_server_info.update().where(tbl_wow_server_info.c.server==server).values
+            await conn.execute(db.tbl_wow_server_info.update().where(db.tbl_wow_server_info.c.server==server).values
                                         (dumped_time=dump_ts_str))
 
             end_time = time.time()
@@ -182,10 +184,10 @@ async def db_update_from_server(server, defaultset):
             end_a = time.time()
             elap_a = round(end_a - start_a, 2)
             elap_a_min = round(elap_a / 60)
-            print(f'JSON 파싱 소요시간: {elap_a} 초({elap_a_min})분')
+            print(f'JSON 파싱 소요시간: {elap_a} 초({elap_a_min}분)')
 
 
-            # arranged_auction db에 삽입 프로세스 by 만들어진 temp_dict를 통해
+            # arranged_auction db에 삽입 프로세스 by 만들어진 temp_dict를 통해...
             #
             #
             now__ = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
@@ -199,7 +201,7 @@ async def db_update_from_server(server, defaultset):
                 str_chain = ''
                 
                 #async for r in conn.execute(tbl_arranged_auction.select().where(and_((tbl_arranged_auction.c.server==server),(tbl_arranged_auction.c.item==id_)))):
-                async for r in conn.execute(select([tbl_arranged_auction.c.item]).where(and_((tbl_arranged_auction.c.server==server),(tbl_arranged_auction.c.item==id_)))):
+                async for r in conn.execute(select([db.tbl_arranged_auction.c.item]).where(and_((db.tbl_arranged_auction.c.server==server),(db.tbl_arranged_auction.c.item==id_)))):
                     #print(r)
                     found = 1
 
@@ -215,7 +217,7 @@ async def db_update_from_server(server, defaultset):
                         str_chain = str_chain + '0?'
                     str_chain = str_chain + str(dict_['min'])
 
-                    await conn.execute(tbl_arranged_auction.insert().values(server=server,
+                    await conn.execute(db.tbl_arranged_auction.insert().values(server=server,
                                                         item=id_,
                                                         num=dict_['num'],
                                                         min=dict_['min'],
@@ -229,8 +231,8 @@ async def db_update_from_server(server, defaultset):
                 else:
                     do_ = 0       # 튜플 업데이트 여부를 결정합니다.시간이 30분 이내면 삽입하지 않습니다
                     # str_chain 을 가져온 후 새 가격을 추가해줍니다
-                    async for sel_ in conn.execute(tbl_arranged_auction.select().where(
-                            and_((tbl_arranged_auction.c.server==server),(tbl_arranged_auction.c.item==id_)))):
+                    async for sel_ in conn.execute(db.tbl_arranged_auction.select().where(
+                            and_((db.tbl_arranged_auction.c.server==server),(db.tbl_arranged_auction.c.item==id_)))):
                         last_timestamp = sel_[7]
                         cur_timestamp = round(time.time())
                         q_ = 0
@@ -269,7 +271,7 @@ async def db_update_from_server(server, defaultset):
                     if do_ == 0:
                         continue
 
-                    await conn.execute(tbl_arranged_auction.update().where(and_((tbl_arranged_auction.c.server==server),(tbl_arranged_auction.c.item==id_))).values(num=dict_['num'],
+                    await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.server==server),(db.tbl_arranged_auction.c.item==id_))).values(num=dict_['num'],
                                                         min=dict_['min'],
                                                         min_seller=dict_['min_seller'],
                                                         min_chain=str_chain,
@@ -292,7 +294,7 @@ async def db_update_from_server(server, defaultset):
         print(f'top_six string: {top_six_str}')
 
         #기본구성 db에 삽입해줍니다
-        await conn.execute(tbl_item_set.update().where(tbl_item_set.c.set_name==defaultset)
+        await conn.execute(db.tbl_item_set.update().where(db.tbl_item_set.c.set_name==defaultset)
                             .values(itemname_list=top_six_str))
 
         end_time = time.time()
@@ -310,9 +312,9 @@ async def worldcup_six(conn, server):       # server는 받습니다만 실제�
     ret_dict = {}
     ind = 1         # 0번은 후에 WoW 토큰을 위해 남겨두고 1부터 시작합니다
     async for result in conn.execute(
-            select([tbl_arranged_auction.c.item, tbl_arranged_auction.c.fame])
-            .order_by(sa.desc(tbl_arranged_auction.c.fame)).limit(6)
-            .where(tbl_arranged_auction.c.server=='아즈샤라')):
+            select([db.tbl_arranged_auction.c.item, db.tbl_arranged_auction.c.fame])
+            .order_by(sa.desc(db.tbl_arranged_auction.c.fame)).limit(6)
+            .where(db.tbl_arranged_auction.c.server=='아즈샤라')):
         ret_dict[ind] = await get_item_name(conn, result[0])
         ind += 1
     #print(ret_dict)
@@ -349,7 +351,7 @@ async def get_item_name(conn, id):
     result = 0
     #async for r in conn.execute(tbl_items.select().where(tbl_items.c.name==name)):
         #id = r[0]
-    async for r in conn.execute(select([tbl_items.c.name]).where(tbl_items.c.id==id)):
+    async for r in conn.execute(select([db.tbl_items.c.name]).where(db.tbl_items.c.id==id)):
         name = r[0]
         result = 1
     return name 
@@ -360,7 +362,7 @@ async def get_item_id(conn, name):
     result = 0
     #async for r in conn.execute(tbl_items.select().where(tbl_items.c.name==name)):
         #id = r[0]
-    async for r in conn.execute(select([tbl_items.c.id]).where(tbl_items.c.name==name)):
+    async for r in conn.execute(select([db.tbl_items.c.id]).where(db.tbl_items.c.name==name)):
         id = r[0]
         result = 1
         '''
@@ -379,7 +381,7 @@ async def get_item_name_and_icon(conn, item_id):
     result = 0          # 아무것도 없는 경우
     name = ''
     icon_name = ''
-    async for r in conn.execute(tbl_items.select().where(tbl_items.c.id==item_id)):
+    async for r in conn.execute(db.tbl_items.select().where(db.tbl_items.c.id==item_id)):
         #if len(r[2]) == 0:
         if (r[2] is None) or (len(r[2]) == 0):
             print(f'item no.{item_id}의 이름은 찾았으나 icon_name은 비어있습니다')
@@ -393,12 +395,12 @@ async def get_item_name_and_icon(conn, item_id):
         print(f'### item no. {item_id} 이 로컬에 없기에 battlenet dev를 통해 가져옵니다...')
         name, icon_name = await get_item(item_id)
         print(f'name: {name}, icon_name: {icon_name}')
-        await conn.execute(tbl_items.insert().values(id=int(item_id), name=name, icon_name=icon_name))
+        await conn.execute(db.tbl_items.insert().values(id=int(item_id), name=name, icon_name=icon_name))
     elif result == 1:
         print(f'### item no. {item_id} 의 icon_name은 비어있기에 battlenetdev를 통해 icon_name만 가져옵니다...')
         name, icon_name = await get_item(item_id)
         print(f'name: {name}, icon_name: {icon_name}')
-        await conn.execute(tbl_items.update().where(tbl_items.c.id==int(item_id)).values(icon_name=icon_name))
+        await conn.execute(db.tbl_items.update().where(db.tbl_items.c.id==int(item_id)).values(icon_name=icon_name))
 
     return name, icon_name
 
@@ -440,7 +442,7 @@ async def get_item_set(conn, setname):
 
     #async for r in conn.execute(tbl_item_set.select(tbl_item_set.c.itemname_list).where(tbl_item_set.c.set_name==setname)) :
     print(f'setname:{setname}');
-    async for r in conn.execute(tbl_item_set.select().where(tbl_item_set.c.set_name==setname)) :
+    async for r in conn.execute(db.tbl_item_set.select().where(db.tbl_item_set.c.set_name==setname)) :
         itemlist = r[1].split(',')
 
     print(itemlist)
@@ -455,10 +457,10 @@ async def get_decoed_item(server, itemset_, pos_, name_):
         async with engine.acquire() as conn:
             id_ = await get_item_id(conn, name_) 
             image_path = ''
-            async for it_ in conn.execute(tbl_items.select().where(tbl_items.c.id==id_)):
+            async for it_ in conn.execute(db.tbl_items.select().where(db.tbl_items.c.id==id_)):
                 img_url = it_[2]
                 #img_url = f'https://wow.zamimg.com/images/wow/icons/large/{img_}.jpg'
-            async for tuple_ in conn.execute(tbl_arranged_auction.select().where(and_((tbl_arranged_auction.c.item==id_),(tbl_arranged_auction.c.server==server)))):
+            async for tuple_ in conn.execute(db.tbl_arranged_auction.select().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==server)))):
                 #print('name_:{}'.format(name_))
                 dict_['name'] = name_ 
                 dict_['num'] = tuple_[2]
@@ -488,12 +490,13 @@ async def get_decoed_item(server, itemset_, pos_, name_):
                     dict_['silver'] = math.floor(price / 100)
 
                 dict_['copper'] = price - dict_['silver'] * 100
+            print(f'fame ++1({fame}) (id: {id_}, {name_})')
             # fame 을 1 증가시켜줍니다
-            await conn.execute(tbl_arranged_auction.update().where(and_((tbl_arranged_auction.c.item==id_),(tbl_arranged_auction.c.server==server))).values(fame=fame))
+            await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==server))).values(fame=fame))
 
             # 현재 itemset의 해당 아이템 칸 값을 새 아이템명으로 변경해줍니다
             # 별도의 task로 실행시켜 최대한 일단 사용자에게 반응을 먼저하도록 노력합니다
-            set_ = Set(itemset_).fork()
+            set_ = a_cl.Set(itemset_).fork()
             await set_.update_itemset(itemset_, pos_, name_)
 
             #loop = asyncio.get_event_loop()
@@ -517,7 +520,7 @@ async def update_itemset(itemset_, pos_, name_):
             print(f'indiv_update: ret_str: {ret_str}')
 
             # itemset 테이블을 업데이트해줍니다
-            await conn.execute(tbl_item_set.update().where(tbl_item_set.c.set_name==itemset_)
+            await conn.execute(db.tbl_item_set.update().where(db.tbl_item_set.c.set_name==itemset_)
                                 .values(itemname_list=ret_str))
 
 
@@ -537,10 +540,10 @@ async def get_decoed_item_set(server, setname):
                 async for image_ in conn.execute(tbl_images.select().where(tbl_images.c.item_name==name_)):
                     image_path = image_[1]
                     '''
-                async for it_ in conn.execute(tbl_items.select().where(tbl_items.c.id==id_)):
+                async for it_ in conn.execute(db.tbl_items.select().where(db.tbl_items.c.id==id_)):
                     img_url = it_[2]
                     #img_url = f'https://wow.zamimg.com/images/wow/icons/large/{img_}.jpg'
-                async for tuple_ in conn.execute(tbl_arranged_auction.select().where(and_((tbl_arranged_auction.c.item==id_),(tbl_arranged_auction.c.server==server)))):
+                async for tuple_ in conn.execute(db.tbl_arranged_auction.select().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==server)))):
                     #print('name_:{}'.format(name_))
                     dict_[name_] = {}
                     dict_[name_]['num'] = tuple_[2]
@@ -576,3 +579,25 @@ async def get_decoed_item_set(server, setname):
                     dict_[name_]['copper'] = price - dict_[name_]['silver'] * 100
 
     return dict_
+
+async def create_itemset(user, setname, defaultuser, defaultset):
+    success = 0
+    dict_ = {}
+    async with create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.211',
+                            password='sksmsqnwk11') as engine:
+        async with engine.acquire() as conn:
+            found = 0
+            async for r_ in conn.execute(db.tbl_item_set.select().where(and_((db.tbl_item_set.c.user==user),(db.tbl_item_set.c.set_name==setname)))):
+                found += 1
+            if(found == 0):
+                itemlist = await get_item_set(conn, defaultset)    # 초기로 '기본구성'리스트를 넣슴다
+                itemstring = ','.join(itemlist)
+                await conn.execute(db.tbl_item_set.insert().values(set_name=setname,
+                                                        itemname_list=itemstring,
+                                                        edited_time='',
+                                                        user=user))
+                success = 1
+    return success
+

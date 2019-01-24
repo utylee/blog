@@ -4,10 +4,10 @@ import aiohttp_mako
 import sqlalchemy as sa
 from aiopg.sa import create_engine
 #from auction import *
-import auction as au
+import auction as auc
 #from auction import get_decoed_item_set, get_decoed_item, db_update_from_server
 #from auction_classes import *
-import auction_classes as ac 
+import auction_classes as a_cl
 #from auction_classes import Set
 import datetime
 import time
@@ -27,6 +27,7 @@ server = '아즈샤라'
 #currentset = '격아약초세트1'
 currentset = '기본구성'
 defaultset = '기본구성'
+defaultuser = 'guest'
 imageroot = 'https://wow.zamimg.com/images/wow/icons/large/'
 
 # 관심 아이템들 목록
@@ -55,15 +56,26 @@ async def ws_handle(request):
 
     return ws
 
+async def create_itemset(request):
+    print('/create_setname handler came in')
+    user = request.match_info['cur_user']
+    setname = request.match_info['setname']
+    success = await auc.create_itemset(user, setname, defaultuser, defaultset) 
+    data = {}
+    data['success'] = success
+
+    return web.json_response(data)
+
 async def update_indiv(request):
     print('/update_indiv handler came in')
     pos_no = request.match_info['num']
     item_name = request.match_info['itemname']
     srver = request.match_info['server']
+    user = request.match_info['cur_user']
     item_set = request.match_info['cur_itemset']
 
     a = time.time()
-    indiv_ar = await get_decoed_item(srver, item_set, pos_no, item_name)
+    indiv_ar = await auc.get_decoed_item(srver, item_set, pos_no, item_name)
     b = time.time()
     sub = round(b - a,2)
     print(f':{sub}초 소요')
@@ -82,6 +94,7 @@ async def update(request):
 
     itemset = request.match_info['itemset']
     srver = request.match_info['server']
+    user = request.match_info['cur_user']
     print(f':itemset = {itemset}')
 
     '''
@@ -91,7 +104,7 @@ async def update(request):
     '''
     # 굳이 글로벌로 균일하게 갖고 있는 것은 말이 안됩니다. 사용자가 원하는 상황마다 그대로 전달해줘야합니다
     start_time = time.time()
-    set_ = Set(itemset).fork()
+    set_ = a_cl.Set(itemset).fork()
     dict_ = await set_.get_decoed_item_set(srver)
     #array = await get_decoed_item_set(srver, itemset)
     finished_time = time.time()
@@ -108,7 +121,7 @@ async def update(request):
                             host='192.168.0.211',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
-            async for r in conn.execute(tbl_wow_server_info.select().where(tbl_wow_server_info.c.server==server)):
+            async for r in conn.execute(di.tbl_wow_server_info.select().where(di.tbl_wow_server_info.c.server==server)):
                 data['time'] = r[1]
             #async for r in conn.execute(tbl_item_set.select()):
                 #itemsets.append(r[0])
@@ -132,7 +145,7 @@ async def handle(request):
     itemsets = await get_itemsets()
     #itemsets.remove(currentset)
     # default set이냐 아니냐로 분기하기 위함입니다
-    set_ = Set(currentset).fork()
+    set_ = a_cl.Set(currentset).fork()
     dict_ = await set_.get_decoed_item_set(server)
     #array = await set_.get_decoed_item_set(server)
     #array = await get_decoed_item_set(server, currentset)
@@ -162,8 +175,9 @@ async def init():
 
     app.router.add_static('/static', 'static')
     app.router.add_get('/', handle)
-    app.router.add_get('/update/{server}/{itemset}', update)
-    app.router.add_get('/update_indiv/{num}/{server}/{cur_itemset}/{itemname}', update_indiv)
+    app.router.add_get('/update/{server}/{cur_user}/{itemset}', update)
+    app.router.add_get('/update_indiv/{num}/{server}/{cur_user}/{cur_itemset}/{itemname}', update_indiv)
+    app.router.add_get('/create_itemset/{cur_user}/{setname}', create_itemset)
 
     # 웹소켓 핸들러도 get을 통해 정의해줘야합니다
     ws = app.router.add_get('/ws', ws_handle)
@@ -181,7 +195,7 @@ async def main_proc(intv):
                             host='192.168.0.211',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
-            async for r in conn.execute(tbl_wow_server_info.select()):
+            async for r in conn.execute(di.tbl_wow_server_info.select()):
                 serverlist.append(r[0])
 
     # 제거해봅니다. 초기에 굳이 하지 않아도 handle(index.html)가 처리합니다
@@ -196,7 +210,7 @@ async def main_proc(intv):
 
 async def timer_proc(serverlist):
     for s_ in serverlist:
-        await db_update_from_server(s_, defaultset)
+        await auc.db_update_from_server(s_, defaultset)
         await fetch_auction()
 
 async def fetch_auction():
@@ -243,7 +257,7 @@ async def get_itemsets():
                             host='192.168.0.211',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
-            async for r in conn.execute(tbl_item_set.select()):
+            async for r in conn.execute(di.tbl_item_set.select()):
                 itemset_names.append(r[0])
     return itemset_names
 
