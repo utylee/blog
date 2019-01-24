@@ -181,6 +181,17 @@
 			openSetForm();
 		}
 
+		function coloring_setbutton(cur_set) {
+			if(cur_set.trim() == '기본구성') {
+				document.getElementById("button_itemset").className = \
+					'btn btn-secondary btn-large btn-block dropdown-toggle text-warning';
+			}
+			else {
+				document.getElementById("button_itemset").className = \
+					'btn btn-secondary btn-large btn-block dropdown-toggle text-muted';
+			}
+		}
+
 		function change_itemset(itemset){
 			// 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
 			cur_itemset = itemset;
@@ -192,6 +203,8 @@
 				}
 			}
 			document.getElementById("button_itemset").innerHTML = itemset;
+			//if(document.getElementById("button_itemset").innerHTML.trim() == '기본구성') {
+			coloring_setbutton(itemset);
 			## 혹시 아이템 입력창이 열려있을 수 있으므로 모두 닫습니다.
 			for (let i=0;i<6;i++){
 				closeForm(i);
@@ -335,13 +348,21 @@
 			for(let it=1;it<itemsets.length;it++){			//0이 아닌 1부터시작 
 				// cur_itemset이 아닌 항목들만 추가합니다
 				//alert(itemsets[it]);
-				if(itemsets[it] != cur_itemset){
-					document.getElementById("div_itemlist").innerHTML += "<a id='itemlist" + it +"' class='dropdown-item text-center' href='#' onclick='change_itemset(\"" + itemsets[it] + "\");'>" + itemsets[it] + "</a>";
+				var cur = itemsets[it];
+				if(cur != cur_itemset){
+					if(cur == '기본구성') {
+						document.getElementById("div_itemlist").innerHTML += "<a id='itemlist" + it +"' class='dropdown-item text-center text-warning' href='#' onclick='change_itemset(\"" + cur + "\");'>" + cur + "</a>";
+					}
+					else {
+						document.getElementById("div_itemlist").innerHTML += "<a id='itemlist" + it +"' class='dropdown-item text-center' href='#' onclick='change_itemset(\"" + cur + "\");'>" + cur + "</a>";
+					}
 				//alert(document.getElementById("div_itemlist").innerHTML);
 				}
 			}
+			//alert(document.getElementById("button_itemset").innerHTML.trim());
 
 			document.getElementById("button_itemset").innerHTML = cur_itemset;
+			coloring_setbutton(cur_itemset);
 			document.getElementById("update_time").innerHTML = t;
 
 			/*
@@ -491,13 +512,20 @@
 		## 아이템 세트 셀렉트 
 		<div class="temple_btn">
 		<div class="dropdown menu_wide" >
-			<button id="button_itemset" class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown">
+			##<button id="button_itemset" class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown">
+			% if current_itemset == '기본구성':
+			<button id="button_itemset" class="btn btn-secondary btn-large btn-block dropdown-toggle text-warning" type="button" data-toggle="dropdown">
+			% else:
+			<button id="button_itemset" class="btn btn-secondary btn-large btn-block dropdown-toggle text-muted" type="button" data-toggle="dropdown">
+			% endif
 				${current_itemset}
 			</button>
 			<div id="div_itemlist" class="dropdown-menu scrollable-menu" style="width:100%">
 				% for i in itemsets:
-					% if i == '+':
+					% if i == '+ 새로 만들기':
 				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center text-primary" href="#" onclick="change_itemset('${i}');"><h2>${i}</h2></a>
+					% elif i == '기본구성':
+				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center text-warning" href="#" onclick="change_itemset('${i}');">${i}</a>
 					% else:
 				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center" href="#" onclick="change_itemset('${i}');">${i}</a>
 					% endif

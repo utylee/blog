@@ -492,7 +492,10 @@ async def get_decoed_item(server, itemset_, pos_, name_):
                 dict_['copper'] = price - dict_['silver'] * 100
             print(f'fame ++1({fame}) (id: {id_}, {name_})')
             # fame 을 1 증가시켜줍니다
-            await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==server))).values(fame=fame))
+            # fame 증가시키는 프로세스를 별도 task로 실행시켜 multitasking을 구현합니다.
+            # 사용자 응답시간이 많이 빨라집니다. 1회 업데이트에 0.1초씩 걸리더군요. rpi3b+에서..
+            await increase_fame(server, id_, fame)
+            #await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==server))).values(fame=fame))
 
             # 현재 itemset의 해당 아이템 칸 값을 새 아이템명으로 변경해줍니다
             # 별도의 task로 실행시켜 최대한 일단 사용자에게 반응을 먼저하도록 노력합니다
@@ -502,6 +505,18 @@ async def get_decoed_item(server, itemset_, pos_, name_):
             #loop = asyncio.get_event_loop()
             #loop.create_task(update_itemset(itemset_, pos_, name_))
     return dict_
+async def increase_fame(srv, id_, fame):
+    loop = asyncio.get_event_loop()
+    loop.create_task(increase_fame_(srv, id_, fame))
+
+async def increase_fame_(srv, id_, fame):
+    async with create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.211',
+                            password='sksmsqnwk11') as engine:
+        async with engine.acquire() as conn:
+            await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==srv))).values(fame=fame))
+
 
 async def update_itemset(itemset_, pos_, name_):
     async with create_engine(user='postgres',
