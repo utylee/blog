@@ -57,7 +57,7 @@ async def ws_handle(request):
     return ws
 
 async def create_itemset(request):
-    print('/create_setname handler came in')
+    print('/create_itemset handler came in')
     user = request.match_info['cur_user']
     setname = request.match_info['setname']
     success = await auc.create_itemset(user, setname, defaultuser, defaultset) 
@@ -95,7 +95,12 @@ async def update(request):
     itemset = request.match_info['itemset']
     srver = request.match_info['server']
     user = request.match_info['cur_user']
+    '''
+    proto = request.match_info['proto']
     print(f':itemset = {itemset}')
+    if(proto == '_default'):
+        print('DEFAULT!!!!')
+        '''
 
     '''
     if currentset != itemset:
@@ -176,6 +181,7 @@ async def init():
     app.router.add_static('/static', 'static')
     app.router.add_get('/', handle)
     app.router.add_get('/update/{server}/{cur_user}/{itemset}', update)
+    #app.router.add_get('/update/{server}/{cur_user}/{itemset}/{proto}', update)
     app.router.add_get('/update_indiv/{num}/{server}/{cur_user}/{cur_itemset}/{itemname}', update_indiv)
     app.router.add_get('/create_itemset/{cur_user}/{setname}', create_itemset)
 

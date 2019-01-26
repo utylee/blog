@@ -48,6 +48,7 @@ class NormalSet(Set):
 
     async def get_decoed_item_set(self, server):
         dict_ = {}
+        fame = 0
         async with create_engine(user='postgres',
                                 database='auction_db',
                                 host='192.168.0.211',
@@ -129,6 +130,7 @@ class DefaultSet(Set):
     async def get_decoed_item_set(self, server):
         print('fetch with NO fame ++1')
         dict_ = {}
+        fame = 0
         async with create_engine(user='postgres',
                                 database='auction_db',
                                 host='192.168.0.211',

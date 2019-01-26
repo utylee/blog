@@ -450,6 +450,7 @@ async def get_item_set(conn, setname):
 
 async def get_decoed_item(server, itemset_, pos_, name_):
     dict_ = {}
+    fame = 0
     async with create_engine(user='postgres',
                             database='auction_db',
                             host='192.168.0.211',
@@ -502,8 +503,6 @@ async def get_decoed_item(server, itemset_, pos_, name_):
             set_ = a_cl.Set(itemset_).fork()
             await set_.update_itemset(itemset_, pos_, name_)
 
-            #loop = asyncio.get_event_loop()
-            #loop.create_task(update_itemset(itemset_, pos_, name_))
     return dict_
 async def increase_fame(srv, id_, fame):
     loop = asyncio.get_event_loop()
@@ -606,6 +605,7 @@ async def create_itemset(user, setname, defaultuser, defaultset):
             found = 0
             async for r_ in conn.execute(db.tbl_item_set.select().where(and_((db.tbl_item_set.c.user==user),(db.tbl_item_set.c.set_name==setname)))):
                 found += 1
+            # 이미 있는 경우는 생성하지 않습니다
             if(found == 0):
                 itemlist = await get_item_set(conn, defaultset)    # 초기로 '기본구성'리스트를 넣슴다
                 itemstring = ','.join(itemlist)

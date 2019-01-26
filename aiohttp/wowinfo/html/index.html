@@ -2,6 +2,12 @@
 
 <%block name="script">
 	<link rel="stylesheet" href="../static/css/add.css">
+	## fontawesome
+	## ../ 에 webfonts 폴더만 추가로 넣으면 됩니다
+	<link rel="stylesheet" href="../static/css/fontawesome.all.min.css">
+	##
+	##<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/regular.css" integrity="sha384-aubIA90W7NxJ+Ly4QHAqo1JBSwQ0jejV75iHhj59KRwVjLVHjuhS3LkDAoa/ltO4" crossorigin="anonymous">
+	##<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/fontawesome.css" integrity="sha384-jLuaxTTBR42U2qJ/pm4JRouHkEDHkVqH0T1nyQXn1mZ7Snycpf6Rl25VBNthU4z0" crossorigin="anonymous">
 	<script charset="utf-8">
 		// 차트에서 포인트 갯수를 정의합니다
 		window.chart_column_num = 24;
@@ -30,7 +36,7 @@
 			//alert('div-form-item'+num);
 			//alert(document.getElementById('div-form-item'+num).style.display);
 			closeForm(num);
-			i_name = document.getElementById('input-item'+num).value;
+			var i_name = document.getElementById('input-item'+num).value;
 			i_name = i_name.trim();
 			if(i_name) {
 				## vanilla js 를 이용해봅니다
@@ -74,9 +80,13 @@
 									update_page(data);
 								}
 							};
+							## 마지막 'd'는 itemset의 성질을 나타냅니다. default로서 fame증가등을 하지 않습니다
 							xhttp.open("GET", '/update/' + server + '/' + \
-												cur_user + '/' + s_name, true);
+												cur_user + '/' + s_name , true);
 							xhttp.send();
+						}
+						else if (data.success == '0') {
+							alert('이미 있는 세트명입니다');
 						}
 						//update_indiv(data);
 					}
@@ -199,10 +209,17 @@
 			for(let it=0;it<itemsets.length;it++){
 				// cur_itemset이 아닌 항목들만 추가합니다
 				if(itemsets[it] != itemset){
-					document.getElementById("div_itemlist").innerHTML += "<a id='itemlist" + it +"' class='dropdown-item text-center' href='#' onclick='change_itemset(\"" + itemsets[it] + "\");'>" + itemsets[it] + "</a>";
+					document.getElementById("div_itemlist").innerHTML += "\
+				<a id='itemlist" + it +"' class='dropdown-item text-center' href='#' onclick='change_itemset(\"" + itemsets[it] + "\");'>" + itemsets[it] + "</a>";
 				}
 			}
-			document.getElementById("button_itemset").innerHTML = itemset;
+			if(itemset == '기본구성') {
+				document.getElementById("button_itemset").innerHTML = \
+				"<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;" + itemset;
+			}
+			else {
+				document.getElementById("button_itemset").innerHTML = itemset; 
+			}
 			//if(document.getElementById("button_itemset").innerHTML.trim() == '기본구성') {
 			coloring_setbutton(itemset);
 			## 혹시 아이템 입력창이 열려있을 수 있으므로 모두 닫습니다.
@@ -275,8 +292,12 @@
 		function deco_itemsets() {
 			//itemsets.unshift('+');
 			//alert('deco' + itemsets[0]);
+			if(itemsets[0] != ' 만들기') {
+				itemsets.unshift(' 만들기');
+			/*
 			if(itemsets[0] != '+ 새로 만들기') {
 				itemsets.unshift('+ 새로 만들기');
+				*/
 				//alert(itemsets[0]);
 			}
 		}
@@ -340,28 +361,58 @@
 				catch(error) {
 				}
 			}
+			function getget(){
+				alert('하하');
+			}
 
 			// 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
 			document.getElementById("div_itemlist").innerHTML = ""; 
 			
-			document.getElementById("div_itemlist").innerHTML += "<a id='itemlist0' class='dropdown-item text-center font-weight-bolder text-info' href='#' onclick='create_itemset();'>" + itemsets[0] + "</a>";
+			## 새로만들기항목
+			document.getElementById("div_itemlist").innerHTML += "\
+			<a id='itemlist0' class='dropdown-item text-center font-weight-bolder text-info' href='#' onclick='create_itemset();'> <i class='far fa-edit' style='font-weight:lighter;font-size:1.0em;'>&nbsp;</i>" + itemsets[0] + "</a>";
+			## 아이템세트들
+			window.dropdown_pair = {};
 			for(let it=1;it<itemsets.length;it++){			//0이 아닌 1부터시작 
 				// cur_itemset이 아닌 항목들만 추가합니다
 				//alert(itemsets[it]);
 				var cur = itemsets[it];
 				if(cur != cur_itemset){
 					if(cur == '기본구성') {
-						document.getElementById("div_itemlist").innerHTML += "<a id='itemlist" + it +"' class='dropdown-item text-center text-warning' href='#' onclick='change_itemset(\"" + cur + "\");'>" + cur + "</a>";
+						document.getElementById("div_itemlist").innerHTML += " \
+						<a id='itemlist" + it +"' class='dropdown-item text-center text-warning' href='#' onclick='change_itemset(\"" + cur + "\");'><i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;" + cur + "</a>";
 					}
 					else {
-						document.getElementById("div_itemlist").innerHTML += "<a id='itemlist" + it +"' class='dropdown-item text-center' href='#' onclick='change_itemset(\"" + cur + "\");'>" + cur + "</a>";
+						## 아이템명 뒤에 휴지통을 추가합니다
+						dropdown_pair[it] = cur;
+						document.getElementById("div_itemlist").innerHTML += \
+							"<div id='dropdown-delete" + it + "' class='dropdown-delete'>" + 
+							"<i class='far fa-trash-alt text-muted'></i></div>" +
+							"<a id='itemlist" + it +"' class='dropdown-item text-center'" +
+							"href='#' onclick='change_itemset(\"" + cur + "\");'>" + cur + "</a>";
 					}
-				//alert(document.getElementById("div_itemlist").innerHTML);
 				}
 			}
+			## 위의 if-else 내에서 innerHTML 작성하면서 addeventlistener를 행하니 동작하지 않았습니다. 
+			## 그래서 for loop 번거롭지만 별도로 뺐습니다.
+			for(let it=1;it<itemsets.length;it++){			//0이 아닌 1부터시작 
+				if(document.getElementById('dropdown-delete'+it)){
+					//alert(document.getElementById('ddelete'+it).innerHTML);
+					//document.getElementById('ddelete'+it).addEventListener("click", function() {getget();}, true); 
+					document.getElementById('dropdown-delete'+it).addEventListener("click", function(){
+						delete_itemset(dropdown_pair[it]);}); 
+				}
+			}
+
 			//alert(document.getElementById("button_itemset").innerHTML.trim());
 
-			document.getElementById("button_itemset").innerHTML = cur_itemset;
+			//document.getElementById("button_itemset").innerHTML = cur_itemset;
+			if(cur_itemset == '기본구성') {
+				document.getElementById("button_itemset").innerHTML = "<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;" + cur_itemset; 
+			}
+			else {
+				document.getElementById("button_itemset").innerHTML = cur_itemset;
+			}
 			coloring_setbutton(cur_itemset);
 			document.getElementById("update_time").innerHTML = t;
 
@@ -374,6 +425,10 @@
 			*/
 			//alert('엄지척');
 		} //function update_page() ends
+
+		function delete_itemset(setname) {
+			alert(setname);
+		}
 		function openSetForm() {
 			document.getElementById("div-form-itemset").style.display = 'flex';
 			document.getElementById("input-itemset").focus();
@@ -434,8 +489,7 @@
 					document.getElementById("input-itemset").focus();
 				}
 			}, false);
-				
-			
+	
 
 			setupWebSocket();
 			// innerHTML
@@ -506,7 +560,10 @@
 		## 아즈샤라 서버
 		<div class="dropdown menu_wide_narrow" >
 			<button  class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown" >
-				<span class="icon-checkcircle" >아즈샤라</span>
+				##<span class="glyphicon glyphicon-grain" aria-hidden="true"></span>
+				<i class="fas fa-check-circle text-success">&nbsp;</i>
+				아즈샤라
+				##<span class="icon-checkcircle" >아즈샤라</span>
 			</button>
 		</div>
 		## 아이템 세트 셀렉트 
@@ -515,12 +572,13 @@
 			##<button id="button_itemset" class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown">
 			% if current_itemset == '기본구성':
 			<button id="button_itemset" class="btn btn-secondary btn-large btn-block dropdown-toggle text-warning" type="button" data-toggle="dropdown">
+				<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp; 
 			% else:
 			<button id="button_itemset" class="btn btn-secondary btn-large btn-block dropdown-toggle text-muted" type="button" data-toggle="dropdown">
 			% endif
 				${current_itemset}
 			</button>
-			<div id="div_itemlist" class="dropdown-menu scrollable-menu" style="width:100%">
+			<div id="div_itemlist" class="dropdown-menu scrollable-menu"  style="width:100%">
 				% for i in itemsets:
 					% if i == '+ 새로 만들기':
 				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center text-primary" href="#" onclick="change_itemset('${i}');"><h2>${i}</h2></a>
