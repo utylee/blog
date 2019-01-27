@@ -135,7 +135,7 @@ async def db_update_from_server(server, defaultset):
 
 
             total = len(js['auctions'])
-            print('총 {} 개의 경매 아이템이 등록되어있습니다'.format(total))
+            print('-- 총 {} 개의 경매 아이템이 등록되어있습니다'.format(total))
             # wow token 가격도 추가로 마지막에 넣어줍니다
             js['auctions'].append({'item': 999999, 'buyout': wowtoken_price, 'quantity': 1, 'owner': 'BLIZZARD Ent.'})
 

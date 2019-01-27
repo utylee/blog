@@ -1,14 +1,18 @@
 <%inherit file="base.html"/>
 
 <%block name="script">
-	<link rel="stylesheet" href="../static/css/add.css">
+	## nginx 에서 static 을 호스팅하느라 상대경로를 바꿨습니다
+	##<link rel="stylesheet" href="../static/css/add.css">
+	<link rel="stylesheet" href="/static/css/add.css">
+	##<link rel="stylesheet" href="/static/css/spin.css">
 	## fontawesome 직접 호스팅
-	## ../ 에 webfonts 폴더만 추가로 넣으면 됩니다
-	##<link rel="stylesheet" href="../static/css/fontawesome.all.min.css">
+	## ../ 에 webfonts 폴더만 추가로 넣으니 되었습니다
+	<link rel="stylesheet" href="/static/css/fontawesome.all.min.css">
 	## fontawemsome 호스팅을 받는 방법
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+	##<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 	##<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/regular.css" integrity="sha384-aubIA90W7NxJ+Ly4QHAqo1JBSwQ0jejV75iHhj59KRwVjLVHjuhS3LkDAoa/ltO4" crossorigin="anonymous">
 	##<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/fontawesome.css" integrity="sha384-jLuaxTTBR42U2qJ/pm4JRouHkEDHkVqH0T1nyQXn1mZ7Snycpf6Rl25VBNthU4z0" crossorigin="anonymous">
+	##<script src="/static/js/spin.js"></script>
 	<script charset="utf-8">
 		// 차트에서 포인트 갯수를 정의합니다
 		window.chart_column_num = 24;
@@ -121,7 +125,7 @@
 					}
 				}
 				//60분 주기일 경우
-				if(b == 1){
+				else if(b == 1){
 					for (let j=len_ - chart_column_num*2 + 1;j<=len_ - 1;j+=2){
 						data_.push(min_chain_[j] / 10000);
 					}
@@ -131,7 +135,7 @@
 					}
 				}
 				//60*2분 주기일 경우
-				if(b == 2){
+				else if(b == 2){
 					for (let j=len_ - chart_column_num*4 + 3;j<=len_ - 1;j+=4){
 						data_.push(min_chain_[j] / 10000);
 					}
@@ -140,8 +144,18 @@
 						labels_.push("");
 					}
 				}
-				//60*24(=1440)분 주기일 경우
-				if(b == 3){
+				//30*2*7(=420)분 주기일 경우
+				else if(b == 3){
+					for (let j=len_ - chart_column_num*14 + 13;j<=len_ - 1;j+=14){
+						data_.push(min_chain_[j] / 10000);
+					}
+					var labels_ = [];
+					for(let l_=0;l_<chart_column_num;l_++){
+						labels_.push("");
+					}
+				}
+				//30*2*24(=1440)분 주기일 경우
+				else if(b == 4){
 					for (let j=len_ - chart_column_num*48 + 47;j<=len_ - 1;j+=48){
 						data_.push(min_chain_[j] / 10000);
 					}
@@ -173,7 +187,6 @@
 					// 업데이트 신호가 들어오면 해당 div를 갱신합니다
 					// /update 페이지에 접속하고 서버에서 해당페이지는 데이터를 json형태로 반납합니다
 					// 역시 vanilla js 를 사용해 봅니다
-					alert('update');
 					var xhttp = new XMLHttpRequest();
 					xhttp.onreadystatechange = function() {
 						if (this.readyState == 4 && this.status == 200) {
@@ -228,17 +241,45 @@
 			for (let i=0;i<6;i++){
 				closeForm(i);
 			}
+
+			## xmlrequest 전송전 버튼색상을 변경합니다
+			##progress_start("button_itemset", "#3498db");
+			##progress_start("button_itemset", "#aaaaaa");
+			document.getElementById("div-spinner").style.display="-webkit-flex";
 			// 역시 vanilla js 로 변경해봅니다
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
-				if(this.readyState == 4 && this.status == 200) {
-					var data = JSON.parse(this.responseText);
-					update_page(data);
+				if(this.readyState == 4) {
+					##progress_end("button_itemset");
+					document.getElementById("div-spinner").style.display="none";
+					if(this.status == 200) {
+						var data = JSON.parse(this.responseText);
+						update_page(data);
+					}
 				}
 			};
 			xhttp.open("GET", '/update/' + server + '/' + cur_user + '/' + itemset, true);
 			xhttp.send();
 			//$.getJSON('/update/' + server + '/' + itemset, function(data){update_page(data);});
+		}
+
+		function progress_start(id_, color_){
+			##document.getElementById(id_).style.WebkitTransition = "background 3.2s";
+			document.getElementById(id_).style.transition = "background 3.2s";
+			##document.getElementById(id_).style.transitionTimingFunction = "linear";
+			document.getElementById(id_).style.transitionTimingFunction = "ease";
+			##document.getElementById(id_).style.background = "#e74c3c"; // danger red
+			##document.getElementById(id_).style.background = "#00bc8c"; // success mint
+			document.getElementById(id_).style.background = color_; // info lightblue
+			##document.getElementById(id_).style.WebkitTransform = "scale(1.2)"; // info lightblue
+			##document.getElementById(id_).style.transform = "scale(1.2)"; // info lightblue
+		}
+		function progress_end(id_){
+			document.getElementById(id_).style.WebkitTransition = "all 0.1s";
+			document.getElementById(id_).style.transition = "all 0.1s";
+			document.getElementById(id_).style.background = "#444444";
+			##document.getElementById(id_).style.WebkitTransform = "scale(1.0)"; // info lightblue
+			##document.getElementById(id_).style.transform = "scale(1.0)"; // info lightblue
 		}
 
 		## 개별 아이템 업그레이드 함수입니다
@@ -308,6 +349,7 @@
 		function update_page(data){
 			//alert(Object.keys(data).length);
 			// data 갯수, 즉 6회동안 각 요소 갱신을 반복합니다
+			##progress_end("button_itemset");
 			t = data.time;
 			itemsets = data.itemsets;
 			deco_itemsets();
@@ -409,12 +451,14 @@
 			//alert(document.getElementById("button_itemset").innerHTML.trim());
 
 			//document.getElementById("button_itemset").innerHTML = cur_itemset;
+			
 			if(cur_itemset == '기본구성') {
 				document.getElementById("button_itemset").innerHTML = "<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;" + cur_itemset; 
 			}
 			else {
 				document.getElementById("button_itemset").innerHTML = cur_itemset;
 			}
+		
 			coloring_setbutton(cur_itemset);
 			document.getElementById("update_time").innerHTML = t;
 
@@ -429,7 +473,7 @@
 		} //function update_page() ends
 
 		function delete_itemset(setname) {
-			//alert(setname);
+			alert(setname);
 			## modal
 		}
 		function openSetForm() {
@@ -472,6 +516,7 @@
 				document.getElementById('lb' + uu + '1').addEventListener('click', function () {update_chart(uu, 1);}, false);
 				document.getElementById('lb' + uu + '2').addEventListener('click', function () {update_chart(uu, 2);}, false);
 				document.getElementById('lb' + uu + '3').addEventListener('click', function () {update_chart(uu, 3);}, false);
+				document.getElementById('lb' + uu + '4').addEventListener('click', function () {update_chart(uu, 4);}, false);
 				document.getElementById("icon-cancel"+uu).addEventListener('click', function() { \
 					if(document.getElementById("input-item"+uu).value == '') {
 						closeForm(uu);
@@ -499,6 +544,10 @@
 			document.getElementById("designed_by").innerHTML = "developed and designed by utylee studios 2019 /&nbsp;";
 			document.getElementById("gathered_from").innerHTML = "item images hosted by zamimg.com /&nbsp; ";
 			document.getElementById("dumped_at").innerHTML = "${server} DB dumped recently at &nbsp;";
+			## donation 제거
+			##document.getElementById("thx_for").innerHTML = "thanks for your";
+			##document.getElementById("donation").innerHTML = "<a href='http://npay.to/15fe4a50e584e996c30f' target='_blank'>NPay donation</a>";
+			http://npay.to/15fe4a50e584e996c30f
 			// websocket을 만듭니다
 			// 차트객체 chart.js 6개를 생성합니다
 			% for a in ar.keys():
@@ -571,19 +620,18 @@
 		</div>
 		## 아이템 세트 셀렉트 
 		<div class="temple_btn">
+		<div id="div-spinner"><div class="spinner"></div></div>
 		<div class="dropdown menu_wide" >
 			##<button id="button_itemset" class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown">
 			% if current_itemset == '기본구성':
 			<button id="button_itemset" class="btn btn-secondary btn-large btn-block dropdown-toggle text-warning" type="button" data-toggle="dropdown">
-				<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp; 
+				<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;${current_itemset}</button>
 			% else:
-			<button id="button_itemset" class="btn btn-secondary btn-large btn-block dropdown-toggle text-muted" type="button" data-toggle="dropdown">
+			<button id="button_itemset" class="btn btn-secondary btn-large btn-block dropdown-toggle text-muted" type="button" data-toggle="dropdown">${current_itemset}</button>
 			% endif
-				${current_itemset}
-			</button>
 			<div id="div_itemlist" class="dropdown-menu scrollable-menu"  style="width:100%">
 				% for i in itemsets:
-					% if i == '+ 새로 만들기':
+					% if i == '만들기':
 				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center text-primary" href="#" onclick="change_itemset('${i}');"><h2>${i}</h2></a>
 					% elif i == '기본구성':
 				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center text-warning" href="#" onclick="change_itemset('${i}');">${i}</a>
@@ -630,7 +678,9 @@
 						##<div id="image${loop.index}" class="iconlarge" style="background-image: url('${imageroot + ar[a]['image']}'+'.jpg')">
 						<div id="image${a}" class="iconlarge" style="background-image: url('${imageroot + b['image'] + '.jpg'}')">
 							<a href="javascript:show_item_form(${a});">
-								<img src="../static/css/images/border.png"/>
+								## nginx 에서 static 을 호스팅하느라 상대경로를 바꿨습니다
+								##<img src="../static/css/images/border.png"/>
+								<img src="/static/css/images/border.png"/>
 							</a>
 						</div>
 					</center>
@@ -680,6 +730,9 @@
 									<input type="radio" name="options" id="option3" autocomplete="off">48시
 								</label>
 								<label id="lb${loop.index}3" class="btn btn-outline-primary text-muted">
+									<input type="radio" name="options" id="option3" autocomplete="off">주일
+								</label>
+								<label id="lb${loop.index}4" class="btn btn-outline-primary text-muted">
 									<input type="radio" name="options" id="option4" autocomplete="off">30일
 								</label>
 							</div>
@@ -699,6 +752,11 @@
 			<span id="gathered_from" class="text-secondary "></span>
 			<span id="dumped_at" class="text-secondary "></span>
 			<span id="update_time" class="text-primary "></span>
+			<br>
+			<%doc>
+			<span id="thx_for" class="text-secondary "></span>
+			<span id="donation" class="text-muted"></span>
+			</%doc>
 		</div>
 	</div>
 </div>

@@ -202,7 +202,7 @@ async def init():
     #lookup = aiohttp_mako.setup(app, directories=['.'])
     #lookup.put_string('index.html', '''<h2>${name}</h2>''')
 
-    app.router.add_static('/static', 'static')
+    #app.router.add_static('/static', 'static')
     app.router.add_get('/', handle)
     app.router.add_get('/update/{server}/{cur_user}/{itemset}', update)
     #app.router.add_get('/update/{server}/{cur_user}/{itemset}/{proto}', update)
@@ -240,7 +240,7 @@ async def main_proc(intv):
 
 async def timer_proc(serverlist):
     for s_ in serverlist:
-        await auc.db_update_from_server(s_, defaultset)
+        #await auc.db_update_from_server(s_, defaultset)
         await fetch_auction()
 
 async def fetch_auction():
