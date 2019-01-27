@@ -2,10 +2,11 @@
 
 <%block name="script">
 	<link rel="stylesheet" href="../static/css/add.css">
-	## fontawesome
+	## fontawesome 직접 호스팅
 	## ../ 에 webfonts 폴더만 추가로 넣으면 됩니다
-	<link rel="stylesheet" href="../static/css/fontawesome.all.min.css">
-	##
+	##<link rel="stylesheet" href="../static/css/fontawesome.all.min.css">
+	## fontawemsome 호스팅을 받는 방법
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 	##<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/regular.css" integrity="sha384-aubIA90W7NxJ+Ly4QHAqo1JBSwQ0jejV75iHhj59KRwVjLVHjuhS3LkDAoa/ltO4" crossorigin="anonymous">
 	##<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/fontawesome.css" integrity="sha384-jLuaxTTBR42U2qJ/pm4JRouHkEDHkVqH0T1nyQXn1mZ7Snycpf6Rl25VBNthU4z0" crossorigin="anonymous">
 	<script charset="utf-8">
@@ -172,6 +173,7 @@
 					// 업데이트 신호가 들어오면 해당 div를 갱신합니다
 					// /update 페이지에 접속하고 서버에서 해당페이지는 데이터를 json형태로 반납합니다
 					// 역시 vanilla js 를 사용해 봅니다
+					alert('update');
 					var xhttp = new XMLHttpRequest();
 					xhttp.onreadystatechange = function() {
 						if (this.readyState == 4 && this.status == 200) {
@@ -427,7 +429,8 @@
 		} //function update_page() ends
 
 		function delete_itemset(setname) {
-			alert(setname);
+			//alert(setname);
+			## modal
 		}
 		function openSetForm() {
 			document.getElementById("div-form-itemset").style.display = 'flex';
@@ -624,8 +627,8 @@
 						border를 img태그를 이용하고 아이템이미지를 div의 백그라운드로 거꾸로 사용해서
 						border가 잘리는문제를 해결하였습니다
 						</%doc>
-						##<div id="image${loop.index}" class="iconlarge" style="background-image: url('${imageroot + ar[a]['image']}')">
-						<div id="image${a}" class="iconlarge" style="background-image: url('${imageroot + b['image']}')">
+						##<div id="image${loop.index}" class="iconlarge" style="background-image: url('${imageroot + ar[a]['image']}'+'.jpg')">
+						<div id="image${a}" class="iconlarge" style="background-image: url('${imageroot + b['image'] + '.jpg'}')">
 							<a href="javascript:show_item_form(${a});">
 								<img src="../static/css/images/border.png"/>
 							</a>

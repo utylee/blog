@@ -1,5 +1,7 @@
 import asyncio
 from aiohttp import web
+import argparse
+import aiohttp
 import aiohttp_mako 
 import sqlalchemy as sa
 from aiopg.sa import create_engine
@@ -21,6 +23,10 @@ new_myapi = 'nMA7eloEh2rHFEiRw9Xs5j0Li6ZaFA5A'
 myapi = 'm5u8gdp6qmhbjkhbht3ax9byp62wench'
 locale = 'ko_KR'
 '''
+parser = argparse.ArgumentParser(description="wowinfo")
+parser.add_argument('--path')
+parser.add_argument('--port')
+
 
 # 서버 선택
 server = '아즈샤라'
@@ -50,9 +56,27 @@ async def ws_handle(request):
     #print(ws)
 
     async for msg in ws:
-        if msg.data == 'connect':
-            print('update on connect')
-            await ws.send_str('update')
+        if msg.type == aiohttp.WSMsgType.TEXT:
+            if msg.data == 'connect':
+                print('update on connect')
+                await ws.send_str('update')
+            elif msg.data == 'close':
+                await ws.close()
+        elif msg.type == aiohttp.WSMsgType.ERROR:
+            print('ws connecion closed with exception {}'.format(ws.exception()))
+
+        ''' nginx server{}에 ws관련해서 따로 설정을 해줘야합니다
+        아 그냥 /ws이 아닌 / 에 아래값을 추가해주니 되네요
+        location /ws {
+            proxy_pass http://aiohttp;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+        }
+        '''
+  
+
+
 
     return ws
 
@@ -267,4 +291,11 @@ async def get_itemsets():
                 itemset_names.append(r[0])
     return itemset_names
 
-web.run_app(init(),port=7777)
+#web.run_app(init(),port=7777)
+if __name__ == '__main__':
+    app = web.Application()
+    # configure app
+
+    args = parser.parse_args()
+    #web.run_app(init(), port=7777)
+    web.run_app(init(), path=args.path, port=args.port)
