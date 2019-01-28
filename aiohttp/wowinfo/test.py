@@ -5,6 +5,7 @@ import time
 import argparse
 import aiohttp
 import logging
+import logging.handlers
 import aiohttp_mako 
 import sqlalchemy as sa
 from aiopg.sa import create_engine
@@ -24,10 +25,12 @@ new_myapi = 'nMA7eloEh2rHFEiRw9Xs5j0Li6ZaFA5A'
 myapi = 'm5u8gdp6qmhbjkhbht3ax9byp62wench'
 locale = 'ko_KR'
 '''
+
 parser = argparse.ArgumentParser(description="wowinfo")
 parser.add_argument('--path')
 parser.add_argument('--port')
-
+args = parser.parse_args()
+log_path = args.path[5:]
 
 # 서버 선택
 server = '아즈샤라'
@@ -60,7 +63,7 @@ async def ws_handle(request):
         if msg.type == aiohttp.WSMsgType.TEXT:
             if msg.data == 'connect':
                 print('update on connect')
-                logging.info('update on connect')
+                log.info('update on connect')
                 await ws.send_str('update')
             elif msg.data == 'close':
                 await ws.close()
@@ -84,7 +87,7 @@ async def ws_handle(request):
 
 async def create_itemset(request):
     print('/create_itemset handler came in')
-    logging.info('/create_itemset handler came in')
+    log.info('/create_itemset handler came in')
     user = request.match_info['cur_user']
     setname = request.match_info['setname']
     success = await auc.create_itemset(user, setname, defaultuser, defaultset) 
@@ -95,7 +98,7 @@ async def create_itemset(request):
 
 async def delete_itemset(request):
     print('/delete_itemset handler came in')
-    logging.info('/delete_itemset handler came in')
+    log.info('/delete_itemset handler came in')
     user = request.match_info['cur_user']
     setname = request.match_info['setname']
     success = await auc.delete_itemset(user, setname)
@@ -106,7 +109,7 @@ async def delete_itemset(request):
 
 async def update_indiv(request):
     print('/update_indiv handler came in')
-    logging.info('/update_indiv handler came in')
+    log.info('/update_indiv handler came in')
     pos_no = request.match_info['num']
     item_name = request.match_info['itemname']
     srver = request.match_info['server']
@@ -118,7 +121,7 @@ async def update_indiv(request):
     b = time.time()
     sub = round(b - a,2)
     print(f':{sub}초 소요')
-    logging.info(f':{sub}초 소요')
+    log.info(f':{sub}초 소요')
     data = {}
     data['indiv_ar'] = indiv_ar 
     data['num'] = pos_no
@@ -131,7 +134,7 @@ async def update(request):
     #global currentset
     itemset = ''
     print('/update handler came in')
-    logging.info('/update handler came in')
+    log.info('/update handler came in')
 
     itemset = request.match_info['itemset']
     srver = request.match_info['server']
@@ -156,7 +159,7 @@ async def update(request):
     finished_time = time.time()
     proc_time = round(finished_time - start_time, 3)
     print(f'fetch elapsed time: {proc_time} 초')
-    logging.info(f'fetch elapsed time: {proc_time} 초')
+    log.info(f'fetch elapsed time: {proc_time} 초')
 
     #print(ar)
     #ar = await get_decoed_item_set(server, currentset)
@@ -264,7 +267,7 @@ async def timer_proc(serverlist):
 
 async def fetch_auction():
     print('.경매장 정보 가져오기 시작')
-    logging.info('.경매장 정보 가져오기 시작')
+    log.info('.경매장 정보 가져오기 시작')
 
     global ws
     global ar
@@ -274,14 +277,14 @@ async def fetch_auction():
     #ar = await get_decoed_item_set(server, currentset)
 
     print('update in fetch')
-    logging.info('update in fetch')
+    log.info('update in fetch')
     try:
         print('ws: send update string')
-        logging.info('ws: send update string')
+        log.info('ws: send update string')
         await ws.send_str('update')
     except:
         print('ws send err!!!!')
-        logging.info('ws send err!!!!')
+        log.info('ws send err!!!!')
 
 def init_data():
     global ar
@@ -316,10 +319,16 @@ async def get_itemsets():
 
 #web.run_app(init(),port=7777)
 if __name__ == '__main__':
-    #log = logging.getLogger('')
-    #log.setLevel(logging.INFO)
-    #log.addHandler(logging.FileHandler('my.log'))
-    logging.basicConfig(filename='my.log', level=logging.INFO, format='%(asctime)s-%(message)s')
+    # 로깅을 설정합니다. getLogger()를 통해 root를 설정해 놓으면 이후 logging으로 바로 사용해도 됩니다
+    # global 영역이 아닌 main 안에 넣은 이유는 그렇게 하지 않으면 두번씩 불리면서 
+    # (다른 파일 from import 할 때 그러는건지) 파일에 두번씩 기록되었기 때문입니다
+    log = logging.getLogger(log_path)
+    log.setLevel(logging.INFO)
+    #fileHandler = logging.FileHandler('/home/pi/wowinfo.log')
+    fileHandler = logging.handlers.RotatingFileHandler(filename='/home/pi/wowinfo.log', maxBytes=10*1024*1024,
+                                                   backupCount=10)
+    fileHandler.setFormatter(logging.Formatter('[%(asctime)s]-(%(name)s)-%(message)s'))
+    log.addHandler(fileHandler)
     app = web.Application()
     # configure app
 

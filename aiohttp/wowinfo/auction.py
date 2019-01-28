@@ -1,3 +1,4 @@
+import sys
 import asyncio
 #import requests        # 비동기 방식인 aiohttp.ClientSession().get()으로 바꾸기로 합니다
 import aiohttp
@@ -16,10 +17,14 @@ from aiopg.sa import create_engine
 
 import db_tableinfo as db
 import auction_classes as a_cl
-#from db_tableinfo import *
-#from auction_classes import Set
 import logging
 
+# db_proc에서 사용되느냐 wowinfo에서 사용되느냐에 따라 log 설정을 바뀌되록 합니다
+if(sys.argv[0][-10:] == 'db_proc.py'):
+    log = logging.getLogger('dbproc')
+else:
+    from test import log_path
+    log = logging.getLogger(log_path)
 
 '''
 https://kr.api.blizzard.com/wow/item/152505?locale=ko_KR&access_token=USt2y7pxKKiJ1yLYDjshaEM2k71sXdbCp3
@@ -39,7 +44,7 @@ tok_url = 'https://apac.battle.net/oauth/token'  #apac = kr, tw
 async def get_oauth():
     auth = aiohttp.BasicAuth(login=cli, password=pwd)
     print('OAuth 토큰을 요청합니다')
-    logging.info('OAuth 토큰을 요청합니다')
+    log.info('OAuth 토큰을 요청합니다')
     async with aiohttp.ClientSession(auth=auth) as sess:
         async with sess.get(tok_url,params='grant_type=client_credentials') as resp:
             tok_load = json.loads(await resp.text())
@@ -69,7 +74,7 @@ async def db_update_from_server(server, defaultset):
         async with engine.acquire() as conn:
             #battle dev api 로서 api key를 사용해 일단 json 주소를 전송받습니다
             print('json주소를 받아옵니다')
-            logging.info('json주소를 받아옵니다')
+            log.info('json주소를 받아옵니다')
             #url = 'https://kr.api.battle.net/wow/auction/data/{}?locale={}&apikey={}'.format(server, locale, myapi)
 
             #battlenet dev api 대변혁으로 로그인 방식이 바뀌었습니다 자칭 OAuth 방식
@@ -81,7 +86,7 @@ async def db_update_from_server(server, defaultset):
             '''
             req_url = f'https://{domain}/wow/auction/data/{server}?locale={locale}&access_token={tok}' 
             print(req_url)
-            logging.info(req_url)
+            log.info(req_url)
 
             # .loads 함수인 것을 봅니다. s가 없는 load 함수는 파일포인터를 받더군요
             # requests가 아닌 aiohttp.ClientSession get 을 사용한 비동기방식으로 변경합니다
@@ -92,7 +97,7 @@ async def db_update_from_server(server, defaultset):
             # 와우토큰 
             wowtoken_price = await get_wowtoken(tok)
             print(f'토큰가격:{wowtoken_price}')
-            logging.info(f'토큰가격:{wowtoken_price}')
+            log.info(f'토큰가격:{wowtoken_price}')
 
             # ssl 체크에서 에러가 나서 ssl 체크를 빼주는 옵션을 찾아서 넣어주었습니다
             #async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as sess:
@@ -105,16 +110,16 @@ async def db_update_from_server(server, defaultset):
                     #str_now = datetime.datetime.fromtimestamp(ts).strftime('%H:%M-%m/%d/%y')
                     dump_ts_str = datetime.datetime.fromtimestamp(dump_ts).strftime('%H:%M-%m/%d/%y')
                     print(f'덤프시각:{dump_ts}, {dump_ts_str}')
-                    logging.info(f'덤프시각:{dump_ts}, {dump_ts_str}')
+                    log.info(f'덤프시각:{dump_ts}, {dump_ts_str}')
                 async with sess.get(js_url) as resp:
                     print('주소:{} \n로부터 json 덤프 파일을 다운로드합니다...\n'.format(js_url))
-                    logging.info('주소:{} \n로부터 json 덤프 파일을 다운로드합니다...\n'.format(js_url))
+                    log.info('주소:{} \n로부터 json 덤프 파일을 다운로드합니다...\n'.format(js_url))
                     async with aiofiles.open(f'auction-{server}.json', 'wb') as f:
                         await f.write(await resp.read())
             # 덤프 시각을 db에 기록합니다
             #str_now = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
             print(f'dumped_time:{dump_ts_str}')
-            logging.info(f'dumped_time:{dump_ts_str}')
+            log.info(f'dumped_time:{dump_ts_str}')
             await conn.execute(db.tbl_wow_server_info.update().where(db.tbl_wow_server_info.c.server==server).values
                                         (dumped_time=dump_ts_str))
 
@@ -124,12 +129,12 @@ async def db_update_from_server(server, defaultset):
             #elapsed_quot_for_chain = round((dump_ts - start_time) / 1800)
             # 받아온 json에 옥션 json 파일의 주소를 포함한 리스폰스를 보내줍니다. 
             print('.다운로드 완료!')
-            logging.info('.다운로드 완료!')
+            log.info('.다운로드 완료!')
             print(f'다운로드에 총 {elapsed_time}초 소요')
-            logging.info(f'다운로드에 총 {elapsed_time}초 소요')
+            log.info(f'다운로드에 총 {elapsed_time}초 소요')
             #print(f'서버 덤프시각에 비해 [30분단위]{elapsed_quot_for_chain}회가 경과하였습니다({dump_ts_str})')
             print('.파싱을 시작합니다')
-            logging.info('.파싱을 시작합니다')
+            log.info('.파싱을 시작합니다')
             async with aiofiles.open(f'auction-{server}.json', 'r') as f:
                 js = json.loads(await f.read())
             #print(js['auctions'])
@@ -148,7 +153,7 @@ async def db_update_from_server(server, defaultset):
 
             total = len(js['auctions'])
             print('-- 총 {} 개의 경매 아이템이 등록되어있습니다'.format(total))
-            logging.info('-- 총 {} 개의 경매 아이템이 등록되어있습니다'.format(total))
+            log.info('-- 총 {} 개의 경매 아이템이 등록되어있습니다'.format(total))
             # wow token 가격도 추가로 마지막에 넣어줍니다
             js['auctions'].append({'item': 999999, 'buyout': wowtoken_price, 'quantity': 1, 'owner': 'BLIZZARD Ent.'})
 
@@ -198,7 +203,7 @@ async def db_update_from_server(server, defaultset):
             elap_a = round(end_a - start_a, 2)
             elap_a_min = round(elap_a / 60)
             print(f'JSON 파싱 소요시간: {elap_a} 초({elap_a_min}분)')
-            logging.info(f'JSON 파싱 소요시간: {elap_a} 초({elap_a_min}분)')
+            log.info(f'JSON 파싱 소요시간: {elap_a} 초({elap_a_min}분)')
 
 
             # arranged_auction db에 삽입 프로세스 by 만들어진 temp_dict를 통해...
@@ -206,7 +211,7 @@ async def db_update_from_server(server, defaultset):
             #
             now__ = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
             print(f'\n## {now__} : 이제 {server} db에 정리한 데이터를 삽입하기 시작합니다')
-            logging.info(f'\n## {now__} : 이제 {server} db에 정리한 데이터를 삽입하기 시작합니다')
+            log.info(f'\n## {now__} : 이제 {server} db에 정리한 데이터를 삽입하기 시작합니다')
             #print(temp_dict.keys())
             start_time = time.time()
 
@@ -261,9 +266,9 @@ async def db_update_from_server(server, defaultset):
                             print('!!! 가격 chain 개수가 맞지 않습니다. --> id: {}, {} 개'.format(id_,l_chain_len))
                             print('!!!  마지막 5개 값:{}'.format(l_chain[-5:]))
                             print('!!!  (잠재적위험) 자동수정1440개로 조정합니다')
-                            logging.info('!!! 가격 chain 개수가 맞지 않습니다. --> id: {}, {} 개'.format(id_,l_chain_len))
-                            logging.info('!!!  마지막 5개 값:{}'.format(l_chain[-5:]))
-                            logging.info('!!!  (잠재적위험) 자동수정1440개로 조정합니다')
+                            log.info('!!! 가격 chain 개수가 맞지 않습니다. --> id: {}, {} 개'.format(id_,l_chain_len))
+                            log.info('!!!  마지막 5개 값:{}'.format(l_chain[-5:]))
+                            log.info('!!!  (잠재적위험) 자동수정1440개로 조정합니다')
                             l_chain = l_chain[l_chain_len - 1440:]
                             str_chain = '?'.join(l_chain)
                             do_ = 2
@@ -277,7 +282,7 @@ async def db_update_from_server(server, defaultset):
                             if(do_ == 2):
                                 size_ = len(str_chain.split('?'))
                                 print(f'수정후 사이즈:{size_}')
-                                logging.info(f'수정후 사이즈:{size_}')
+                                log.info(f'수정후 사이즈:{size_}')
                             do_ = 1
                         # 텀이 30분일 경우 (round 반올림이라 15분(0.5)부터 45분(1.4)까지가 여기에 해당될듯)
                         elif q_ == 0:
@@ -285,7 +290,7 @@ async def db_update_from_server(server, defaultset):
                             if(do_ == 2):
                                 size_ = len(str_chain.split('?'))
                                 print(f'수정후 사이즈:{size_}')
-                                logging.info(f'수정후 사이즈:{size_}')
+                                log.info(f'수정후 사이즈:{size_}')
                             do_ = 1
                     # 30분 이내일 경우는 insert를 패스합니다. 개수 조정이 필요할 경우에는 인서트합니다
                     if do_ == 0:
@@ -312,7 +317,7 @@ async def db_update_from_server(server, defaultset):
         top_six[0] = "0?WoW 토큰"
         top_six_str = ','.join(top_six.values())
         print(f'top_six string: {top_six_str}')
-        logging.info(f'top_six string: {top_six_str}')
+        log.info(f'top_six string: {top_six_str}')
 
         #기본구성 db에 삽입해줍니다
         await conn.execute(db.tbl_item_set.update().where(db.tbl_item_set.c.set_name==defaultset)
@@ -326,8 +331,8 @@ async def db_update_from_server(server, defaultset):
         elapsed_time = round(end_time - start_time)
         print(f'서버 {server}에 대한 삽입 정리 프로세스 종료')
         print(f'총 {elapsed_time} 초({elapsed_min}분)가 소요되었습니다')
-        logging.info(f'서버 {server}에 대한 삽입 정리 프로세스 종료')
-        logging.info(f'총 {elapsed_time} 초({elapsed_min}분)가 소요되었습니다')
+        log.info(f'서버 {server}에 대한 삽입 정리 프로세스 종료')
+        log.info(f'총 {elapsed_time} 초({elapsed_min}분)가 소요되었습니다')
         
         return 
 
@@ -408,7 +413,7 @@ async def get_item_name_and_icon(conn, item_id):
         #if len(r[2]) == 0:
         if (r[2] is None) or (len(r[2]) == 0):
             print(f'item no.{item_id}의 이름은 찾았으나 icon_name은 비어있습니다')
-            logging.info(f'item no.{item_id}의 이름은 찾았으나 icon_name은 비어있습니다')
+            log.info(f'item no.{item_id}의 이름은 찾았으나 icon_name은 비어있습니다')
             name = r[1]
             result = 1  # icon_name만 없는 경우
         else :
@@ -417,17 +422,17 @@ async def get_item_name_and_icon(conn, item_id):
     #해당 아이템이 로컬 테이블에 없다면 받아온 후 로컬 테이블에 저정합니다
     if result == 0:
         print(f'### item no. {item_id} 이 로컬에 없기에 battlenet dev를 통해 가져옵니다...')
-        logging.info(f'### item no. {item_id} 이 로컬에 없기에 battlenet dev를 통해 가져옵니다...')
+        log.info(f'### item no. {item_id} 이 로컬에 없기에 battlenet dev를 통해 가져옵니다...')
         name, icon_name = await get_item(item_id)
         print(f'name: {name}, icon_name: {icon_name}')
-        logging.info(f'name: {name}, icon_name: {icon_name}')
+        log.info(f'name: {name}, icon_name: {icon_name}')
         await conn.execute(db.tbl_items.insert().values(id=int(item_id), name=name, icon_name=icon_name))
     elif result == 1:
         print(f'### item no. {item_id} 의 icon_name은 비어있기에 battlenetdev를 통해 icon_name만 가져옵니다...')
-        logging.info(f'### item no. {item_id} 의 icon_name은 비어있기에 battlenetdev를 통해 icon_name만 가져옵니다...')
+        log.info(f'### item no. {item_id} 의 icon_name은 비어있기에 battlenetdev를 통해 icon_name만 가져옵니다...')
         name, icon_name = await get_item(item_id)
         print(f'name: {name}, icon_name: {icon_name}')
-        logging.info(f'name: {name}, icon_name: {icon_name}')
+        log.info(f'name: {name}, icon_name: {icon_name}')
         await conn.execute(db.tbl_items.update().where(db.tbl_items.c.id==int(item_id)).values(icon_name=icon_name))
 
     return name, icon_name
@@ -470,12 +475,12 @@ async def get_item_set(conn, setname):
 
     #async for r in conn.execute(tbl_item_set.select(tbl_item_set.c.itemname_list).where(tbl_item_set.c.set_name==setname)) :
     print(f'setname:{setname}');
-    logging.info(f'setname:{setname}');
+    log.info(f'setname:{setname}');
     async for r in conn.execute(db.tbl_item_set.select().where(db.tbl_item_set.c.set_name==setname)) :
         itemlist = r[1].split(',')
 
     print(itemlist)
-    logging.info(itemlist)
+    log.info(itemlist)
     return itemlist
 
 async def get_decoed_item(server, itemset_, pos_, name_):
@@ -522,7 +527,7 @@ async def get_decoed_item(server, itemset_, pos_, name_):
 
                 dict_['copper'] = price - dict_['silver'] * 100
             print(f'fame ++1({fame}) (id: {id_}, {name_})')
-            logging.info(f'fame ++1({fame}) (id: {id_}, {name_})')
+            log.info(f'fame ++1({fame}) (id: {id_}, {name_})')
             # fame 을 1 증가시켜줍니다
             # fame 증가시키는 프로세스를 별도 task로 실행시켜 multitasking을 구현합니다.
             # 사용자 응답시간이 많이 빨라집니다. 1회 업데이트에 0.1초씩 걸리더군요. rpi3b+에서..
@@ -563,7 +568,7 @@ async def update_itemset(itemset_, pos_, name_):
                 temp_l.append('?'.join(l_))
             ret_str = ','.join(temp_l)
             print(f'indiv_update: ret_str: {ret_str}')
-            logging.info(f'indiv_update: ret_str: {ret_str}')
+            log.info(f'indiv_update: ret_str: {ret_str}')
 
             # itemset 테이블을 업데이트해줍니다
             await conn.execute(db.tbl_item_set.update().where(db.tbl_item_set.c.set_name==itemset_)

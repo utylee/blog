@@ -1,3 +1,4 @@
+import sys
 import math
 import asyncio
 import sqlalchemy as sa
@@ -7,7 +8,15 @@ from sqlalchemy.sql import and_, or_, not_
 #from auction import get_item_set, get_item_id
 import auction as auc
 import db_tableinfo as db
+import logging
+#from test import log_path
 
+# db_proc에서 사용되느냐 wowinfo에서 사용되느냐에 따라 log 설정을 바뀌되록 합니다
+if(sys.argv[0][-10:] == 'db_proc.py'):
+    log = logging.getLogger('dbproc')
+else:
+    from test import log_path
+    log = logging.getLogger(log_path)
 
 class Set:
     def __init__(self, setname):
@@ -41,7 +50,7 @@ class NormalSet(Set):
                     temp_l.append('?'.join(l_))
                 ret_str = ','.join(temp_l)
                 print(f'indiv_update: ret_str: {ret_str}')
-                logging.info(f'indiv_update: ret_str: {ret_str}')
+                log.info(f'indiv_update: ret_str: {ret_str}')
 
                 # itemset 테이블을 업데이트해줍니다
                 await conn.execute(db.tbl_item_set.update().where(db.tbl_item_set.c.set_name==itemset_)
@@ -103,8 +112,8 @@ class NormalSet(Set):
 
                         dict_[num_]['copper'] = price - dict_[num_]['silver'] * 100
                     # fame 을 1 증가시켜줍니다
-                    print(f'fame ++1({fame}) (id: {id_}, {name_})')
-                    logging.info(f'fame ++1({fame}) (id: {id_}, {name_})')
+                    #print(f'fame ++1({fame}) (id: {id_}, {name_})')
+                    log.info(f'fame ++1({fame}) (id: {id_}, {name_})')
                     # fame 증가시키는 프로세스를 별도 task로 실행시켜 multitasking을 구현합니다.
                     # 사용자 응답시간이 많이 빨라집니다. 1회 업데이트에 0.1초씩 걸리더군요. rpi3b+에서..
                     await self.increase_fame(server, id_, fame)
@@ -131,7 +140,7 @@ class DefaultSet(Set):
         return
     async def get_decoed_item_set(self, server):
         print('fetch with NO fame ++1')
-        logging.info('fetch with NO fame ++1')
+        log.info('fetch with NO fame ++1')
         dict_ = {}
         fame = 0
         async with create_engine(user='postgres',

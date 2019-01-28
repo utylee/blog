@@ -1,5 +1,6 @@
 from auction import *
 import logging
+import logging.handlers
 
 interval = 1800 #초
 tok = ''
@@ -9,6 +10,16 @@ myapi = 'm5u8gdp6qmhbjkhbht3ax9byp62wench'
 cli = 'b934788e2cde4166acb93dcbf558040f'
 pwd = 'nMA7eloEh2rHFEiRw9Xs5j0Li6ZaFA5A'
 tok_url = 'https://apac.battle.net/oauth/token'  #apac = kr, tw
+
+# 로깅을 설정합니다. getLogger()를 통해 root를 설정해 놓으면 이후 logging으로 바로 사용해도 됩니다
+log = logging.getLogger('dbproc')
+log.setLevel(logging.INFO)
+#저렇게 home 경로에 저장하니 두줄씩 써지는 버그가 있습니다
+#fileHandler = logging.FileHandler('/home/pi/dbproc.log')
+fileHandler = logging.handlers.RotatingFileHandler(filename='/home/pi/dbproc.log', maxBytes=10*1024*1024,
+                                                   backupCount=10)
+fileHandler.setFormatter(logging.Formatter('[%(asctime)s]-(%(name)s)-%(message)s'))
+log.addHandler(fileHandler)
 
 async def main_proc(intv):
     # 한국 와우 서버 리스트를 가져옵니다
