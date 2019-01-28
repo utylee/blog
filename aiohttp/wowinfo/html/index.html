@@ -247,7 +247,7 @@
 			## xmlrequest 전송전 버튼색상을 변경합니다
 			##progress_start("button_itemset", "#3498db");
 			##progress_start("button_itemset", "#aaaaaa");
-			document.getElementById("div-spinner").style.display="-webkit-flex";
+			document.getElementById("div-spinner").style.display="flex";
 			// 역시 vanilla js 로 변경해봅니다
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
@@ -352,6 +352,8 @@
 			//alert(Object.keys(data).length);
 			// data 갯수, 즉 6회동안 각 요소 갱신을 반복합니다
 			##progress_end("button_itemset");
+			##spinner 생성
+			document.getElementById("div-spinner").style.display="flex";
 			t = data.time;
 			itemsets = data.itemsets;
 			deco_itemsets();
@@ -407,9 +409,6 @@
 				catch(error) {
 				}
 			}
-			function getget(){
-				alert('하하');
-			}
 
 			// 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
 			document.getElementById("div_itemlist").innerHTML = ""; 
@@ -463,6 +462,8 @@
 		
 			coloring_setbutton(cur_itemset);
 			document.getElementById("update_time").innerHTML = t;
+			##spinner 제거
+			document.getElementById("div-spinner").style.display="none";
 
 			/*
 			var lbs = document.getElementsByTagName("label");
@@ -475,8 +476,37 @@
 		} //function update_page() ends
 
 		function delete_itemset(setname) {
-			alert(setname);
+			alert('delete ' + setname + '!!');
 			## modal
+			document.getElementById("div-spinner").style.display="flex";
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if(this.readyState == 4) {
+					document.getElementById("div-spinner").style.display="none";
+					if (this.status == 200) {
+						var data = JSON.parse(this.responseText);
+						//alert(data.success);
+						if(data.success == '1') {
+							## 삭제성공하였을 경우 처리합니다
+							var xhtp = new XMLHttpRequest();
+							xhtp.onreadystatechange = function() {
+								if (this.readyState == 4) {
+									if(this.status == 200) {	
+										var data = JSON.parse(this.responseText);
+										update_page(data);
+									}
+								}
+							};
+							## 마지막 'd'는 itemset의 성질을 나타냅니다. default로서 fame증가등을 하지 않습니다
+							xhtp.open("GET", '/update/' + server + '/' + \
+												cur_user + '/' + cur_itemset , true);
+							xhtp.send();
+						}
+					}
+				}
+			};
+			xhttp.open("GET", '/delete_itemset/' + cur_user + '/' + setname ,true);
+			xhttp.send();
 		}
 		function openSetForm() {
 			document.getElementById("div-form-itemset").style.display = 'flex';

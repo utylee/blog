@@ -616,3 +616,14 @@ async def create_itemset(user, setname, defaultuser, defaultset):
                 success = 1
     return success
 
+async def delete_itemset(user, setname):
+    success = 0
+    dict_ = {}
+    async with create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.211',
+                            password='sksmsqnwk11') as engine:
+        async with engine.acquire() as conn:
+            await conn.execute(db.tbl_item_set.delete().where(and_((db.tbl_item_set.c.user==user),(db.tbl_item_set.c.set_name==setname))))
+            success = 1
+    return success
