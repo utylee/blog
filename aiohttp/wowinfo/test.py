@@ -220,7 +220,7 @@ async def init():
     #lookup = aiohttp_mako.setup(app, directories=['.'])
     #lookup.put_string('index.html', '''<h2>${name}</h2>''')
 
-    #app.router.add_static('/static', 'static')
+    app.router.add_static('/static', 'static')
     app.router.add_get('/', handle)
     app.router.add_get('/update/{server}/{cur_user}/{itemset}', update)
     #app.router.add_get('/update/{server}/{cur_user}/{itemset}/{proto}', update)
@@ -323,5 +323,5 @@ if __name__ == '__main__':
     # configure app
 
     args = parser.parse_args()
-    #web.run_app(init(), port=7777)
-    web.run_app(init(), path=args.path, port=args.port)
+    web.run_app(init(), port=7777)
+    #web.run_app(init(), path=args.path, port=args.port)
