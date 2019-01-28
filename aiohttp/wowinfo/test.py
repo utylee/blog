@@ -60,7 +60,7 @@ async def ws_handle(request):
         if msg.type == aiohttp.WSMsgType.TEXT:
             if msg.data == 'connect':
                 print('update on connect')
-                log.info('update on connect')
+                logging.info('update on connect')
                 await ws.send_str('update')
             elif msg.data == 'close':
                 await ws.close()
@@ -84,7 +84,7 @@ async def ws_handle(request):
 
 async def create_itemset(request):
     print('/create_itemset handler came in')
-    log.info('/create_itemset handler came in')
+    logging.info('/create_itemset handler came in')
     user = request.match_info['cur_user']
     setname = request.match_info['setname']
     success = await auc.create_itemset(user, setname, defaultuser, defaultset) 
@@ -95,7 +95,7 @@ async def create_itemset(request):
 
 async def delete_itemset(request):
     print('/delete_itemset handler came in')
-    log.info('/delete_itemset handler came in')
+    logging.info('/delete_itemset handler came in')
     user = request.match_info['cur_user']
     setname = request.match_info['setname']
     success = await auc.delete_itemset(user, setname)
@@ -106,7 +106,7 @@ async def delete_itemset(request):
 
 async def update_indiv(request):
     print('/update_indiv handler came in')
-    log.info('/update_indiv handler came in')
+    logging.info('/update_indiv handler came in')
     pos_no = request.match_info['num']
     item_name = request.match_info['itemname']
     srver = request.match_info['server']
@@ -118,7 +118,7 @@ async def update_indiv(request):
     b = time.time()
     sub = round(b - a,2)
     print(f':{sub}초 소요')
-    log.info(f':{sub}초 소요')
+    logging.info(f':{sub}초 소요')
     data = {}
     data['indiv_ar'] = indiv_ar 
     data['num'] = pos_no
@@ -131,7 +131,7 @@ async def update(request):
     #global currentset
     itemset = ''
     print('/update handler came in')
-    log.info('/update handler came in')
+    logging.info('/update handler came in')
 
     itemset = request.match_info['itemset']
     srver = request.match_info['server']
@@ -156,7 +156,7 @@ async def update(request):
     finished_time = time.time()
     proc_time = round(finished_time - start_time, 3)
     print(f'fetch elapsed time: {proc_time} 초')
-    log.info(f'fetch elapsed time: {proc_time} 초')
+    logging.info(f'fetch elapsed time: {proc_time} 초')
 
     #print(ar)
     #ar = await get_decoed_item_set(server, currentset)
@@ -264,7 +264,7 @@ async def timer_proc(serverlist):
 
 async def fetch_auction():
     print('.경매장 정보 가져오기 시작')
-    log.info('.경매장 정보 가져오기 시작')
+    logging.info('.경매장 정보 가져오기 시작')
 
     global ws
     global ar
@@ -274,14 +274,14 @@ async def fetch_auction():
     #ar = await get_decoed_item_set(server, currentset)
 
     print('update in fetch')
-    log.info('update in fetch')
+    logging.info('update in fetch')
     try:
         print('ws: send update string')
-        log.info('ws: send update string')
+        logging.info('ws: send update string')
         await ws.send_str('update')
     except:
         print('ws send err!!!!')
-        log.info('ws send err!!!!')
+        logging.info('ws send err!!!!')
 
 def init_data():
     global ar
@@ -316,9 +316,10 @@ async def get_itemsets():
 
 #web.run_app(init(),port=7777)
 if __name__ == '__main__':
-    log = logging.getLogger('')
-    log.setLevel(logging.INFO)
-    log.addHandler(logging.FileHandler('my.log'))
+    #log = logging.getLogger('')
+    #log.setLevel(logging.INFO)
+    #log.addHandler(logging.FileHandler('my.log'))
+    logging.basicConfig(filename='my.log', level=logging.INFO, format='%(asctime)s-%(message)s')
     app = web.Application()
     # configure app
 
