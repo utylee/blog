@@ -1,4 +1,5 @@
 from auction import *
+import logging
 
 interval = 1800 #초
 tok = ''
@@ -34,5 +35,6 @@ async def timer_proc(serverlist):
     for s_ in serverlist:
         await db_update_from_server(s_, defaultset)
 
+logging.basicConfig(filename='dbproc.log', level=logging.INFO, format='%(asctime)s-%(message)s')
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main_proc(interval))
