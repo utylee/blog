@@ -17,6 +17,7 @@ import auction_classes as a_cl
 #from auction_classes import Set
 #from db_tableinfo import *
 import db_tableinfo as di 
+import pathlib
 '''
 metadata = sa.MetaData()
 items = {}
@@ -168,7 +169,7 @@ async def update(request):
 
     async with create_engine(user='postgres',
                             database='auction_db',
-                            host='192.168.0.211',
+                            host='192.168.0.212',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
             async for r in conn.execute(di.tbl_wow_server_info.select().where(di.tbl_wow_server_info.c.server==server)):
@@ -244,7 +245,7 @@ async def main_proc(intv):
     serverlist = []
     async with create_engine(user='postgres',
                             database='auction_db',
-                            host='192.168.0.211',
+                            host='192.168.0.212',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
             async for r in conn.execute(di.tbl_wow_server_info.select()):
@@ -310,7 +311,7 @@ async def get_itemsets():
     itemset_names = []
     async with create_engine(user='postgres',
                             database='auction_db',
-                            host='192.168.0.211',
+                            host='192.168.0.212',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
             async for r in conn.execute(di.tbl_item_set.select()):
@@ -325,7 +326,8 @@ if __name__ == '__main__':
     log = logging.getLogger(log_path)
     log.setLevel(logging.INFO)
     #fileHandler = logging.FileHandler('/home/pi/wowinfo.log')
-    fileHandler = logging.handlers.RotatingFileHandler(filename='/home/pi/wowinfo.log', maxBytes=10*1024*1024,
+    myhome = str(pathlib.Path.home())
+    fileHandler = logging.handlers.RotatingFileHandler(filename=myhome+'/wowinfo.log', maxBytes=10*1024*1024,
                                                    backupCount=10)
     fileHandler.setFormatter(logging.Formatter('[%(asctime)s]-(%(name)s)-%(message)s'))
     log.addHandler(fileHandler)

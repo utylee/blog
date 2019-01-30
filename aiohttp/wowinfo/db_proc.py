@@ -1,8 +1,10 @@
 from auction import *
 import logging
 import logging.handlers
+import pathlib
 
-interval = 1800 #초
+#interval = 1800 #초
+interval = 3600 #초
 tok = ''
 defaultset = '기본구성'
 locale = 'ko_KR'
@@ -16,7 +18,8 @@ log = logging.getLogger('dbproc')
 log.setLevel(logging.INFO)
 #저렇게 home 경로에 저장하니 두줄씩 써지는 버그가 있습니다
 #fileHandler = logging.FileHandler('/home/pi/dbproc.log')
-fileHandler = logging.handlers.RotatingFileHandler(filename='/home/pi/dbproc.log', maxBytes=10*1024*1024,
+myhome = str(pathlib.Path.home())
+fileHandler = logging.handlers.RotatingFileHandler(filename=myhome+'/dbproc.log', maxBytes=10*1024*1024,
                                                    backupCount=10)
 fileHandler.setFormatter(logging.Formatter('[%(asctime)s]-(%(name)s)-%(message)s'))
 log.addHandler(fileHandler)
@@ -35,7 +38,8 @@ async def main_proc(intv):
     # 제거해봅니다. 초기에 굳이 하지 않아도 handle(index.html)가 처리합니다
     #await fetch_auction()
     
-    serverlist = ['아즈샤라']
+    #serverlist = ['아즈샤라']
+    log.info(f'serverlist = {serverlist}')
     # 주기마다 반복합니다
     while True:
         loop = asyncio.get_event_loop()

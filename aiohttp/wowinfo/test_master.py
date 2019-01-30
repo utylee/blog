@@ -30,11 +30,12 @@ parser.add_argument('--path')
 parser.add_argument('--port')
 
 # 로깅을 설정합니다. getLogger()를 통해 root를 설정해 놓으면 이후 logging으로 바로 사용해도 됩니다
-log = logging.getLogger('wowinfo')
+log_path = 'single'
+log = logging.getLogger('single')
 log.setLevel(logging.INFO)
 #저렇게 home 경로에 저장하니 두줄씩 써지는 버그가 있습니다
 #fileHandler = logging.FileHandler('/home/pi/wowinfo.log')
-fileHandler = logging.FileHandler('wowinfo.log')
+fileHandler = logging.FileHandler('single.log')
 fileHandler.setFormatter(logging.Formatter('%(asctime)s-%(name)s-%(message)s'))
 log.addHandler(fileHandler)
 
@@ -175,7 +176,7 @@ async def update(request):
 
     async with create_engine(user='postgres',
                             database='auction_db',
-                            host='192.168.0.211',
+                            host='192.168.0.212',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
             async for r in conn.execute(di.tbl_wow_server_info.select().where(di.tbl_wow_server_info.c.server==server)):
@@ -251,7 +252,7 @@ async def main_proc(intv):
     serverlist = []
     async with create_engine(user='postgres',
                             database='auction_db',
-                            host='192.168.0.211',
+                            host='192.168.0.212',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
             async for r in conn.execute(di.tbl_wow_server_info.select()):
@@ -317,7 +318,7 @@ async def get_itemsets():
     itemset_names = []
     async with create_engine(user='postgres',
                             database='auction_db',
-                            host='192.168.0.211',
+                            host='192.168.0.212',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
             async for r in conn.execute(di.tbl_item_set.select()):

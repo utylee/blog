@@ -14,6 +14,9 @@ import logging
 # db_proc에서 사용되느냐 wowinfo에서 사용되느냐에 따라 log 설정을 바뀌되록 합니다
 if(sys.argv[0][-10:] == 'db_proc.py'):
     log = logging.getLogger('dbproc')
+elif(sys.argv[0][-14:] == 'test_master.py'):
+    from test_master import log_path
+    log = logging.getLogger(log_path)
 else:
     from test import log_path
     log = logging.getLogger(log_path)
@@ -38,7 +41,7 @@ class NormalSet(Set):
     async def update_itemset_(self, itemset_, pos_, name_):
         async with create_engine(user='postgres',
                                 database='auction_db',
-                                host='192.168.0.211',
+                                host='192.168.0.212',
                                 password='sksmsqnwk11') as engine:
             async with engine.acquire() as conn:
                 itemset_l = await auc.get_item_set(conn, itemset_)
@@ -61,7 +64,7 @@ class NormalSet(Set):
         fame = 0
         async with create_engine(user='postgres',
                                 database='auction_db',
-                                host='192.168.0.211',
+                                host='192.168.0.212',
                                 password='sksmsqnwk11') as engine:
             async with engine.acquire() as conn:
                 itemlist = await auc.get_item_set(conn, self.setname)
@@ -128,7 +131,7 @@ class NormalSet(Set):
     async def increase_fame_(self, srv, id_, fame):
         async with create_engine(user='postgres',
                                 database='auction_db',
-                                host='192.168.0.211',
+                                host='192.168.0.212',
                                 password='sksmsqnwk11') as engine:
             async with engine.acquire() as conn:
                 await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==srv))).values(fame=fame))
@@ -145,7 +148,7 @@ class DefaultSet(Set):
         fame = 0
         async with create_engine(user='postgres',
                                 database='auction_db',
-                                host='192.168.0.211',
+                                host='192.168.0.212',
                                 password='sksmsqnwk11') as engine:
             async with engine.acquire() as conn:
                 itemlist = await auc.get_item_set(conn, self.setname)

@@ -22,6 +22,9 @@ import logging
 # db_proc에서 사용되느냐 wowinfo에서 사용되느냐에 따라 log 설정을 바뀌되록 합니다
 if(sys.argv[0][-10:] == 'db_proc.py'):
     log = logging.getLogger('dbproc')
+elif(sys.argv[0][-14:] == 'test_master.py'):
+    from test_master import log_path
+    log = logging.getLogger(log_path)
 else:
     from test import log_path
     log = logging.getLogger(log_path)
@@ -69,7 +72,7 @@ async def db_update_from_server(server, defaultset):
     # DB에 접속해둡니다
     async with create_engine(user='postgres',
                             database='auction_db',
-                            host='192.168.0.211',
+                            host='192.168.0.212',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
             #battle dev api 로서 api key를 사용해 일단 json 주소를 전송받습니다
@@ -488,7 +491,7 @@ async def get_decoed_item(server, itemset_, pos_, name_):
     fame = 0
     async with create_engine(user='postgres',
                             database='auction_db',
-                            host='192.168.0.211',
+                            host='192.168.0.212',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
             id_ = await get_item_id(conn, name_) 
@@ -547,7 +550,7 @@ async def increase_fame(srv, id_, fame):
 async def increase_fame_(srv, id_, fame):
     async with create_engine(user='postgres',
                             database='auction_db',
-                            host='192.168.0.211',
+                            host='192.168.0.212',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
             await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==srv))).values(fame=fame))
@@ -556,7 +559,7 @@ async def increase_fame_(srv, id_, fame):
 async def update_itemset(itemset_, pos_, name_):
     async with create_engine(user='postgres',
                             database='auction_db',
-                            host='192.168.0.211',
+                            host='192.168.0.212',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
             itemset_l = await get_item_set(conn, itemset_)
@@ -579,7 +582,7 @@ async def get_decoed_item_set(server, setname):
     dict_ = {}
     async with create_engine(user='postgres',
                             database='auction_db',
-                            host='192.168.0.211',
+                            host='192.168.0.212',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
             itemlist = await get_item_set(conn, setname)
@@ -636,7 +639,7 @@ async def create_itemset(user, setname, defaultuser, defaultset):
     dict_ = {}
     async with create_engine(user='postgres',
                             database='auction_db',
-                            host='192.168.0.211',
+                            host='192.168.0.212',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
             found = 0
@@ -658,7 +661,7 @@ async def delete_itemset(user, setname):
     dict_ = {}
     async with create_engine(user='postgres',
                             database='auction_db',
-                            host='192.168.0.211',
+                            host='192.168.0.212',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
             await conn.execute(db.tbl_item_set.delete().where(and_((db.tbl_item_set.c.user==user),(db.tbl_item_set.c.set_name==setname))))
