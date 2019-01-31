@@ -154,6 +154,7 @@ class DefaultSet(Set):
                 itemlist = await auc.get_item_set(conn, self.setname)
                 #for name_ in itemlist:
                 #itemlist to dict
+                log.info(f'서버:{server}')
                 for _ in itemlist:
                     l_ = _.split('?')
                     num_ = l_[0]

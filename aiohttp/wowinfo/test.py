@@ -35,6 +35,7 @@ log_path = args.path[5:]
 
 # 서버 선택
 server = '아즈샤라'
+serverlist = []     # 총 서버리스트는 거의 변하지 않으므로 글로벌로 최초 handle시에만 전달해줍니다
 #currentset = '격아약초세트1'
 currentset = '기본구성'
 defaultset = '기본구성'
@@ -48,7 +49,7 @@ pin_items = ['하늘 골렘', '아쿤다의 이빨', '닻풀', # 심해 가방',
 
 # fetch 실행 주기 :5분
 interval = 1800 #초
-interval = 1800 #초
+interval = 3600 #초
 ws = 0
 ar = {} 
 
@@ -80,9 +81,6 @@ async def ws_handle(request):
             proxy_set_header Connection "upgrade";
         }
         '''
-  
-
-
 
     return ws
 
@@ -132,6 +130,7 @@ async def update_indiv(request):
 async def update(request):
     global ar
     global server
+    global serverlist
     #global currentset
     itemset = ''
     print('/update handler came in')
@@ -153,6 +152,7 @@ async def update(request):
         ar = await get_decoed_item_set(server, currentset)
     '''
     # 굳이 글로벌로 균일하게 갖고 있는 것은 말이 안됩니다. 사용자가 원하는 상황마다 그대로 전달해줘야합니다
+    log.info(f'들어오긴합니까? {srver}')
     start_time = time.time()
     set_ = a_cl.Set(itemset).fork()
     dict_ = await set_.get_decoed_item_set(srver)
@@ -172,15 +172,14 @@ async def update(request):
                             host='192.168.0.212',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
-            async for r in conn.execute(di.tbl_wow_server_info.select().where(di.tbl_wow_server_info.c.server==server)):
+            async for r in conn.execute(di.tbl_wow_server_info.select().where(di.tbl_wow_server_info.c.server==srver)):
                 data['time'] = r[1]
-            #async for r in conn.execute(tbl_item_set.select()):
-                #itemsets.append(r[0])
 
     #data['ar'] = ar
     #data['itemsets'] = itemsets
     data['ar'] = dict_
     data['itemsets'] = await get_itemsets()
+    data['serverlist'] = await auc.get_serverlist() # get_serverlist가 처음 handle시에삽입되어 있습니다
     #data['currentset'] = currentset 
 
     return web.json_response(data)
@@ -192,7 +191,9 @@ async def handle(request):
     global server
     global currentset
     global imageroot
+    global serverlist
     
+    serverlist = await auc.get_serverlist()
     itemsets = await get_itemsets()
     #itemsets.remove(currentset)
     # default set이냐 아니냐로 분기하기 위함입니다
@@ -206,8 +207,8 @@ async def handle(request):
     return {'name': '7', 'imageroot': '../static/images/' ,'ar':ar, 'server':server,
                     'itemsets': itemsets, 'current_itemset':currentset}
     '''
-    return {'name': '7', 'imageroot': imageroot ,'ar':dict_, 'server':server,
-                    'itemsets': itemsets, 'current_itemset':currentset}
+    return {'name': '7', 'imageroot': imageroot ,'ar':dict_, 'server':server, 
+                    'serverlist':serverlist, 'itemsets': itemsets, 'current_itemset':currentset}
 
 async def init():
     global interval
@@ -307,6 +308,16 @@ def init_data():
         ar[a]['silver'] =0
         ar[a]['copper'] =0
 
+async def get_serverlist():
+    serverlist = []
+    async with create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.212',
+                            password='sksmsqnwk11') as engine:
+        async with engine.acquire() as conn:
+            async for r in conn.execute(di.tbl_item_set.select()):
+                itemset_names.append(r[0])
+    return itemset_names
 async def get_itemsets():
     itemset_names = []
     async with create_engine(user='postgres',

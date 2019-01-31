@@ -177,6 +177,22 @@ input[type="search"]::-webkit-search-decoration {
 	align-content: center;
 	justify-content: center;
 }
+.server_btn {
+	position: relative;
+	width: 300px;
+	height: 70px;
+	/*font-size: 1.2rem;*/
+	align-content: center;
+	justify-content: center;
+}
+.login_btn {
+	position: relative;
+	width: 150px;
+	height: 70px;
+	/*font-size: 1.2rem;*/
+	align-content: center;
+	justify-content: center;
+}
 .menu_wide {
 	position: absolute;
 	width: 300px;
@@ -185,7 +201,26 @@ input[type="search"]::-webkit-search-decoration {
 	z-index: 20;
 }
 
-#div-spinner {
+#div-login-screener {
+	display: flex;
+	position: absolute;
+	background: white;
+	flex-direction: column;
+	text-align: center;
+	justify-content: center;
+	align-content: center;
+	width: 100%;
+	height: 100%;
+	/*
+	width: 40px;
+	height: 40px;
+	margin-top: 15px;
+	margin-left: 20px;
+	*/
+	padding-left: 20px;
+	z-index:21;
+}
+#div-srv-screener {
 	display: flex;
 	position: absolute;
 	flex-direction: column;
@@ -203,8 +238,8 @@ input[type="search"]::-webkit-search-decoration {
 	padding-left: 20px;
 	z-index:21;
 }
-#div-spinner-screener {
-	display: none;
+#div-spinner {
+	display: flex;
 	position: absolute;
 	flex-direction: column;
 	text-align: center;
@@ -213,9 +248,12 @@ input[type="search"]::-webkit-search-decoration {
 	width: 100%;
 	height: 100%;
 	/*
+	width: 40px;
+	height: 40px;
 	margin-top: 15px;
 	margin-left: 20px;
 	*/
+	padding-left: 20px;
 	z-index:21;
 }
 
@@ -306,11 +344,18 @@ input[type="search"]::-webkit-search-decoration {
 	background-size:1.3rem;
 	background-image: url(images/icons/Icon-checkCircleGreen.png);
 }
+/* 가장작은폭일때 : 모바일 */
 @media all and (max-width: 626px) {
 	.menu_wide_narrow {
 		order: -1;
 		width: 150px;
 	}
+	/*
+	.server_btn {
+		order: -1;
+		width: 150px;
+	}
+	*/
 	.menu_wide_narrow > button {
 		font-size: 0.9rem;
 	}
@@ -321,10 +366,19 @@ input[type="search"]::-webkit-search-decoration {
 	.menu_narrow {
 		order: -1;
 	}
+	/*
+	.login_btn {
+		order: -1;
+	}
+	*/
 }
 
+/* 중간사이즈일때 */
 @media all and (min-width: 627px) and (max-width: 800px) {
 	.menu_wide_narrow {
+		width: 150px;
+	}
+	.server_btn {
 		width: 150px;
 	}
 	.menu_wide_narrow > button {

@@ -667,3 +667,19 @@ async def delete_itemset(user, setname):
             await conn.execute(db.tbl_item_set.delete().where(and_((db.tbl_item_set.c.user==user),(db.tbl_item_set.c.set_name==setname))))
             success = 1
     return success
+
+
+async def get_serverlist():
+    # 한국 와우 서버 리스트를 가져옵니다
+    serverlist = []
+    async with create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.212',
+                            password='sksmsqnwk11') as engine:
+        async with engine.acquire() as conn:
+            async for r in conn.execute(db.tbl_wow_server_info.select()):
+                serverlist.append(r[0])
+    
+    #serverlist = ['아즈샤라']
+    log.info(f'serverlist = {serverlist}')
+    return sorted(serverlist)

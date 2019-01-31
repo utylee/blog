@@ -4,7 +4,7 @@ import logging.handlers
 import pathlib
 
 #interval = 1800 #초
-interval = 3600 #초
+interval = 5400 #초
 tok = ''
 defaultset = '기본구성'
 locale = 'ko_KR'
@@ -25,11 +25,13 @@ fileHandler.setFormatter(logging.Formatter('[%(asctime)s]-(%(name)s)-%(message)s
 log.addHandler(fileHandler)
 
 async def main_proc(intv):
+    serverlist = await get_serverlist()
+    '''
     # 한국 와우 서버 리스트를 가져옵니다
     serverlist = []
     async with create_engine(user='postgres',
                             database='auction_db',
-                            host='192.168.0.211',
+                            host='192.168.0.212',
                             password='sksmsqnwk11') as engine:
         async with engine.acquire() as conn:
             async for r in conn.execute(db.tbl_wow_server_info.select()):
@@ -40,6 +42,7 @@ async def main_proc(intv):
     
     #serverlist = ['아즈샤라']
     log.info(f'serverlist = {serverlist}')
+    '''
     # 주기마다 반복합니다
     while True:
         loop = asyncio.get_event_loop()
