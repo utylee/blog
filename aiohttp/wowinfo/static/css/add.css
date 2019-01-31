@@ -204,7 +204,6 @@ input[type="search"]::-webkit-search-decoration {
 #div-login-screener {
 	display: flex;
 	position: absolute;
-	background: white;
 	flex-direction: column;
 	text-align: center;
 	justify-content: center;
@@ -347,15 +346,14 @@ input[type="search"]::-webkit-search-decoration {
 /* 가장작은폭일때 : 모바일 */
 @media all and (max-width: 626px) {
 	.menu_wide_narrow {
-		order: -1;
 		width: 150px;
 	}
-	/*
-	.server_btn {
-		order: -1;
+	.server_btn{
 		width: 150px;
 	}
-	*/
+	.temple_btn {
+		order: 1;
+	}
 	.menu_wide_narrow > button {
 		font-size: 0.9rem;
 	}
@@ -366,11 +364,6 @@ input[type="search"]::-webkit-search-decoration {
 	.menu_narrow {
 		order: -1;
 	}
-	/*
-	.login_btn {
-		order: -1;
-	}
-	*/
 }
 
 /* 중간사이즈일때 */
