@@ -227,6 +227,7 @@ async def init():
 
     #app.router.add_static('/static', 'static')
     app.router.add_get('/', handle)
+    app.router.add_get('/update/{server}/{cur_user}/{itemset}/{dummy}', update)
     app.router.add_get('/update/{server}/{cur_user}/{itemset}', update)
     #app.router.add_get('/update/{server}/{cur_user}/{itemset}/{proto}', update)
     app.router.add_get('/update_indiv/{num}/{server}/{cur_user}/{cur_itemset}/{itemname}', update_indiv)
