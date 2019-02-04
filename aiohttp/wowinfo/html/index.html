@@ -31,8 +31,11 @@
 		function modal_login(){
 			##alert('모달');
 			##document.getElementById('modal_login').style.display = 'block';
+			##openLoginForm();
+			$('#modal_login').on('shown.bs.modal', function () {
+				$('#input-login').focus();
+			});
 			$('#modal_login').modal();
-
 		}
 		function show_item_form(num) {
 			//alert('div-form-item'+num);
@@ -601,6 +604,15 @@
 			xhttp.open("GET", '/delete_itemset/' + cur_user + '/' + setname ,true);
 			xhttp.send();
 		}
+		function openLoginForm() {
+			document.getElementById("input-login").focus();
+			document.getElementById('icon-login-cancel').style.display = 'flex';
+		}
+
+		function closeLoginForm() {
+			$('#modal_login').modal('hide');
+		}
+
 		function openSetForm() {
 			document.getElementById("div-form-itemset").style.display = 'flex';
 			document.getElementById("input-itemset").focus();
@@ -626,21 +638,54 @@
 		// jQuery document ready 를 대신하는 자바스크립트입니다 다만 익스플로러 9이하에선 안된다는 말도 있네요
 		document.addEventListener("DOMContentLoaded", function(){
 			window.checked = new Array;
-			window.addEventListener("keydown", function (event) {
-				//alert(event.key);
-				if(event.key == "Escape"){
-					for(let i=0;i<6;i++) {
-						closeForm(i);
+			if(window.addEventListener) {
+				window.addEventListener("keydown", function (event) {
+					//alert(event.key);
+					## IE에선 Esc 입니다
+					if(event.key == "Escape" || event.key == "Esc"){
+						for(let i=0;i<6;i++) {
+							closeForm(i);
+						}
+						closeSetForm();
+						closeLoginForm();
 					}
-					closeSetForm();
-				}
-			});
+				});
+			}
+			else if (document.attachEvent) { // IE 용으로 만들었는데 이문제가 아니었습니다. 또한IE10이상에서는
+											// 해결된 문제로 보입니다
+				document.attachEvent("keydown", function (event) {
+					//alert(event.key);
+					if(event.key == "Escape"){
+						for(let i=0;i<6;i++) {
+							closeForm(i);
+						}
+						closeSetForm();
+						closeLoginForm();
+					}
+				});
+			}
+			<%doc>
+			else (document.addEventListener) {
+				alert('??');
+			}
+			</%doc>
 
 			## explorer 11 에서 let 이 제대로 지원안된다고 합니다.MDN에 따르면,
 			## function scope밖에 없으므로classic한 방법인 별도의 function에서 생성하는 방법을 택했습니다
 			## 참고:https://stackoverflow.com/questions/750486/javascript-closure-inside-loops-simple-practical-example?page=1&tab=votes#tab-top
 			function fn_update_chart(i,j) {
 				return function () {update_chart(i, j);}
+			}
+			function fn_item_cancel(i) {
+				return function () {
+					if(document.getElementById("input-item"+i).value == '') {
+						closeForm(i);
+					}
+					else {
+						document.getElementById("input-item"+i).value=''; 
+						document.getElementById("input-item"+i).focus();
+					}
+				}
 			}
 			for (let uu=0;uu<6;uu++) {
 				checked[uu] = 0;
@@ -649,15 +694,7 @@
 				document.getElementById('lb' + uu + '2').addEventListener('click', fn_update_chart(uu, 2), false);
 				document.getElementById('lb' + uu + '3').addEventListener('click', fn_update_chart(uu, 3), false);
 				document.getElementById('lb' + uu + '4').addEventListener('click', fn_update_chart(uu, 4), false);
-				document.getElementById("icon-cancel"+uu).addEventListener('click', function() { \
-					if(document.getElementById("input-item"+uu).value == '') {
-						closeForm(uu);
-					}
-					else {
-						document.getElementById("input-item"+uu).value=''; 
-						document.getElementById("input-item"+uu).focus();
-					}
-				}, false);
+				document.getElementById("icon-cancel"+uu).addEventListener('click', fn_item_cancel(uu), false);
 			}
 			document.getElementById("icon-set-cancel").addEventListener('click', function() { \
 				t = document.getElementById("input-itemset").value; 
@@ -669,8 +706,19 @@
 					document.getElementById("input-itemset").focus();
 				}
 			}, false);
+			/*
+			document.getElementById("icon-login-cancel").addEventListener('click', function() { \
+				tt = document.getElementById("input-login").value; 
+				if(tt == '') {
+					closeLoginForm();
+				}
+				else {
+					document.getElementById("input-login").value=''; 
+					document.getElementById("input-login").focus();
+				}
+			}, false);
+			*/
 	
-
 			setupWebSocket();
 			// innerHTML
 			document.getElementById("designed_by").innerHTML = "developed and designed by utylee studios 2019 /&nbsp;";
@@ -783,18 +831,17 @@
 				% endfor
 			</div>
 		</div>
-		<div id="div-form-itemset" class="input_wide" align="center">
-			<form action="javascript:submit_itemset_form();" >
-				<input id="input-itemset" class="form-control-itemset" type="text" placeholder="만들 세트명을 입력하세요">
-				<button id="itemset-confirm" class="btn btn-lg btn-success " type="submit">
-				##<button id="itemset-confirm" class="btn-info " type="submit">
-					확인
-				</button>
-			</form>
-		<div id="icon-set-cancel" >
-			X		
-		</div>
-		</div>
+			<div id="div-form-itemset" class="input_wide" align="center">
+				<form action="javascript:submit_itemset_form();" >
+					<input id="input-itemset" class="form-control-itemset" type="text" placeholder="만들 세트명을 입력하세요">
+					<button id="itemset-confirm" class="btn btn-lg btn-success " type="submit">
+						확인
+					</button>
+				</form>
+				<div id="icon-set-cancel" >
+					X		
+				</div>
+			</div>
 		</div>
 		## 로그인 
 		<div class="login_btn"> 
@@ -813,32 +860,34 @@
 			<div class="modal-content">
 				<div class="modal-myflex-outer">
 					<div style="height:5px"></div>
-						<div style="width:92%;">
+					<div style="width:92%;">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
-						</div>
-						<div style='height:10px;'></div>
+					</div>
+					<div style='height:10px;'></div>
+					<div class="modal-loginform-outer">
 						<form id="login-form" action="javascript:submit_item_form();" method="get">
-							<input id="input-id" class="form-control-login" type="text" placeholder="아이디를 입력하세요">
+							<input id="input-login" class="form-control-login" type="text" placeholder="아이디를 입력하세요" >
 							<input id="submit-login-form" type="submit" style="display:none;"/>
 						</form>
-						<div style='height:12px;'></div>
-						<div class="confirm_or_cancel">
-							<!-- <label for="submit-login-form" tabindex="0">로그인</label> -->
-							<button type="button" style="width:90px;height:45px;font-size:1.1rem" class="btn btn-info" type="submit" onclick="document.getElementById('login-form').submit();">로그인</button>
-							<div style="width:10px;"></div>
-							<button type="button" style="width:90px;height:45px;font-size:1.1rem" class="btn btn-secondary" data-dismiss="modal">취소</button>
-						</div>
-						<div style='height:25px;'></div>
-						<div style='width:85%;height:1px;background:#444;'></div>
-						<div style='height:10px;'></div>
-				<span class="text-muted" style="font-size:0.7rem;">
-				  아니면
-				</span>
-				<div style="height:5px;"></div>
-				##<button type="button" class="btn btn-large btn-outline-success create-id" style="border-radius:12px;font-size:1.1rem;width:220px;"><i class="fas fa-edit" style='font-size:1.4rem;'></i>&nbsp;새로운 아이디 만들기</button>
-				<button type="button" class="btn btn-large btn-outline-success create-id" style="border-radius:12px;font-size:0.9rem;width:200px;"><i class="fas fa-pencil-alt" style='font-size:1.2rem;'></i>&nbsp;새로운 아이디 만들기</button>
+						<div id="icon-login-cancel">X</div>
+					</div>
+					<div style='height:12px;'></div>
+					<div class="confirm_or_cancel">
+						<!-- <label for="submit-login-form" tabindex="0">로그인</label> -->
+						<button type="button" style="width:90px;height:45px;font-size:1.1rem" class="btn btn-info" type="submit" onclick="document.getElementById('login-form').submit();">로그인</button>
+						<div style="width:10px;"></div>
+						<button type="button" style="width:90px;height:45px;font-size:1.1rem" class="btn btn-secondary" data-dismiss="modal">취소</button>
+					</div>
+					<div style='height:25px;'></div>
+					<div style='width:85%;height:1px;background:#444;'></div>
+					<div style='height:10px;'></div>
+					<span class="text-muted" style="font-size:0.7rem;">
+					  아니면
+					</span>
+					<div style="height:5px;"></div>
+					<button type="button" class="btn btn-large btn-outline-success create-id" style="border-radius:12px;font-size:0.9rem;width:200px;"><i class="fas fa-pencil-alt" style='font-size:1.2rem;'></i>&nbsp;새로운 아이디 만들기</button>
 					<div style="height:15px;"></div>
 				</div>
 			</div>

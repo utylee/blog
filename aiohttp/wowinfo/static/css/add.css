@@ -13,6 +13,11 @@ html, body{
 textarea:focus, input:focus{
     outline: 0 none;
 }
+/* IE11에서 input에 입력시 얘는 또 불쑥불쑥 잘도 나옵니다. 없애기 위한 문법이 좀 다릅니다
+ */
+*::-ms-clear {
+	display: none;
+}
 *:focus {
 	outline: 0 none;
 }
@@ -29,6 +34,42 @@ input[type=radio] {
 	display: flex;
 	flex-direction : column;
 	align-items: center;
+}
+.modal-loginform-outer {
+	display: flex;
+	position:relative;
+	width: 250px;
+	/*align-items: center;*/
+}
+.form-control-login {
+	/* width: 250px; */
+	width: 100%;
+	height: 60px;
+	font-size: 1.5em;
+	color: #222;
+	/*background: #EEE;*/
+	border: none;
+	border-radius: 8px;
+	padding-left: 10px;
+}
+#icon-login-cancel {
+	display:flex;			/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
+	flex-direction:row;	/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
+	position: absolute;
+	width: 22px;
+	height: 22px;
+	font-size:1.3em;
+	font-weight: bold;
+	text-align:center;
+	border-radius: 6px;
+	background: #dddddd;
+	justify-content:center;
+	align-content:center;
+	align-items:center;
+	margin-top: 20px;
+	right: 12px;
+	cursor: pointer;
+	z-index:6;
 }
 
 #modal_login {
@@ -75,17 +116,6 @@ input[type=radio] {
 	left:0px;
 	justify-items: center;
 }
-.form-control-login {
-	/*width: 240px;*/
-	width: 100%;
-	height: 60px;
-	font-size: 1.5em;
-	color: #222;
-	background: #EEE;
-	border: none;
-	border-radius: 8px;
-	padding-left: 10px;
-}
 .form-control-item {
 	width: 268px;
 	height: 70px;
@@ -97,20 +127,27 @@ input[type=radio] {
 	width: 150px;
 }
 
+
+/*
+input[type=text]::-ms-clear {
+	display: none;
+}
+*/
+
 /*
 input[type=search]::-webkit-search-cancel-button {
     -webkit-appearance: searchfield-cancel-button;
 }
-
 input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 */
 
+
 /* 텍스트 클리어 버튼을 div로 직접 만들어 봤습니다 */
-#icon-cancel0, #icon-cancel1, #icon-cancel2, #icon-cancel3, #icon-cancel4, #icon-cancel5, #icon-set-cancel {
+#icon-cancel0, #icon-cancel1, #icon-cancel2, #icon-cancel3, #icon-cancel4, #icon-cancel5 {
 	display:none;			/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
-	flex-direction:column;	/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
+	flex-direction:row;	/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
 	position: absolute;
 	width: 22px;
 	height: 22px;
@@ -121,13 +158,14 @@ input[type="search"]::-webkit-search-decoration {
 	background: #dddddd;
 	justify-content:center;
 	align-content:center;
+	align-items:center;
 	margin: 8px 220px;
 	cursor: pointer;
 	z-index:3;
 }
 #icon-set-cancel {
 	display:none;			/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
-	flex-direction:column;	/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
+	flex-direction:row;	/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
 	position: absolute;
 	width: 22px;
 	height: 22px;
@@ -138,6 +176,7 @@ input[type="search"]::-webkit-search-decoration {
 	background: #dddddd;
 	justify-content:center;
 	align-content:center;
+	align-items:center;
 	margin: 15px ;
 	left: 205px;
 	cursor: pointer;
@@ -351,6 +390,20 @@ input[type="search"]::-webkit-search-decoration {
 */
 
 /*.input_wide {*/
+#div-form-login {
+	display: none;
+	position: absolute;
+	flex-wrap: nowrap;
+	flex-direction: row;
+	height: 100%;
+	width: 100%;
+	padding: 8px;
+	margin: 0px;
+	/*border-radius: 13px;*/
+	/*z-index: 21;*/
+	justify-content: center;
+	align-content: center;
+}
 #div-form-itemset {
 	display: none;
 	position: absolute;
@@ -379,8 +432,6 @@ input[type="search"]::-webkit-search-decoration {
 	padding:0px;
 	width: 36px;
 	height: 45px;
-}
-#icon-set-cancel {
 }
 .menu_wide_narrow {
 	width: 300px;
