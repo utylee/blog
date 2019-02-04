@@ -5,7 +5,7 @@
 	##<link rel="stylesheet" href="../static/css/add.css">
 	<link rel="stylesheet" href="/static/css/add.css">
 	##<link rel="stylesheet" href="/static/css/spin.css">
-	## fontawesome 직접 호스팅
+	## fontawesome 직접 호스팅(:by nginx)
 	## ../ 에 webfonts 폴더만 추가로 넣으니 되었습니다
 	<link rel="stylesheet" href="/static/css/fontawesome.all.min.css">
 	## fontawemsome 호스팅을 받는 방법
@@ -27,6 +27,12 @@
 		window.form_opened = new Array;
 		for (let i=0;i<6;i++) {
 			form_opened[i] = 0;
+		}
+		function modal_login(){
+			##alert('모달');
+			##document.getElementById('modal_login').style.display = 'block';
+			$('#modal_login').modal();
+
 		}
 		function show_item_form(num) {
 			//alert('div-form-item'+num);
@@ -222,6 +228,7 @@
 
 		function change_server(srver){
 			// 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
+			##window.history.pushState("", "", "/blog/blog/");
 			window.server = srver;
 			document.getElementById("div_serverlist").innerHTML = ""; 
 			for(let i=0;i<serverlist.length;i++){
@@ -472,7 +479,7 @@
 			
 			## 새로만들기항목
 			document.getElementById("div_itemlist").innerHTML += "\
-			<a id='itemlist0' class='dropdown-item text-center font-weight-bolder text-info' href='#' onclick='create_itemset();'> <i class='far fa-edit' style='font-weight:lighter;font-size:1.0em;'>&nbsp;</i>" + itemsets[0] + "</a>";
+			<a id='itemlist0' class='dropdown-item text-center font-weight-bolder text-info' href='#' onclick='create_itemset();'> <i class='fas fa-folder-open' style='font-weight:lighter;font-size:1.0em;'>&nbsp;</i>" + itemsets[0] + "</a>";
 			## 아이템세트들
 			window.dropdown_pair = {};
 			for(let it=1;it<itemsets.length;it++){			//0이 아닌 1부터시작 
@@ -502,7 +509,9 @@
 					//alert(document.getElementById('ddelete'+it).innerHTML);
 					//document.getElementById('ddelete'+it).addEventListener("click", function() {getget();}, true); 
 					document.getElementById('dropdown-delete'+it).addEventListener("click", function(){
-						delete_itemset(dropdown_pair[it]);}); 
+						##delete_itemset(dropdown_pair[it]);}); 
+						##delete_name = dropdown_pair[it];
+						show_modal_delete(dropdown_pair[it]);}); 
 				}
 			}
 
@@ -534,9 +543,17 @@
 			*/
 			//alert('엄지척');
 		} //function update_page() ends
+		function show_modal_delete(setname) {
+			window.delete_name = setname;
+			document.getElementById('delete_name').innerHTML = setname;
+			$('#modal_delete').modal();
+		}
 
-		function delete_itemset(setname) {
-			alert('delete ' + setname + '!!');
+		##function delete_itemset(setname) {
+		function delete_confirm() {
+			setname = delete_name;
+			$('#modal_delete').modal('hide');
+			##alert('delete ' + setname + '!!');
 			## modal
 			document.getElementById("div-spinner").style.display="flex";
 			document.getElementById("div-srv-screener").style.display="flex";
@@ -762,13 +779,75 @@
 		<div class="login_btn"> 
 		<div id="div-login-screener"></div>
 		<div class="menu_narrow">
-			<button id="button_login" class="btn btn-info btn-block " type="button">
+			<button id="button_login" class="btn btn-info btn-block " type="button" onclick="modal_login();">
 				로그인	
 			</button>
 		</div>
 		</div>
 	</div>
 
+	## 로그인 modal 
+	<div id="modal_login" class="modal fade">
+		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="modal-myflex-outer">
+						<div style="width:100%;">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						</div>
+						<div style='height:20px;'></div>
+						<form id="login-form" action="javascript:submit_item_form();" method="get">
+							<input id="input-id" class="form-control-login" type="text" placeholder="아이디를 입력하세요">
+							<input id="submit-login-form" type="submit" style="display:none;"/>
+						</form>
+						<div style='height:12px;'></div>
+						<div class="confirm_or_cancel">
+							<!-- <label for="submit-login-form" tabindex="0">로그인</label> -->
+							<button type="button" style="width:90px;height:45px;font-size:1.1rem" class="btn btn-info" type="submit" onclick="document.getElementById('login-form').submit();">로그인</button>
+							<div style="width:10px;"></div>
+							<button type="button" style="width:90px;height:45px;font-size:1.1rem" class="btn btn-secondary" data-dismiss="modal">취소</button>
+						</div>
+						<div style='height:25px;'></div>
+						<div style='width:95%;height:1px;background:#444;'></div>
+						<div style='height:10px;'></div>
+				<span class="text-muted" style="font-size:0.7rem;">
+				  아니면
+				</span>
+				<div style="height:5px;"></div>
+				##<button type="button" class="btn btn-large btn-outline-success create-id" style="border-radius:12px;font-size:1.1rem;width:220px;"><i class="fas fa-edit" style='font-size:1.4rem;'></i>&nbsp;새로운 아이디 만들기</button>
+				<button type="button" class="btn btn-large btn-outline-success create-id" style="border-radius:12px;font-size:0.9rem;width:180px;"><i class="fas fa-pencil-alt" style='font-size:1.2rem;'></i>&nbsp;새로운 아이디 만들기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="modal_delete" class="modal fade">
+		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-content">
+					<div class="modal-body">
+						<p style="font-size:1.3rem;">
+						<span id="delete_name">
+						</span>
+						, 삭제합니까?
+						<br>
+						</p>
+						<div class="confirm_or_cancel" style="display:flex;flex-wrap:nowrap;">
+						<button class="btn btn-large btn-danger" style="width:80px;height:40px;font-size:1.1rem" onclick="delete_confirm();">삭제</button>
+						<div style="width:10px;"></div>
+						<button class="btn btn-large btn-secondary" style="width:80px;height:40px;font-size:1.1rem" data-dismiss="modal">취소</button>
+						<br>
+						<br>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	## ---------------------------------------------------------------
 	## ---------------------------------------------------------------
 	## 메인 row
