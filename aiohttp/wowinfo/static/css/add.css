@@ -26,6 +26,11 @@ textarea:focus, input:focus{
   -webkit-box-shadow: none;
   box-shadow: none;
 }
+.form-control-login:focus {
+  border-color: inherit;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
 /* radio 버튼을 숨깁니다 */
 input[type=radio] {
 	display: none;
@@ -39,7 +44,7 @@ input[type=radio] {
 	display: flex;
 	position:relative;
 	width: 250px;
-	/*align-items: center;*/
+	justify-content: center;
 }
 .form-control-login {
 	/* width: 250px; */

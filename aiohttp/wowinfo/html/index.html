@@ -612,6 +612,9 @@
 		function closeLoginForm() {
 			$('#modal_login').modal('hide');
 		}
+		function closeDeleteModal() {
+			$('#modal_delete').modal('hide');
+		}
 
 		function openSetForm() {
 			document.getElementById("div-form-itemset").style.display = 'flex';
@@ -648,6 +651,7 @@
 						}
 						closeSetForm();
 						closeLoginForm();
+						closeDeleteModal();
 					}
 				});
 			}

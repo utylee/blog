@@ -4,7 +4,7 @@ import logging.handlers
 import pathlib
 
 #interval = 1800 #초
-interval = 5400 #초
+interval = 3600 #초
 tok = ''
 defaultset = '기본구성'
 locale = 'ko_KR'
@@ -43,11 +43,44 @@ async def main_proc(intv):
     #serverlist = ['아즈샤라']
     log.info(f'serverlist = {serverlist}')
     '''
+    size = len(serverlist)
+    az = serverlist.index('아즈샤라')
+    hj = serverlist.index('하이잘')
+    etc_l = [ _ for _ in serverlist if _ != '아즈샤라' and _ != '하이잘']
+    log.info(etc_l)
+    '''
+        아즈샤라:   18분
+        하이잘:     13분
+        헬스크림:   7분
+        말퓨리온:   5분
+        가로나:     4분
+        굴단:       3분
+        줄진:       3분
+        노르간논:   4분
+        달라란:     3분
+        듀로탄:     3분
+        데스윙:     4분
+        렉사르:     3분
+        불타는 군단: 3분
+        세나리우스: 3분
+        스톰레이지: 4분
+        윈드러너:   3분
+        와일드해머: 3분
+        알렉스트라자:4분
+        '''
+
+    # 아즈샤라, 하이잘은 매시간 탐색, 나머지 16개 서버는 세시간 단위로 나눠서탐색합니다
+
+    r_list = [['아즈샤라', '하이잘', '헬스크림', '말퓨리온', '가로나', '굴단'],
+                ['아즈샤라', '하이잘', '줄진', '노르간논', '달라란', '듀로탄', '데스윙', '렉사르'], 
+                ['아즈샤라', '하이잘', '불타는 군단', '세나리우스', '스톰레이지', '윈드러너'
+                                        , '와일드해머', '알렉스트라자']]
     # 주기마다 반복합니다
     while True:
-        loop = asyncio.get_event_loop()
-        loop.create_task(timer_proc(serverlist))
-        await asyncio.sleep(intv)
+        for serverlist in r_list:
+            loop = asyncio.get_event_loop()
+            loop.create_task(timer_proc(serverlist))
+            await asyncio.sleep(intv)
 
 async def timer_proc(serverlist):
     for s_ in serverlist:
