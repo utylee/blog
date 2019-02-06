@@ -188,7 +188,7 @@
 			}
 		}
 		function setupWebSocket(){
-			this.socket = new WebSocket('ws://'+window.location.host+'/ws');
+			this.socket = new WebSocket('wss://'+window.location.host+'/ws');
 			this.socket.onopen = function(){
 				socket.send('connect');
 			}
@@ -255,16 +255,12 @@
 				"<i class='fas fa-check-circle text-success'>&nbsp;</i>" + server;
 
 			## xmlrequest 전송전 버튼색상을 변경합니다
-			document.getElementById("div-spinner").style.display="flex";
-			document.getElementById("div-srv-screener").style.display="flex";
-			document.getElementById("div-login-screener").style.display="flex";
+			show_spinner();
 			// 역시 vanilla js 로 변경해봅니다
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
 				if(this.readyState == 4) {
-					document.getElementById("div-spinner").style.display="none";
-					document.getElementById("div-srv-screener").style.display="none";
-					document.getElementById("div-login-screener").style.display="none";
+					hide_spinner();
 					if(this.status == 200) {
 						var data = JSON.parse(this.responseText);
 						update_page(data);
@@ -312,17 +308,13 @@
 			## xmlrequest 전송전 버튼색상을 변경합니다
 			##progress_start("button_itemset", "#3498db");
 			##progress_start("button_itemset", "#aaaaaa");
-			document.getElementById("div-spinner").style.display="flex";
-			document.getElementById("div-srv-screener").style.display="flex";
-			document.getElementById("div-login-screener").style.display="flex";
+			show_spinner();
 			// 역시 vanilla js 로 변경해봅니다
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
 				if(this.readyState == 4) {
 					##progress_end("button_itemset");
-					document.getElementById("div-spinner").style.display="none";
-					document.getElementById("div-srv-screener").style.display="none";
-					document.getElementById("div-login-screener").style.display="none";
+					hide_spinner();
 					if(this.status == 200) {
 						var data = JSON.parse(this.responseText);
 						update_page(data);
@@ -418,72 +410,8 @@
 			}
 		}
 
-		## 전체 6개 아이템 업데이트 함수입니다
-		function update_page(data){
-			// data 갯수, 즉 6회동안 각 요소 갱신을 반복합니다
-			##progress_end("button_itemset");
-			##spinner 생성
-			document.getElementById("div-spinner").style.display="flex";
-			document.getElementById("div-srv-screener").style.display="flex";
-			document.getElementById("div-login-screener").style.display="flex";
-			t = data.time;
-			itemsets = data.itemsets;
-			//alert('update:' + itemsets.length);
-			serverlist = data.serverlist;
+		function update_itemset_dropdown() {
 			deco_itemsets();
-			data = data.ar;
-			//alert(data[0]['name']);
-			## sort를 통해 아래와같이 할수도 있지만 이미 html상 해당id들이 정렬된채 생성된 상태라 상관없습니다
-			for (let i=0;i < Object.keys(data).length;i++) {
-			//Object.keys(data).sort().foreach(function(i) {
-				//alert(i);
-				document.getElementById("image"+i).setAttribute("style", "background-image: url('" + img_host + data[i].image + ".jpg')"); 
-				document.getElementById("itemname"+i).innerHTML = data[i].name;
-				document.getElementById("num"+i).innerHTML = data[i].num;
-				document.getElementById("moneygold"+i).innerHTML = data[i].gold;
-				document.getElementById("moneysilver"+i).innerHTML = data[i].silver;
-				document.getElementById("moneycopper"+i).innerHTML = data[i].copper;
-				document.getElementById("min_seller"+i).innerHTML = data[i].min_seller;
-
-				//실제로 클릭액션을 해야하는 클래스라 안먹힙니다
-				//document.getElementById("lb"+i+"0").checked = 1; 
-				document.getElementById("lb"+i+"0").click();
-				
-				## 아직chLine이 미처 생성되지 않았을 경우 exception이 발생해 이상동작이 발생하는듯 
-				try {
-					if(eval('chart'+i)){
-						//min_chain_ = data[Object.keys(data)[i]].min_chain;
-						chart_chains[i] = data[i].min_chain;
-						min_chain_ = chart_chains[i];
-						//alert(min_chain_[min_chain_.length - 1]);
-						//eval('chLine' + i).data = min_chain_[min_chain_.length - 1] / 10000;
-						let data_ = [],
-							len_ = min_chain_.length;
-						//alert(min_chain_[0]);
-						for (let j=len_ - chart_column_num;j<=len_ - 1;j++){
-						//for (i=0;i<=3;i++){
-							data_.push(min_chain_[j] / 10000);
-						}
-						var labels_ = [];
-						for(let l_=0;l_<chart_column_num;l_++){
-							labels_.push("");
-						}
-						//alert(data_[0]);
-						//eval('chLine' + i).data = min_chain_.slice(,min_chain_.length - 1) / 10000);
-						//eval('chart' + i).data = full_data_; 
-						//eval('chart' + i).data.datasets[0].data = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; 
-						eval('chart'+i).data.labels = labels_;
-						eval('chart'+i).data.datasets[0].data = data_;
-						eval('chart'+i).update();
-						//alert('엄지척');
-						////eval('chLine' + i).addData = data_; 
-						//eval('chLine' + i).update();
-					}
-				}
-				catch(error) {
-				}
-			}
-
 			// 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
 			document.getElementById("div_itemlist").innerHTML = ""; 
 			
@@ -541,22 +469,107 @@
 			}
 		
 			coloring_setbutton(cur_itemset);
+
+		}
+		function update_dumped_time(server, t) {
 			document.getElementById("dumped_at").innerHTML =  server + " DB dumped recently at &nbsp;";
 			document.getElementById("update_time").innerHTML = t;
+		}
+		function show_spinner() {
+			##spinner show
+			document.getElementById("div-spinner").style.display="flex";
+			document.getElementById("div-srv-screener").style.display="flex";
+			document.getElementById("div-login-screener").style.display="flex";
+		}
+		function hide_spinner() {
 			##spinner 제거
 			document.getElementById("div-spinner").style.display="none";
 			document.getElementById("div-srv-screener").style.display="none";
 			document.getElementById("div-login-screener").style.display="none";
-
-			/*
-			var lbs = document.getElementsByTagName("label");
-			alert(lbs.length);
-			for(let i=0;i<lbs.length;i++) {
-
+		}
+		function update_charts(data) {
+			## 아직chLine이 미처 생성되지 않았을 경우 exception이 발생해 이상동작이 발생하는듯 
+			for(var i=0;i<6;i++) {
+				if(eval('chart'+i)){
+					//min_chain_ = data[Object.keys(data)[i]].min_chain;
+					chart_chains[i] = data[i].min_chain;
+					min_chain_ = chart_chains[i];
+					//alert(min_chain_[min_chain_.length - 1]);
+					//eval('chLine' + i).data = min_chain_[min_chain_.length - 1] / 10000;
+					let data_ = [],
+						len_ = min_chain_.length;
+					//alert(min_chain_[0]);
+					for (let j=len_ - chart_column_num;j<=len_ - 1;j++){
+					//for (i=0;i<=3;i++){
+						data_.push(min_chain_[j] / 10000);
+					}
+					var labels_ = [];
+					for(let l_=0;l_<chart_column_num;l_++){
+						labels_.push("");
+					}
+					//alert(data_[0]);
+					//eval('chLine' + i).data = min_chain_.slice(,min_chain_.length - 1) / 10000);
+					//eval('chart' + i).data = full_data_; 
+					//eval('chart' + i).data.datasets[0].data = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; 
+					eval('chart'+i).data.labels = labels_;
+					eval('chart'+i).data.datasets[0].data = data_;
+					eval('chart'+i).update();
+					//alert('엄지척');
+					////eval('chLine' + i).addData = data_; 
+					//eval('chLine' + i).update();
+				}
 			}
-			*/
-			//alert('엄지척');
+		}
+		function update_serverlist() {
+			document.getElementById("div_serverlist").innerHTML = ""; 
+			for(let i=0;i<serverlist.length;i++){
+				// cur_itemset이 아닌 항목들만 추가합니다
+				i_server = serverlist[i];
+				if(i_server != server){
+					document.getElementById("div_serverlist").innerHTML += \
+						"<a id='server" + i + "' class='dropdown-item text-center' href='#'" + \
+						"onclick='change_server(\""+ i_server + "\")';>" + i_server + "</a>";
+				}
+			}
+			## 혹시 아이템 입력창이 열려있을 수 있으므로 모두 닫습니다.
+			##for (let i=0;i<6;i++){
+				##closeForm(i);
+			##}
+		}
+
+		## 전체 6개 아이템 업데이트 함수입니다
+		function update_page(data){
+			// data 갯수, 즉 6회동안 각 요소 갱신을 반복합니다
+			show_spinner();
+			t = data.time;
+			itemsets = data.itemsets;
+			//alert('update:' + itemsets.length);
+			serverlist = data.serverlist;
+			data = data.ar;
+			//alert(data[0]['name']);
+			## sort를 통해 아래와같이 할수도 있지만 이미 html상 해당id들이 정렬된채 생성된 상태라 상관없습니다
+			for (let i=0;i < Object.keys(data).length;i++) {
+			//Object.keys(data).sort().foreach(function(i) {
+				//alert(i);
+				document.getElementById("image"+i).setAttribute("style", "background-image: url('" + img_host + data[i].image + ".jpg')"); 
+				document.getElementById("itemname"+i).innerHTML = data[i].name;
+				document.getElementById("num"+i).innerHTML = data[i].num;
+				document.getElementById("moneygold"+i).innerHTML = data[i].gold;
+				document.getElementById("moneysilver"+i).innerHTML = data[i].silver;
+				document.getElementById("moneycopper"+i).innerHTML = data[i].copper;
+				document.getElementById("min_seller"+i).innerHTML = data[i].min_seller;
+
+				//실제로 클릭액션을 해야하는 클래스라 안먹힙니다
+				//document.getElementById("lb"+i+"0").checked = 1; 
+				document.getElementById("lb"+i+"0").click();
+				
+			}
+			update_charts(data);
+			update_itemset_dropdown();
+			update_dumped_time(server, t);
+			hide_spinner();
 		} //function update_page() ends
+
 		function show_modal_delete(setname) {
 			window.delete_name = setname;
 			document.getElementById('delete_name').innerHTML = setname;
@@ -568,15 +581,11 @@
 			$('#modal_delete').modal('hide');
 			##alert('delete ' + setname + '!!');
 			## modal
-			document.getElementById("div-spinner").style.display="flex";
-			document.getElementById("div-srv-screener").style.display="flex";
-			document.getElementById("div-login-screener").style.display="flex";
+			show_spinner();
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
 				if(this.readyState == 4) {
-					document.getElementById("div-spinner").style.display="none";
-					document.getElementById("div-srv-screener").style.display="none";
-					document.getElementById("div-login-screener").style.display="none";
+					hide_spinner();
 					if (this.status == 200) {
 						var data = JSON.parse(this.responseText);
 						if(data.success == '1') {
@@ -640,6 +649,7 @@
 		}
 		// jQuery document ready 를 대신하는 자바스크립트입니다 다만 익스플로러 9이하에선 안된다는 말도 있네요
 		document.addEventListener("DOMContentLoaded", function(){
+			itemsets = ${itemsets};
 			window.checked = new Array;
 			if(window.addEventListener) {
 				window.addEventListener("keydown", function (event) {
@@ -710,7 +720,6 @@
 					document.getElementById("input-itemset").focus();
 				}
 			}, false);
-			/*
 			document.getElementById("icon-login-cancel").addEventListener('click', function() { \
 				tt = document.getElementById("input-login").value; 
 				if(tt == '') {
@@ -721,8 +730,9 @@
 					document.getElementById("input-login").focus();
 				}
 			}, false);
-			*/
-	
+
+			//update_charts(${ar});
+			update_itemset_dropdown();
 			setupWebSocket();
 			// innerHTML
 			document.getElementById("designed_by").innerHTML = "developed and designed by utylee studios 2019 /&nbsp;";
@@ -731,9 +741,10 @@
 			## donation 제거
 			##document.getElementById("thx_for").innerHTML = "thanks for your";
 			##document.getElementById("donation").innerHTML = "<a href='http://npay.to/15fe4a50e584e996c30f' target='_blank'>NPay donation</a>";
-			http://npay.to/15fe4a50e584e996c30f
+			##http://npay.to/15fe4a50e584e996c30f
 			// websocket을 만듭니다
 			// 차트객체 chart.js 6개를 생성합니다
+			<%doc>
 			% for a in ar.keys():
 			var data_ = [];
 			//alert('${ar[a]['min_chain'][-1]}');
@@ -785,6 +796,7 @@
 				});
 			}
 			% endfor
+			</%doc>
 		});
 	</script>
 </%block>

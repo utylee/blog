@@ -295,7 +295,7 @@ input[type="search"]::-webkit-search-decoration {
 }
 
 #div-login-screener {
-	display: flex;
+	display: none;
 	position: absolute;
 	flex-direction: column;
 	text-align: center;
@@ -313,7 +313,7 @@ input[type="search"]::-webkit-search-decoration {
 	z-index:21;
 }
 #div-srv-screener {
-	display: flex;
+	display: none;
 	position: absolute;
 	flex-direction: column;
 	text-align: center;
@@ -331,7 +331,7 @@ input[type="search"]::-webkit-search-decoration {
 	z-index:21;
 }
 #div-spinner {
-	display: flex;
+	display: none;
 	position: absolute;
 	flex-direction: column;
 	text-align: center;

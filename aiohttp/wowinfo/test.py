@@ -1,4 +1,7 @@
 import asyncio
+import uvloop
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
 from aiohttp import web
 import datetime
 import time
@@ -64,9 +67,13 @@ async def ws_handle(request):
     async for msg in ws:
         if msg.type == aiohttp.WSMsgType.TEXT:
             if msg.data == 'connect':
+                log.info('connected')
+                #await ws.send_str('1')
+                '''
                 print('update on connect')
                 log.info('update on connect')
                 await ws.send_str('update')
+                '''
             elif msg.data == 'close':
                 await ws.close()
         elif msg.type == aiohttp.WSMsgType.ERROR:
@@ -133,7 +140,6 @@ async def update(request):
     global serverlist
     #global currentset
     itemset = ''
-    print('/update handler came in')
     log.info('/update handler came in')
 
     itemset = request.match_info['itemset']
@@ -156,14 +162,11 @@ async def update(request):
     start_time = time.time()
     set_ = a_cl.Set(itemset).fork()
     dict_ = await set_.get_decoed_item_set(srver)
-    #array = await get_decoed_item_set(srver, itemset)
+    #dict_ = {}
     finished_time = time.time()
     proc_time = round(finished_time - start_time, 3)
-    print(f'fetch elapsed time: {proc_time} 초')
     log.info(f'fetch elapsed time: {proc_time} 초')
 
-    #print(ar)
-    #ar = await get_decoed_item_set(server, currentset)
     data = {}
     itemsets = []
 
@@ -175,12 +178,11 @@ async def update(request):
             async for r in conn.execute(di.tbl_wow_server_info.select().where(di.tbl_wow_server_info.c.server==srver)):
                 data['time'] = r[1]
 
-    #data['ar'] = ar
-    #data['itemsets'] = itemsets
     data['ar'] = dict_
     data['itemsets'] = await get_itemsets()
+    #data['itemsets'] = []
     data['serverlist'] = await auc.get_serverlist() # get_serverlist가 처음 handle시에삽입되어 있습니다
-    #data['currentset'] = currentset 
+    #data['serverlist'] = []
 
     return web.json_response(data)
 
@@ -193,15 +195,13 @@ async def handle(request):
     global imageroot
     global serverlist
     
-    serverlist = await auc.get_serverlist()
+    #최적화를 위해서 굳이 db에서 가져오지 않습니다. 0.2초 단축 200ms
     itemsets = await get_itemsets()
-    #itemsets.remove(currentset)
+    #itemsets = []
     # default set이냐 아니냐로 분기하기 위함입니다
     set_ = a_cl.Set(currentset).fork()
     dict_ = await set_.get_decoed_item_set(server)
-    #array = await set_.get_decoed_item_set(server)
-    #array = await get_decoed_item_set(server, currentset)
-    #print(f'dict_:{dict_}')
+    #dict_ = {}
 
     '''
     return {'name': '7', 'imageroot': '../static/images/' ,'ar':ar, 'server':server,
@@ -213,7 +213,7 @@ async def handle(request):
 async def init():
     global interval
     global ws
-    init_data()
+
     app = web.Application()
     # 한글 주석들이 파싱하다가 에러가 나버리는 바람에 샘플대로 encoding 옵션을 다시 모두 넣어줬습니다
     # directories 부분을 지정해주면 샘플과 달리 파일을 직접 언급해서 가져올수 있습니다
@@ -237,12 +237,28 @@ async def init():
     # 웹소켓 핸들러도 get을 통해 정의해줘야합니다
     ws = app.router.add_get('/ws', ws_handle)
 
+    #별도의 db proc을 돌리므로 뺍니다. 불필요한 업데이트가 초반 두번 일어나는 결과를 불러옵니다
+    '''
     loop = asyncio.get_event_loop()
     loop.create_task(main_proc(interval))
+    '''
+    loop = asyncio.get_event_loop()
+    loop.create_task(init_proc())
+    # 서버리스트를 가져오고 (X 최초아이템 셋도 가져옵니다)
+    #init_data()
 
     return app
 
+async def init_proc():
+    global serverlist
+    #log.info(f'init serverlist size: {len(serverlist)}')
+    if(len(serverlist) == 0):
+        serverlist = await auc.get_serverlist()
+        #log.info(f'after serverlist size: {len(serverlist)}')
+
+
 async def main_proc(intv):
+    # 현재 동작 안합니다. 별도로 분리
     # 한국 와우 서버 리스트를 가져옵니다
     serverlist = []
     async with create_engine(user='postgres',
@@ -265,7 +281,7 @@ async def main_proc(intv):
 
 async def timer_proc(serverlist):
     for s_ in serverlist:
-        #await auc.db_update_from_server(s_, defaultset)
+        await auc.db_update_from_server(s_, defaultset)
         await fetch_auction()
 
 async def fetch_auction():
@@ -290,9 +306,10 @@ async def fetch_auction():
         log.info('ws send err!!!!')
 
 def init_data():
-    global ar
+    #global ar
+    global serverlist
 
-
+    '''
     ar = {'사술매듭 가방': {'num': 10, 'min': 1379999900, 'min_seller': '밀림왕세나씨', 'min_chain':'0'}, 
                 '심해 가방': {'num': 300, 'min': 18000000, 'min_seller': '인중개박살'}, 
                 '호화로운 모피': {'num': 158, 'min': 4000, 'min_seller': '우렝밀렵'}, 
@@ -308,17 +325,9 @@ def init_data():
         ar[a]['gold'] = 0
         ar[a]['silver'] =0
         ar[a]['copper'] =0
+        '''
 
-async def get_serverlist():
-    serverlist = []
-    async with create_engine(user='postgres',
-                            database='auction_db',
-                            host='192.168.0.212',
-                            password='sksmsqnwk11') as engine:
-        async with engine.acquire() as conn:
-            async for r in conn.execute(di.tbl_item_set.select()):
-                itemset_names.append(r[0])
-    return itemset_names
+
 async def get_itemsets():
     itemset_names = []
     async with create_engine(user='postgres',
