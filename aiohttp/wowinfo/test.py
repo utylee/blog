@@ -136,6 +136,29 @@ async def update_indiv(request):
     data['num'] = pos_no
 
     return web.json_response(data)
+async def rq_servertime(request):
+    global ar
+    global server
+    #global currentset
+    log.info('/rq_servertime handler came in')
+    data = {}
+
+    srver = request.match_info['server']
+    start_time = time.time()
+    async with create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.212',
+                            password='sksmsqnwk11') as engine:
+        async with engine.acquire() as conn:
+            async for r in conn.execute(di.tbl_wow_server_info.select().where(di.tbl_wow_server_info.c.server==srver)):
+                data['time'] = r[1]
+    finished_time = time.time()
+    proc_time = round(finished_time - start_time, 3)
+    log.info(f'fetch elapsed time: {proc_time} 초')
+    data['server'] = srver
+    log.info(f'data: {data}')
+
+    return web.json_response(data)
 
 async def update(request):
     global ar
@@ -173,6 +196,7 @@ async def update(request):
     data = {}
     itemsets = []
 
+    '''
     async with create_engine(user='postgres',
                             database='auction_db',
                             host='192.168.0.212',
@@ -180,6 +204,7 @@ async def update(request):
         async with engine.acquire() as conn:
             async for r in conn.execute(di.tbl_wow_server_info.select().where(di.tbl_wow_server_info.c.server==srver)):
                 data['time'] = r[1]
+                '''
 
     #data['time'] = ''
     data['ar'] = dict_
@@ -234,6 +259,7 @@ async def init():
     app.router.add_get('/', handle)
     app.router.add_get('/update/{server}/{cur_user}/{itemset}/{dummy}', update)
     app.router.add_get('/update/{server}/{cur_user}/{itemset}', update)
+    app.router.add_get('/rq_servertime/{server}/{dummy}', rq_servertime)
     #app.router.add_get('/update/{server}/{cur_user}/{itemset}/{proto}', update)
     app.router.add_get('/update_indiv/{num}/{server}/{cur_user}/{cur_itemset}/{itemname}', update_indiv)
     app.router.add_get('/create_itemset/{cur_user}/{setname}', create_itemset)

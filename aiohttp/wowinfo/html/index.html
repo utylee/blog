@@ -477,9 +477,10 @@
 		
 			coloring_setbutton(cur_itemset);
 		}
-		function update_dumped_time(server, t) {
-			document.getElementById("dumped_at").innerHTML =  server + " DB dumped recently at &nbsp;";
-			document.getElementById("update_time").innerHTML = t;
+		##function update_dumped_time(server, t) {
+		function update_dumped_time(data) {
+			document.getElementById("dumped_at").innerHTML =  data.server + " DB dumped recently at &nbsp;";
+			document.getElementById("update_time").innerHTML = data.time;
 		}
 		function show_spinner() {
 			##spinner show
@@ -577,7 +578,7 @@
 			}
 			update_charts(data);
 			update_itemset_dropdown();
-			update_dumped_time(server, t);
+			##update_dumped_time(server, t);
 			hide_spinner();
 		} //function update_page() ends
 
@@ -754,18 +755,9 @@
 			##document.getElementById("donation").innerHTML = "<a href='http://npay.to/15fe4a50e584e996c30f' target='_blank'>NPay donation</a>";
 			##http://npay.to/15fe4a50e584e996c30f
 
-			// 역시 vanilla js 를 사용해 봅니다
-			var xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 200) {
-					var data = JSON.parse(this.responseText);
-					update_page(data);
-				}
-			};
-			var dummy = new Date().getTime();
-			xhttp.open("GET", '/update/' + server + '/' + \
-								cur_user + '/' + cur_itemset + '/' + dummy, true);
-			xhttp.send();
+			rq_dumptime();
+			rq_fullpage();
+
 			/*
 			var xhttp2 = new XMLHttpRequest();
 			xhttp2.onreadystatechange = function() {
@@ -837,6 +829,36 @@
 			% endfor
 			</%doc>
 		});
+
+		function rq_dumptime() {
+			// 역시 vanilla js 를 사용해 봅니다
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var data = JSON.parse(this.responseText);
+					##update_servertime(data);
+					update_dumped_time(data);
+				}
+			};
+			var dummy = new Date().getTime();
+			xhttp.open("GET", '/rq_servertime/' + server + '/' + dummy, true);
+			xhttp.send();
+		}
+
+		function rq_fullpage() {
+			// 역시 vanilla js 를 사용해 봅니다
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var data = JSON.parse(this.responseText);
+					update_page(data);
+				}
+			};
+			var dummy = new Date().getTime();
+			xhttp.open("GET", '/update/' + server + '/' + \
+								cur_user + '/' + cur_itemset + '/' + dummy, true);
+			xhttp.send();
+		}
 
 		function create_chart_objects() {
 			//window[eval('k'+1)] = document.getElementById("chLine" + 1);
