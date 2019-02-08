@@ -2,7 +2,7 @@
 
 <%block name="script">
 	## nginx 에서 static 을 호스팅하느라 상대경로를 바꿨습니다
-	##<link rel="stylesheet" href="../static/css/add.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
 	<link rel="stylesheet" href="/static/css/add.css">
 	##<link rel="stylesheet" href="/static/css/spin.css">
 	## fontawesome 직접 호스팅(:by nginx)
@@ -22,6 +22,7 @@
 		window.itemsets = [];
 		window.img_host = 'https://wow.zamimg.com/images/wow/icons/large/';
 		window.chart_chains = new Array;
+		window.chart = new Array;
 		window.server = '아즈샤라';
 		window.serverlist = [];
 		window.form_opened = new Array;
@@ -182,13 +183,17 @@
 				//eval('chLine' + i).data = min_chain_.slice(,min_chain_.length - 1) / 10000);
 				//eval('chart' + i).data = full_data_; 
 				//eval('chart' + i).data.datasets[0].data = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; 
-				eval('chart'+a).data.labels = labels_;
-				eval('chart'+a).data.datasets[0].data = data_;
-				eval('chart'+a).update();
+				##eval('chart'+a).data.labels = labels_;
+				##eval('chart'+a).data.datasets[0].data = data_;
+				##eval('chart'+a).update();
+				chart[a].data.labels = labels_;
+				chart[a].data.datasets[0].data = data_;
+				chart[a].update();
 			}
 		}
 		function setupWebSocket(){
 			this.socket = new WebSocket('wss://'+window.location.host+'/ws');
+			##this.socket = new WebSocket('ws://'+window.location.host+'/ws');
 			this.socket.onopen = function(){
 				socket.send('connect');
 			}
@@ -418,6 +423,7 @@
 			## 새로만들기항목
 			document.getElementById("div_itemlist").innerHTML += "\
 			<a id='itemlist0' class='dropdown-item text-center font-weight-bolder text-info' href='#' onclick='create_itemset();'> <i class='fas fa-folder-open' style='font-weight:lighter;font-size:1.0em;'>&nbsp;</i>" + itemsets[0] + "</a>";
+			//alert(div_itemlist.innerHTML);
 			## 아이템세트들
 			window.dropdown_pair = {};
 			for(let it=1;it<itemsets.length;it++){			//0이 아닌 1부터시작 
@@ -440,6 +446,7 @@
 					}
 				}
 			}
+			//alert(div_itemlist.innerHTML);
 			## 위의 if-else 내에서 innerHTML 작성하면서 addeventlistener를 행하니 동작하지 않았습니다. 
 			## 그래서 for loop 번거롭지만 별도로 뺐습니다.
 			## 또한 inner function closure 문제 관련해서도 추후 별도의 함수선언으로 뺐습니다
@@ -469,7 +476,6 @@
 			}
 		
 			coloring_setbutton(cur_itemset);
-
 		}
 		function update_dumped_time(server, t) {
 			document.getElementById("dumped_at").innerHTML =  server + " DB dumped recently at &nbsp;";
@@ -490,7 +496,8 @@
 		function update_charts(data) {
 			## 아직chLine이 미처 생성되지 않았을 경우 exception이 발생해 이상동작이 발생하는듯 
 			for(var i=0;i<6;i++) {
-				if(eval('chart'+i)){
+				##if(eval('chart'+i)){
+				if(chart[i]){
 					//min_chain_ = data[Object.keys(data)[i]].min_chain;
 					chart_chains[i] = data[i].min_chain;
 					min_chain_ = chart_chains[i];
@@ -511,9 +518,12 @@
 					//eval('chLine' + i).data = min_chain_.slice(,min_chain_.length - 1) / 10000);
 					//eval('chart' + i).data = full_data_; 
 					//eval('chart' + i).data.datasets[0].data = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; 
-					eval('chart'+i).data.labels = labels_;
-					eval('chart'+i).data.datasets[0].data = data_;
-					eval('chart'+i).update();
+					##eval('chart'+i).data.labels = labels_;
+					##eval('chart'+i).data.datasets[0].data = data_;
+					##eval('chart'+i).update();
+					chart[i].data.labels = labels_;
+					chart[i].data.datasets[0].data = data_;
+					chart[i].update();
 					//alert('엄지척');
 					////eval('chLine' + i).addData = data_; 
 					//eval('chLine' + i).update();
@@ -547,6 +557,7 @@
 			serverlist = data.serverlist;
 			data = data.ar;
 			//alert(data[0]['name']);
+			update_serverlist();
 			## sort를 통해 아래와같이 할수도 있지만 이미 html상 해당id들이 정렬된채 생성된 상태라 상관없습니다
 			for (let i=0;i < Object.keys(data).length;i++) {
 			//Object.keys(data).sort().foreach(function(i) {
@@ -732,8 +743,8 @@
 			}, false);
 
 			//update_charts(${ar});
-			update_itemset_dropdown();
 			setupWebSocket();
+			update_itemset_dropdown();
 			// innerHTML
 			document.getElementById("designed_by").innerHTML = "developed and designed by utylee studios 2019 /&nbsp;";
 			document.getElementById("gathered_from").innerHTML = "item images hosted by zamimg.com /&nbsp; ";
@@ -742,7 +753,35 @@
 			##document.getElementById("thx_for").innerHTML = "thanks for your";
 			##document.getElementById("donation").innerHTML = "<a href='http://npay.to/15fe4a50e584e996c30f' target='_blank'>NPay donation</a>";
 			##http://npay.to/15fe4a50e584e996c30f
-			// websocket을 만듭니다
+
+			// 역시 vanilla js 를 사용해 봅니다
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var data = JSON.parse(this.responseText);
+					update_page(data);
+				}
+			};
+			var dummy = new Date().getTime();
+			xhttp.open("GET", '/update/' + server + '/' + \
+								cur_user + '/' + cur_itemset + '/' + dummy, true);
+			xhttp.send();
+			/*
+			var xhttp2 = new XMLHttpRequest();
+			xhttp2.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var data = JSON.parse(this.responseText);
+					update_page(data);
+				}
+			};
+			var dummy2 = new Date().getTime();
+			xhttp2.open("GET", '/update/' + server + '/' + \
+								cur_user + '/' + cur_itemset + '/' + dummy2, true);
+			xhttp2.send();
+			*/
+
+			create_chart_objects();
+
 			// 차트객체 chart.js 6개를 생성합니다
 			<%doc>
 			% for a in ar.keys():
@@ -798,6 +837,44 @@
 			% endfor
 			</%doc>
 		});
+
+		function create_chart_objects() {
+			//window[eval('k'+1)] = document.getElementById("chLine" + 1);
+
+			for (let i=0;i<6;i++) {
+				var labels_ = [];
+				for(let l_=0;l_<chart_column_num;l_++){
+					labels_.push("");
+				}
+				if(eval('chLine' + i)) {
+					##window.chart${loop.index} = new Chart(chLine${loop.index}, {
+					window.chart[i] = new Chart(eval('chLine'+i), {
+						type: 'line',
+						##data: chartData${loop.index},
+						data: {
+							labels: labels_,
+							datasets: [{
+								data: [] }]},
+						options: {
+							scales: {
+								yAxes: [{
+									ticks: {
+										beginAtZero: false
+									}
+								}]
+							},
+							legend: {
+								display: false
+							},
+							## explorer에서의 차트 사이즈 안먹히는 문제로 수동모드로 사이즈 정해주기로 했습니다
+							responsive: false
+						}
+					});
+				}
+				<%doc>
+				</%doc>
+			} // end-for
+		} // end-function create-chart-objects()
 	</script>
 </%block>
 
@@ -818,9 +895,11 @@
 				##<span class="icon-checkcircle" >아즈샤라</span>
 			</button>
 			<div id="div_serverlist" class="dropdown-menu scrollable-menu"  style="width:100%">
+				<%doc>
 				% for i in serverlist:
 				<a id="${'server'+str(loop.index)}" class="dropdown-item text-center" href="#" onclick="change_server('${i}');">${i}</a>
 				% endfor
+				</%doc>
 			</div>
 		</div>
 		</div> 
@@ -828,14 +907,18 @@
 		<div class="temple_btn">
 		<div id="div-spinner"><div class="spinner"></div></div>
 		<div class="dropdown menu_wide" >
-			##<button id="button_itemset" class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown">
+			<button id="button_itemset" class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown"></button>
+			<%doc>
 			% if current_itemset == '기본구성':
 			<button id="button_itemset" class="btn btn-secondary btn-large btn-block dropdown-toggle text-warning" type="button" data-toggle="dropdown">
 				<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;${current_itemset}</button>
 			% else:
 			<button id="button_itemset" class="btn btn-secondary btn-large btn-block dropdown-toggle text-muted" type="button" data-toggle="dropdown">${current_itemset}</button>
 			% endif
+			</%doc>
 			<div id="div_itemlist" class="dropdown-menu scrollable-menu"  style="width:100%">
+				<%doc>
+				<a id="itemlist0" class="dropdown-item text-center text-primary" href="#">dummy</a>
 				% for i in itemsets:
 					% if i == '만들기':
 				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center text-primary" href="#" onclick="change_itemset('${i}');"><h2>${i}</h2></a>
@@ -845,6 +928,7 @@
 				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center" href="#" onclick="change_itemset('${i}');">${i}</a>
 					% endif
 				% endfor
+				</%doc>
 			</div>
 		</div>
 			<div id="div-form-itemset" class="input_wide" align="center">
@@ -939,16 +1023,18 @@
 	## 메인 row
 	<div class="my-main">
 			## % for a in ar.keys():
-			% for a, b in sorted(ar.items()):
+			##% for a, b in sorted(ar.items()):
+			% for a in range(0, 6):
 			<div class="card" >
 				<div class="card-img-top bg-secondary"  >
 					<center>
 						<%doc>
-						border를 img태그를 이용하고 아이템이미지를 div의 백그라운드로 거꾸로 사용해서
-						border가 잘리는문제를 해결하였습니다
+						border를 img태그를 이용하고 아이템이미지를 div의 백그라운드로 거꾸로
+						사용해서border가 잘리는문제를 해결하였습니다
 						</%doc>
 						##<div id="image${loop.index}" class="iconlarge" style="background-image: url('${imageroot + ar[a]['image']}'+'.jpg')">
-						<div id="image${a}" class="iconlarge" style="background-image: url('${imageroot + b['image'] + '.jpg'}')">
+						##<div id="image${a}" class="iconlarge" style="background-image: url('${imageroot + b['image'] + '.jpg'}')">
+						<div id="image${a}" class="iconlarge" style="">
 							<a href="javascript:show_item_form(${a});">
 								## nginx 에서 static 을 호스팅하느라 상대경로를 바꿨습니다
 								##<img src="../static/css/images/border.png"/>
@@ -972,39 +1058,50 @@
 						X		
 					</div>
 					<div class="card-title" align="center"  >
-						<a href="javascript:show_item_form(${a});"><span id="itemname${a}" style="font-size:1.2rem">${b['name']}</span><span id="num${a}" class="badge badge-success badge-pill" >${b['num']}</span>
+						##<a href="javascript:show_item_form(${a});"><span id="itemname${a}" style="font-size:1.2rem">${b['name']}</span><span id="num${a}" class="badge badge-success badge-pill" >${b['num']}</span>
+						<a href="javascript:show_item_form(${a});"><span id="itemname${a}" style="font-size:1.2rem">WoW 토큰</span><span id="num${a}" class="badge badge-success badge-pill" >1111</span>
 						</a>
 					</div>
 					<ul class="list-group list-group-flush">
 					<li class="list-group-item">
 					<p class="card-text" align="center">
-					<span id="moneygold${loop.index}" class="moneygold">${int(b['gold'])}</span>
-					<span id="moneysilver${loop.index}" class="moneysilver">${int(b['silver'])}</span>
-					<span id="moneycopper${loop.index}" class="moneycopper">${int(b['copper'])}</span>
+					##<span id="moneygold${loop.index}" class="moneygold">${int(b['gold'])}</span>
+					##<span id="moneysilver${loop.index}" class="moneysilver">${int(b['silver'])}</span>
+					##<span id="moneycopper${loop.index}" class="moneycopper">${int(b['copper'])}</span>
+					<span id="moneygold${a}" class="moneygold">11</span>
+					<span id="moneysilver${a}" class="moneysilver">11</span>
+					<span id="moneycopper${a}" class="moneycopper">11</span>
 					<br>
-					<span id="min_seller${loop.index}" class="badge badge-secondary text-muted" >${b['min_seller']}</span>
+					##<span id="min_seller${loop.index}" class="badge badge-secondary text-muted" >${b['min_seller']}</span>
+					<span id="min_seller${a}" class="badge badge-secondary text-muted" ></span>
 					</p>
 					</li>
 					<div style="font-size:12px;margin-top:0px;" align="center">
 						##차트
 						<li class="list-group-item" align="center">
-							<canvas id="chLine${loop.index}" style="width:200px;"></canvas>
+							##<canvas id="chLine${loop.index}" style="width:200px;"></canvas>
+							<canvas id="chLine${a}" style="width:200px;"></canvas>
 						##주기선택
 							##<div align="center" class="btn-block btn-group-sm btn-group-toggle center" style="transform:scale(0.6);" data-toggle="buttons">
 							<div align="center" class="btn-group btn-group-toggle center"  data-toggle="buttons">
-								<label id="lb${loop.index}0" class="btn btn-outline-primary text-muted active">
+								##<label id="lb${loop.index}0" class="btn btn-outline-primary text-muted active">
+								<label id="lb${a}0" class="btn btn-outline-primary text-muted active">
 									<input type="radio" name="options" id="option1" autocomplete="off">12시
 								</label>
-								<label id="lb${loop.index}1" class="btn btn-outline-primary text-muted">
+								##<label id="lb${loop.index}1" class="btn btn-outline-primary text-muted">
+								<label id="lb${a}1" class="btn btn-outline-primary text-muted">
 									<input type="radio" name="options" id="option2" autocomplete="off">24시
 								</label>
-								<label id="lb${loop.index}2" class="btn btn-outline-primary text-muted">
+								##<label id="lb${loop.index}2" class="btn btn-outline-primary text-muted">
+								<label id="lb${a}2" class="btn btn-outline-primary text-muted">
 									<input type="radio" name="options" id="option3" autocomplete="off">48시
 								</label>
-								<label id="lb${loop.index}3" class="btn btn-outline-primary text-muted">
+								##<label id="lb${loop.index}3" class="btn btn-outline-primary text-muted">
+								<label id="lb${a}3" class="btn btn-outline-primary text-muted">
 									<input type="radio" name="options" id="option3" autocomplete="off">주일
 								</label>
-								<label id="lb${loop.index}4" class="btn btn-outline-primary text-muted">
+								##<label id="lb${loop.index}4" class="btn btn-outline-primary text-muted">
+								<label id="lb${a}4" class="btn btn-outline-primary text-muted">
 									<input type="radio" name="options" id="option4" autocomplete="off">30일
 								</label>
 							</div>

@@ -34,7 +34,10 @@ parser = argparse.ArgumentParser(description="wowinfo")
 parser.add_argument('--path')
 parser.add_argument('--port')
 args = parser.parse_args()
-log_path = args.path[5:]
+try:
+    log_path = args.path[5:]
+except:
+    log_path = args.port
 
 # 서버 선택
 server = '아즈샤라'
@@ -178,11 +181,13 @@ async def update(request):
             async for r in conn.execute(di.tbl_wow_server_info.select().where(di.tbl_wow_server_info.c.server==srver)):
                 data['time'] = r[1]
 
+    #data['time'] = ''
     data['ar'] = dict_
     data['itemsets'] = await get_itemsets()
     #data['itemsets'] = []
-    data['serverlist'] = await auc.get_serverlist() # get_serverlist가 처음 handle시에삽입되어 있습니다
-    #data['serverlist'] = []
+
+    #data['serverlist'] = await auc.get_serverlist() # get_serverlist가 처음 handle시에삽입되어 있습니다
+    data['serverlist'] = serverlist 
 
     return web.json_response(data)
 
@@ -196,12 +201,12 @@ async def handle(request):
     global serverlist
     
     #최적화를 위해서 굳이 db에서 가져오지 않습니다. 0.2초 단축 200ms
-    itemsets = await get_itemsets()
-    #itemsets = []
+    #itemsets = await get_itemsets()
+    itemsets = []
     # default set이냐 아니냐로 분기하기 위함입니다
     set_ = a_cl.Set(currentset).fork()
-    dict_ = await set_.get_decoed_item_set(server)
-    #dict_ = {}
+    #dict_ = await set_.get_decoed_item_set(server)
+    dict_ = {}
 
     '''
     return {'name': '7', 'imageroot': '../static/images/' ,'ar':ar, 'server':server,
