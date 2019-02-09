@@ -83,8 +83,12 @@ async def main_proc(intv):
             await asyncio.sleep(intv)
 
 async def timer_proc(serverlist):
-    for s_ in serverlist:
-        await db_update_from_server(s_, defaultset)
+    async with create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.212',
+                            password='sksmsqnwk11') as engine:
+        for s_ in serverlist:
+            await db_update_from_server(engine, s_, defaultset)
 
 logging.basicConfig(filename='dbproc.log', level=logging.INFO, format='%(asctime)s-%(message)s')
 loop = asyncio.get_event_loop()

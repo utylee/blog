@@ -164,7 +164,7 @@ async def update(request):
     log.info(f'들어오긴합니까? {srver}')
     start_time = time.time()
     set_ = a_cl.Set(itemset).fork()
-    dict_ = await set_.get_decoed_item_set(srver)
+    dict_ = await set_.get_decoed_item_set(request.app['db'], srver)
     #dict_ = {}
     finished_time = time.time()
     proc_time = round(finished_time - start_time, 3)
@@ -173,6 +173,11 @@ async def update(request):
     data = {}
     itemsets = []
 
+    #conn = await request.app['db'].cursor() 
+    async with request.app['db'].acquire() as conn:
+        async for r in conn.execute(di.tbl_wow_server_info.select().where(di.tbl_wow_server_info.c.server==srver)):
+            data['time'] = r[1]
+    '''
     async with create_engine(user='postgres',
                             database='auction_db',
                             host='192.168.0.212',
@@ -180,10 +185,11 @@ async def update(request):
         async with engine.acquire() as conn:
             async for r in conn.execute(di.tbl_wow_server_info.select().where(di.tbl_wow_server_info.c.server==srver)):
                 data['time'] = r[1]
+                '''
 
     #data['time'] = ''
     data['ar'] = dict_
-    data['itemsets'] = await get_itemsets()
+    data['itemsets'] = await get_itemsets(request)
     #data['itemsets'] = []
 
     #data['serverlist'] = await auc.get_serverlist() # get_serverlist가 처음 handle시에삽입되어 있습니다
@@ -215,11 +221,11 @@ async def handle(request):
     return {'name': '7', 'imageroot': imageroot ,'ar':dict_, 'server':server, 
                     'serverlist':serverlist, 'itemsets': itemsets, 'current_itemset':currentset}
 
-async def init():
+async def init(app):
     global interval
     global ws
 
-    app = web.Application()
+    #app = web.Application()
     # 한글 주석들이 파싱하다가 에러가 나버리는 바람에 샘플대로 encoding 옵션을 다시 모두 넣어줬습니다
     # directories 부분을 지정해주면 샘플과 달리 파일을 직접 언급해서 가져올수 있습니다
     lookup = aiohttp_mako.setup(app,directories=['html'], 
@@ -230,7 +236,7 @@ async def init():
     #lookup = aiohttp_mako.setup(app, directories=['.'])
     #lookup.put_string('index.html', '''<h2>${name}</h2>''')
 
-    #app.router.add_static('/static', 'static')
+    app.router.add_static('/static', 'static')
     app.router.add_get('/', handle)
     app.router.add_get('/update/{server}/{cur_user}/{itemset}/{dummy}', update)
     app.router.add_get('/update/{server}/{cur_user}/{itemset}', update)
@@ -249,6 +255,14 @@ async def init():
     '''
     loop = asyncio.get_event_loop()
     loop.create_task(init_proc())
+
+    # db에 바로 접속해 놓습니다
+    engine = await create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.212',
+                            password='sksmsqnwk11')
+    app['db'] = engine
+
     # 서버리스트를 가져오고 (X 최초아이템 셋도 가져옵니다)
     #init_data()
 
@@ -333,15 +347,11 @@ def init_data():
         '''
 
 
-async def get_itemsets():
+async def get_itemsets(request):
     itemset_names = []
-    async with create_engine(user='postgres',
-                            database='auction_db',
-                            host='192.168.0.212',
-                            password='sksmsqnwk11') as engine:
-        async with engine.acquire() as conn:
-            async for r in conn.execute(di.tbl_item_set.select()):
-                itemset_names.append(r[0])
+    async with request.app['db'].acquire() as conn:
+        async for r in conn.execute(di.tbl_item_set.select()):
+            itemset_names.append(r[0])
     return itemset_names
 
 #web.run_app(init(),port=7777)
@@ -362,4 +372,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     #web.run_app(init(), port=7777)
-    web.run_app(init(), path=args.path, port=args.port)
+    web.run_app(init(app), path=args.path, port=args.port)

@@ -65,248 +65,245 @@ async def get_wowtoken(tok):
     return price
 
 #async def proc(server, item_list):
-async def db_update_from_server(server, defaultset):
+async def db_update_from_server(engine, server, defaultset):
     global tok
     # 임시 딕셔너리를 만듭니다. 전체 db를 아이템별로 처리합니다
     temp_dict = {}
     # DB에 접속해둡니다
-    async with create_engine(user='postgres',
-                            database='auction_db',
-                            host='192.168.0.212',
-                            password='sksmsqnwk11') as engine:
-        async with engine.acquire() as conn:
-            #battle dev api 로서 api key를 사용해 일단 json 주소를 전송받습니다
-            print('json주소를 받아옵니다')
-            log.info('json주소를 받아옵니다')
-            #url = 'https://kr.api.battle.net/wow/auction/data/{}?locale={}&apikey={}'.format(server, locale, myapi)
+    async with engine.acquire() as conn:
+        #battle dev api 로서 api key를 사용해 일단 json 주소를 전송받습니다
+        print('json주소를 받아옵니다')
+        log.info('json주소를 받아옵니다')
+        #url = 'https://kr.api.battle.net/wow/auction/data/{}?locale={}&apikey={}'.format(server, locale, myapi)
 
-            #battlenet dev api 대변혁으로 로그인 방식이 바뀌었습니다 자칭 OAuth 방식
-            domain = 'kr.api.blizzard.com'
-            #먼저 토큰을 요청합니다
-            tok = await get_oauth()
-            '''
-            https://us.api.blizzard.com/wow/auction/data/medivh?locale=en_US&access_token=USt2y7pxKKiJ1yLYDjshaEM2k71sXdbCp3
-            '''
-            req_url = f'https://{domain}/wow/auction/data/{server}?locale={locale}&access_token={tok}' 
-            print(req_url)
-            log.info(req_url)
+        #battlenet dev api 대변혁으로 로그인 방식이 바뀌었습니다 자칭 OAuth 방식
+        domain = 'kr.api.blizzard.com'
+        #먼저 토큰을 요청합니다
+        tok = await get_oauth()
+        '''
+        https://us.api.blizzard.com/wow/auction/data/medivh?locale=en_US&access_token=USt2y7pxKKiJ1yLYDjshaEM2k71sXdbCp3
+        '''
+        req_url = f'https://{domain}/wow/auction/data/{server}?locale={locale}&access_token={tok}' 
+        print(req_url)
+        log.info(req_url)
 
-            # .loads 함수인 것을 봅니다. s가 없는 load 함수는 파일포인터를 받더군요
-            # requests가 아닌 aiohttp.ClientSession get 을 사용한 비동기방식으로 변경합니다
-            start_time = time.time()
-            dump_ts = 0             # 블리자드서버 경매데이터 덤프 시각 timestamp
-            dump_ts_str = ''        # 블리자드서버 경매데이터 덤프 시각 timestamp 스트링
+        # .loads 함수인 것을 봅니다. s가 없는 load 함수는 파일포인터를 받더군요
+        # requests가 아닌 aiohttp.ClientSession get 을 사용한 비동기방식으로 변경합니다
+        start_time = time.time()
+        dump_ts = 0             # 블리자드서버 경매데이터 덤프 시각 timestamp
+        dump_ts_str = ''        # 블리자드서버 경매데이터 덤프 시각 timestamp 스트링
 
-            # 와우토큰 
-            wowtoken_price = await get_wowtoken(tok)
-            print(f'토큰가격:{wowtoken_price}')
-            log.info(f'토큰가격:{wowtoken_price}')
+        # 와우토큰 
+        wowtoken_price = await get_wowtoken(tok)
+        print(f'토큰가격:{wowtoken_price}')
+        log.info(f'토큰가격:{wowtoken_price}')
 
-            # ssl 체크에서 에러가 나서 ssl 체크를 빼주는 옵션을 찾아서 넣어주었습니다
-            #async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as sess:
-            async with aiohttp.ClientSession() as sess:
-                async with sess.get(req_url) as resp:
-                    #print(await resp.text())
-                    load = json.loads(await resp.text())
-                    js_url = load['files'][0]['url']
-                    dump_ts = round(int(load['files'][0]['lastModified']) / 1000)
-                    #str_now = datetime.datetime.fromtimestamp(ts).strftime('%H:%M-%m/%d/%y')
-                    dump_ts_str = datetime.datetime.fromtimestamp(dump_ts).strftime('%H:%M-%m/%d/%y')
-                    print(f'덤프시각:{dump_ts}, {dump_ts_str}')
-                    log.info(f'덤프시각:{dump_ts}, {dump_ts_str}')
-                async with sess.get(js_url) as resp:
-                    print('주소:{} \n로부터 json 덤프 파일을 다운로드합니다...\n'.format(js_url))
-                    log.info('주소:{} \n로부터 json 덤프 파일을 다운로드합니다...\n'.format(js_url))
-                    async with aiofiles.open(f'auction-{server}.json', 'wb') as f:
-                        await f.write(await resp.read())
-            # 덤프 시각을 db에 기록합니다
-            #str_now = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
-            print(f'dumped_time:{dump_ts_str}')
-            log.info(f'dumped_time:{dump_ts_str}')
-            await conn.execute(db.tbl_wow_server_info.update().where(db.tbl_wow_server_info.c.server==server).values
-                                        (dumped_time=dump_ts_str))
+        # ssl 체크에서 에러가 나서 ssl 체크를 빼주는 옵션을 찾아서 넣어주었습니다
+        #async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as sess:
+        async with aiohttp.ClientSession() as sess:
+            async with sess.get(req_url) as resp:
+                #print(await resp.text())
+                load = json.loads(await resp.text())
+                js_url = load['files'][0]['url']
+                dump_ts = round(int(load['files'][0]['lastModified']) / 1000)
+                #str_now = datetime.datetime.fromtimestamp(ts).strftime('%H:%M-%m/%d/%y')
+                dump_ts_str = datetime.datetime.fromtimestamp(dump_ts).strftime('%H:%M-%m/%d/%y')
+                print(f'덤프시각:{dump_ts}, {dump_ts_str}')
+                log.info(f'덤프시각:{dump_ts}, {dump_ts_str}')
+            async with sess.get(js_url) as resp:
+                print('주소:{} \n로부터 json 덤프 파일을 다운로드합니다...\n'.format(js_url))
+                log.info('주소:{} \n로부터 json 덤프 파일을 다운로드합니다...\n'.format(js_url))
+                async with aiofiles.open(f'auction-{server}.json', 'wb') as f:
+                    await f.write(await resp.read())
+        # 덤프 시각을 db에 기록합니다
+        #str_now = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
+        print(f'dumped_time:{dump_ts_str}')
+        log.info(f'dumped_time:{dump_ts_str}')
+        await conn.execute(db.tbl_wow_server_info.update().where(db.tbl_wow_server_info.c.server==server).values
+                                    (dumped_time=dump_ts_str))
 
-            end_time = time.time()
-            elapsed_time = round(end_time - start_time)
-            # 가격 삽입시 30분 단위로 몇 번 지났는지 확인하기 위한 변수
-            #elapsed_quot_for_chain = round((dump_ts - start_time) / 1800)
-            # 받아온 json에 옥션 json 파일의 주소를 포함한 리스폰스를 보내줍니다. 
-            print('.다운로드 완료!')
-            log.info('.다운로드 완료!')
-            print(f'다운로드에 총 {elapsed_time}초 소요')
-            log.info(f'다운로드에 총 {elapsed_time}초 소요')
-            #print(f'서버 덤프시각에 비해 [30분단위]{elapsed_quot_for_chain}회가 경과하였습니다({dump_ts_str})')
-            print('.파싱을 시작합니다')
-            log.info('.파싱을 시작합니다')
-            async with aiofiles.open(f'auction-{server}.json', 'r') as f:
-                js = json.loads(await f.read())
-            #print(js['auctions'])
+        end_time = time.time()
+        elapsed_time = round(end_time - start_time)
+        # 가격 삽입시 30분 단위로 몇 번 지났는지 확인하기 위한 변수
+        #elapsed_quot_for_chain = round((dump_ts - start_time) / 1800)
+        # 받아온 json에 옥션 json 파일의 주소를 포함한 리스폰스를 보내줍니다. 
+        print('.다운로드 완료!')
+        log.info('.다운로드 완료!')
+        print(f'다운로드에 총 {elapsed_time}초 소요')
+        log.info(f'다운로드에 총 {elapsed_time}초 소요')
+        #print(f'서버 덤프시각에 비해 [30분단위]{elapsed_quot_for_chain}회가 경과하였습니다({dump_ts_str})')
+        print('.파싱을 시작합니다')
+        log.info('.파싱을 시작합니다')
+        async with aiofiles.open(f'auction-{server}.json', 'r') as f:
+            js = json.loads(await f.read())
+        #print(js['auctions'])
 
-            target_item_name = "하늘 골렘"
-            # 저장된 파일을 읽은 후 한줄씩 탐색합니다
-            sellers = []
-            min_seller = ''
-            i = 0
+        target_item_name = "하늘 골렘"
+        # 저장된 파일을 읽은 후 한줄씩 탐색합니다
+        sellers = []
+        min_seller = ''
+        i = 0
+        price = 0
+        min = 0
+        max = 0
+        avg = 0
+        sum = 0
+
+
+        total = len(js['auctions'])
+        print('-- 총 {} 개의 경매 아이템이 등록되어있습니다'.format(total))
+        log.info('-- 총 {} 개의 경매 아이템이 등록되어있습니다'.format(total))
+        # wow token 가격도 추가로 마지막에 넣어줍니다
+        js['auctions'].append({'item': 999999, 'buyout': wowtoken_price, 'quantity': 1, 'owner': 'BLIZZARD Ent.'})
+
+        start_a = time.time()
+        for l in js['auctions']:
+            num = 0
+            cur = int(l['item'])
             price = 0
-            min = 0
-            max = 0
-            avg = 0
-            sum = 0
+            if l['buyout'] == 0:
+                price = int(l['bid'] / int(l['quantity']))
+            else:
+                price = int(l['buyout'] / int(l['quantity'])) # 묶음 가격을 감안하지 못해서 추가합니다
+
+            # 해당아이템에 대한 딕트-리스트가 존재하지 않을경우
+            if temp_dict.get(cur) is None:
+                # 굳이 이름은 arranged table 에 넣지 않기에 (id만) 굳이 가져오는 
+                #       프로세스로 인한 시간 낭비를방지합니다
+                # !!라고 생각했으나 이 프로세스를 행하지 않으면 item존재를 로컬 db상 존재유무를 알수
+                #   없습니다. 속도도 해당아이템 최초의 경우에만 가져오고 속도도 빨라서 큰 영향
+                #   없다고 생각됩니다.
+                #temp_name = ''
+                res_ = await get_item_name_and_icon(conn, cur)
+                temp_name, temp_image = res_
+
+                #print(temp_name)
+                #temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner']}
+                temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner'], 'image': temp_image}
+            # 해당아이템 딕트가 이미 존재할 경우
+            else:
+                temp_dict[cur]['num'] = temp_dict[cur]['num'] + l['quantity']
+                temp_dict[cur]['num'] = temp_dict[cur]['num'] + l['quantity']
+
+                if (int(temp_dict[cur]['min']) == 0) or (price < temp_dict[cur]['min']):
+                    temp_dict[cur]['min'] = price
+                    temp_dict[cur]['min_seller'] = l['owner']
+            # sleep을 줘서 점유를 풀어줍니다
+            # 0.05 이상의 값을 줄 경우 어떤 경우에 있으서 transport 에러 워닝이 뜹니다.
+            # sleep을 0으로 하라는 말도 있는데 그렇게 하니 오히려 행이 좀 걸리는 것 같습니다.
+            # 관련 정보 링크https://github.com/aio-libs/aiohttp/issues/1115
+            #await asyncio.sleep(0.01)
+
+            # 내가 경매에 부친 물건이 있는지 표시합니다
+        #print(temp_dict)
+        ## 각 item 반복작업 종료
+        
+        end_a = time.time()
+        elap_a = round(end_a - start_a, 2)
+        elap_a_min = round(elap_a / 60)
+        print(f'JSON 파싱 소요시간: {elap_a} 초({elap_a_min}분)')
+        log.info(f'JSON 파싱 소요시간: {elap_a} 초({elap_a_min}분)')
 
 
-            total = len(js['auctions'])
-            print('-- 총 {} 개의 경매 아이템이 등록되어있습니다'.format(total))
-            log.info('-- 총 {} 개의 경매 아이템이 등록되어있습니다'.format(total))
-            # wow token 가격도 추가로 마지막에 넣어줍니다
-            js['auctions'].append({'item': 999999, 'buyout': wowtoken_price, 'quantity': 1, 'owner': 'BLIZZARD Ent.'})
+        # arranged_auction db에 삽입 프로세스 by 만들어진 temp_dict를 통해...
+        #
+        #
+        now__ = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
+        print(f'\n## {now__} : 이제 {server} db에 정리한 데이터를 삽입하기 시작합니다')
+        log.info(f'\n## {now__} : 이제 {server} db에 정리한 데이터를 삽입하기 시작합니다')
+        #print(temp_dict.keys())
+        start_time = time.time()
 
-            start_a = time.time()
-            for l in js['auctions']:
-                num = 0
-                cur = int(l['item'])
-                price = 0
-                if l['buyout'] == 0:
-                    price = int(l['bid'] / int(l['quantity']))
-                else:
-                    price = int(l['buyout'] / int(l['quantity'])) # 묶음 가격을 감안하지 못해서 추가합니다
-
-                # 해당아이템에 대한 딕트-리스트가 존재하지 않을경우
-                if temp_dict.get(cur) is None:
-                    # 굳이 이름은 arranged table 에 넣지 않기에 (id만) 굳이 가져오는 
-                    #       프로세스로 인한 시간 낭비를방지합니다
-                    # !!라고 생각했으나 이 프로세스를 행하지 않으면 item존재를 로컬 db상 존재유무를 알수
-                    #   없습니다. 속도도 해당아이템 최초의 경우에만 가져오고 속도도 빨라서 큰 영향
-                    #   없다고 생각됩니다.
-                    #temp_name = ''
-                    res_ = await get_item_name_and_icon(conn, cur)
-                    temp_name, temp_image = res_
-
-                    #print(temp_name)
-                    #temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner']}
-                    temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner'], 'image': temp_image}
-                # 해당아이템 딕트가 이미 존재할 경우
-                else:
-                    temp_dict[cur]['num'] = temp_dict[cur]['num'] + l['quantity']
-                    temp_dict[cur]['num'] = temp_dict[cur]['num'] + l['quantity']
-
-                    if (int(temp_dict[cur]['min']) == 0) or (price < temp_dict[cur]['min']):
-                        temp_dict[cur]['min'] = price
-                        temp_dict[cur]['min_seller'] = l['owner']
-                # sleep을 줘서 점유를 풀어줍니다
-                # 0.05 이상의 값을 줄 경우 어떤 경우에 있으서 transport 에러 워닝이 뜹니다.
-                # sleep을 0으로 하라는 말도 있는데 그렇게 하니 오히려 행이 좀 걸리는 것 같습니다.
-                # 관련 정보 링크https://github.com/aio-libs/aiohttp/issues/1115
-                #await asyncio.sleep(0.01)
-
-                # 내가 경매에 부친 물건이 있는지 표시합니다
-            #print(temp_dict)
-            ## 각 item 반복작업 종료
+        for id_ in temp_dict.keys():
+            found = 0
+            dict_ = temp_dict[id_]
+            str_chain = ''
             
-            end_a = time.time()
-            elap_a = round(end_a - start_a, 2)
-            elap_a_min = round(elap_a / 60)
-            print(f'JSON 파싱 소요시간: {elap_a} 초({elap_a_min}분)')
-            log.info(f'JSON 파싱 소요시간: {elap_a} 초({elap_a_min}분)')
+            #async for r in conn.execute(tbl_arranged_auction.select().where(and_((tbl_arranged_auction.c.server==server),(tbl_arranged_auction.c.item==id_)))):
+            async for r in conn.execute(select([db.tbl_arranged_auction.c.item]).where(and_((db.tbl_arranged_auction.c.server==server),(db.tbl_arranged_auction.c.item==id_)))):
+                #print(r)
+                found = 1
 
+            ##temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner']}
+            # arranged auction에 없다면 초기 튜플을 삽입합니다
+            if found == 0:
+                #print('no found')
 
-            # arranged_auction db에 삽입 프로세스 by 만들어진 temp_dict를 통해...
-            #
-            #
-            now__ = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
-            print(f'\n## {now__} : 이제 {server} db에 정리한 데이터를 삽입하기 시작합니다')
-            log.info(f'\n## {now__} : 이제 {server} db에 정리한 데이터를 삽입하기 시작합니다')
-            #print(temp_dict.keys())
-            start_time = time.time()
+                # min_chain 초기스트링만들기
+                # 30분씩 하루 48 데이터, 그것을 30배(한달치) 한 1440개의 데이터를 보관하기로 합니다
+                #1439개의 0을 ?로 구분하고 마지막은 현재 최저가 min을 넣어놓습니다
+                for i_ in range(0, 1439):
+                    str_chain = str_chain + '0?'
+                str_chain = str_chain + str(dict_['min'])
 
-            for id_ in temp_dict.keys():
-                found = 0
-                dict_ = temp_dict[id_]
-                str_chain = ''
-                
-                #async for r in conn.execute(tbl_arranged_auction.select().where(and_((tbl_arranged_auction.c.server==server),(tbl_arranged_auction.c.item==id_)))):
-                async for r in conn.execute(select([db.tbl_arranged_auction.c.item]).where(and_((db.tbl_arranged_auction.c.server==server),(db.tbl_arranged_auction.c.item==id_)))):
-                    #print(r)
-                    found = 1
+                await conn.execute(db.tbl_arranged_auction.insert().values(server=server,
+                                                    item=id_,
+                                                    num=dict_['num'],
+                                                    min=dict_['min'],
+                                                    min_seller=dict_['min_seller'],
+                                                    min_chain=str_chain,
+                                                    edited_time=dump_ts_str,
+                                                    edited_timestamp=dump_ts,
+                                                    image=dict_['image'],
+                                                    fame=0))
+            # 해당 튜플이 있을 경우
+            else:
+                do_ = 0       # 튜플 업데이트 여부를 결정합니다.시간이 30분 이내면 삽입하지 않습니다
+                # str_chain 을 가져온 후 새 가격을 추가해줍니다
+                async for sel_ in conn.execute(db.tbl_arranged_auction.select().where(
+                        and_((db.tbl_arranged_auction.c.server==server),(db.tbl_arranged_auction.c.item==id_)))):
+                    last_timestamp = sel_[7]
+                    cur_timestamp = round(time.time())
+                    q_ = 0
+                    if(last_timestamp is not None):
+                        q_ = round((cur_timestamp - last_timestamp) / 1800) - 1 #반올림
+                    #print(f'q_: {q_}')
+                    str_chain = sel_[5]
+                    l_chain = str_chain.split('?')
+                    l_chain_len = len(l_chain)
+                    if(l_chain_len != 1440):
+                        print('!!! 가격 chain 개수가 맞지 않습니다. --> id: {}, {} 개'.format(id_,l_chain_len))
+                        print('!!!  마지막 5개 값:{}'.format(l_chain[-5:]))
+                        print('!!!  (잠재적위험) 자동수정1440개로 조정합니다')
+                        log.info('!!! 가격 chain 개수가 맞지 않습니다. --> id: {}, {} 개'.format(id_,l_chain_len))
+                        log.info('!!!  마지막 5개 값:{}'.format(l_chain[-5:]))
+                        log.info('!!!  (잠재적위험) 자동수정1440개로 조정합니다')
+                        l_chain = l_chain[l_chain_len - 1440:]
+                        str_chain = '?'.join(l_chain)
+                        do_ = 2
+                    # 텀이 길어 빈 30분횟수가 있을 경우
+                    if (q_ > 0):
+                        last_cell = l_chain[-1]
+                        # 30분 경과 횟수만큼 반복하여 마지막 값을 추가합니다
+                        for _ in range(0, q_):
+                            l_chain.append(last_cell)
+                        str_chain = '?'.join(l_chain[q_+1:]) + '?' + str(dict_['min'])
+                        if(do_ == 2):
+                            size_ = len(str_chain.split('?'))
+                            print(f'수정후 사이즈:{size_}')
+                            log.info(f'수정후 사이즈:{size_}')
+                        do_ = 1
+                    # 텀이 30분일 경우 (round 반올림이라 15분(0.5)부터 45분(1.4)까지가 여기에 해당될듯)
+                    elif q_ == 0:
+                        str_chain = str_chain.split('?', 1)[1] + '?' + str(dict_['min'])
+                        if(do_ == 2):
+                            size_ = len(str_chain.split('?'))
+                            print(f'수정후 사이즈:{size_}')
+                            log.info(f'수정후 사이즈:{size_}')
+                        do_ = 1
+                # 30분 이내일 경우는 insert를 패스합니다. 개수 조정이 필요할 경우에는 인서트합니다
+                if do_ == 0:
+                    continue
 
-                ##temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner']}
-                # arranged auction에 없다면 초기 튜플을 삽입합니다
-                if found == 0:
-                    #print('no found')
-
-                    # min_chain 초기스트링만들기
-                    # 30분씩 하루 48 데이터, 그것을 30배(한달치) 한 1440개의 데이터를 보관하기로 합니다
-                    #1439개의 0을 ?로 구분하고 마지막은 현재 최저가 min을 넣어놓습니다
-                    for i_ in range(0, 1439):
-                        str_chain = str_chain + '0?'
-                    str_chain = str_chain + str(dict_['min'])
-
-                    await conn.execute(db.tbl_arranged_auction.insert().values(server=server,
-                                                        item=id_,
-                                                        num=dict_['num'],
-                                                        min=dict_['min'],
-                                                        min_seller=dict_['min_seller'],
-                                                        min_chain=str_chain,
-                                                        edited_time=dump_ts_str,
-                                                        edited_timestamp=dump_ts,
-                                                        image=dict_['image'],
-                                                        fame=0))
-                # 해당 튜플이 있을 경우
-                else:
-                    do_ = 0       # 튜플 업데이트 여부를 결정합니다.시간이 30분 이내면 삽입하지 않습니다
-                    # str_chain 을 가져온 후 새 가격을 추가해줍니다
-                    async for sel_ in conn.execute(db.tbl_arranged_auction.select().where(
-                            and_((db.tbl_arranged_auction.c.server==server),(db.tbl_arranged_auction.c.item==id_)))):
-                        last_timestamp = sel_[7]
-                        cur_timestamp = round(time.time())
-                        q_ = 0
-                        if(last_timestamp is not None):
-                            q_ = round((cur_timestamp - last_timestamp) / 1800) - 1 #반올림
-                        #print(f'q_: {q_}')
-                        str_chain = sel_[5]
-                        l_chain = str_chain.split('?')
-                        l_chain_len = len(l_chain)
-                        if(l_chain_len != 1440):
-                            print('!!! 가격 chain 개수가 맞지 않습니다. --> id: {}, {} 개'.format(id_,l_chain_len))
-                            print('!!!  마지막 5개 값:{}'.format(l_chain[-5:]))
-                            print('!!!  (잠재적위험) 자동수정1440개로 조정합니다')
-                            log.info('!!! 가격 chain 개수가 맞지 않습니다. --> id: {}, {} 개'.format(id_,l_chain_len))
-                            log.info('!!!  마지막 5개 값:{}'.format(l_chain[-5:]))
-                            log.info('!!!  (잠재적위험) 자동수정1440개로 조정합니다')
-                            l_chain = l_chain[l_chain_len - 1440:]
-                            str_chain = '?'.join(l_chain)
-                            do_ = 2
-                        # 텀이 길어 빈 30분횟수가 있을 경우
-                        if (q_ > 0):
-                            last_cell = l_chain[-1]
-                            # 30분 경과 횟수만큼 반복하여 마지막 값을 추가합니다
-                            for _ in range(0, q_):
-                                l_chain.append(last_cell)
-                            str_chain = '?'.join(l_chain[q_+1:]) + '?' + str(dict_['min'])
-                            if(do_ == 2):
-                                size_ = len(str_chain.split('?'))
-                                print(f'수정후 사이즈:{size_}')
-                                log.info(f'수정후 사이즈:{size_}')
-                            do_ = 1
-                        # 텀이 30분일 경우 (round 반올림이라 15분(0.5)부터 45분(1.4)까지가 여기에 해당될듯)
-                        elif q_ == 0:
-                            str_chain = str_chain.split('?', 1)[1] + '?' + str(dict_['min'])
-                            if(do_ == 2):
-                                size_ = len(str_chain.split('?'))
-                                print(f'수정후 사이즈:{size_}')
-                                log.info(f'수정후 사이즈:{size_}')
-                            do_ = 1
-                    # 30분 이내일 경우는 insert를 패스합니다. 개수 조정이 필요할 경우에는 인서트합니다
-                    if do_ == 0:
-                        continue
-
-                    await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.server==server),(db.tbl_arranged_auction.c.item==id_))).values(num=dict_['num'],
-                                                        min=dict_['min'],
-                                                        min_seller=dict_['min_seller'],
-                                                        min_chain=str_chain,
-                                                        edited_time=dump_ts_str,
-                                                        edited_timestamp=dump_ts,
-                                                        image=dict_['image']))
+                await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.server==server),(db.tbl_arranged_auction.c.item==id_))).values(num=dict_['num'],
+                                                    min=dict_['min'],
+                                                    min_seller=dict_['min_seller'],
+                                                    min_chain=str_chain,
+                                                    edited_time=dump_ts_str,
+                                                    edited_timestamp=dump_ts,
+                                                    image=dict_['image']))
             #top_six = await worldcup_six(conn)
+    
 
         #인기 탑5를 선별합니다
         top_six = {}
