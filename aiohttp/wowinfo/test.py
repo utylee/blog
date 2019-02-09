@@ -126,7 +126,7 @@ async def update_indiv(request):
     item_set = request.match_info['cur_itemset']
 
     a = time.time()
-    indiv_ar = await auc.get_decoed_item(engine, srver, item_set, pos_no, item_name)
+    indiv_ar = await auc.get_decoed_item(request.app['db'], srver, item_set, pos_no, item_name)
     b = time.time()
     sub = round(b - a,2)
     print(f':{sub}초 소요')

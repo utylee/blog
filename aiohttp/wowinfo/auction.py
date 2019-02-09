@@ -523,8 +523,6 @@ async def get_decoed_item(engine, server, itemset_, pos_, name_):
                 dict_['silver'] = math.floor(price / 100)
 
             dict_['copper'] = price - dict_['silver'] * 100
-        print(f'fame ++1({fame}) (id: {id_}, {name_})')
-        log.info(f'fame ++1({fame}) (id: {id_}, {name_})')
         # fame 을 1 증가시켜줍니다
         # fame 증가시키는 프로세스를 별도 task로 실행시켜 multitasking을 구현합니다.
         # 사용자 응답시간이 많이 빨라집니다. 1회 업데이트에 0.1초씩 걸리더군요. rpi3b+에서..
@@ -544,6 +542,7 @@ async def increase_fame(engine, srv, id_, fame):
 async def increase_fame_(engine, srv, id_, fame):
     async with engine.acquire() as conn:
         await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==srv))).values(fame=fame))
+    log.info(f'fame ++1({fame}) (id: {id_}, {name_})')
 
 
 async def update_itemset(engine, itemset_, pos_, name_):

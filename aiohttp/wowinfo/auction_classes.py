@@ -32,32 +32,28 @@ class Set:
             return NormalSet(self.setname)
     async def get_decoed_item_set(self, engine, server):
         pass
-    async def update_itemset(self, itemset_, pos_, name_):
+    async def update_itemset(self, engine, itemset_, pos_, name_):
         pass
 class NormalSet(Set):
-    async def update_itemset(self, itemset_, pos_, name_):
+    async def update_itemset(self, engine, itemset_, pos_, name_):
         loop = asyncio.get_event_loop()
-        loop.create_task(self.update_itemset_(itemset_, pos_, name_))
-    async def update_itemset_(self, itemset_, pos_, name_):
-        async with create_engine(user='postgres',
-                                database='auction_db',
-                                host='192.168.0.212',
-                                password='sksmsqnwk11') as engine:
-            async with engine.acquire() as conn:
-                itemset_l = await auc.get_item_set(conn, itemset_)
-                temp_l = []
-                for _ in itemset_l:
-                    l_ = _.split('?')
-                    if l_[0] == pos_:
-                        l_[1] = name_
-                    temp_l.append('?'.join(l_))
-                ret_str = ','.join(temp_l)
-                print(f'indiv_update: ret_str: {ret_str}')
-                log.info(f'indiv_update: ret_str: {ret_str}')
+        loop.create_task(self.update_itemset_(engine, itemset_, pos_, name_))
+    async def update_itemset_(self, engine, itemset_, pos_, name_):
+        async with engine.acquire() as conn:
+            itemset_l = await auc.get_item_set(conn, itemset_)
+            temp_l = []
+            for _ in itemset_l:
+                l_ = _.split('?')
+                if l_[0] == pos_:
+                    l_[1] = name_
+                temp_l.append('?'.join(l_))
+            ret_str = ','.join(temp_l)
+            print(f'indiv_update: ret_str: {ret_str}')
+            log.info(f'indiv_update: ret_str: {ret_str}')
 
-                # itemset 테이블을 업데이트해줍니다
-                await conn.execute(db.tbl_item_set.update().where(db.tbl_item_set.c.set_name==itemset_)
-                                    .values(itemname_list=ret_str))
+            # itemset 테이블을 업데이트해줍니다
+            await conn.execute(db.tbl_item_set.update().where(db.tbl_item_set.c.set_name==itemset_)
+                                .values(itemname_list=ret_str))
 
     async def get_decoed_item_set(self, engine, server):
         dict_ = {}
@@ -130,7 +126,7 @@ class NormalSet(Set):
 
 
 class DefaultSet(Set):
-    async def update_itemset(self, itemset_, pos_, name_):
+    async def update_itemset(self, engine, itemset_, pos_, name_):
         #업데이트하지 않습니다
         return
     async def get_decoed_item_set(self, engine, server):

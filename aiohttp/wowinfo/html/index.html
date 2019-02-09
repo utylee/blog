@@ -89,6 +89,7 @@
 							## 생성성공하였을 경우 처리합니다
 							document.getElementById('input-itemset').value = '';
 							change_itemset(s_name);
+							/*
 							var xhttp = new XMLHttpRequest();
 							xhttp.onreadystatechange = function() {
 								if (this.readyState == 4 && this.status == 200) {
@@ -101,6 +102,7 @@
 							xhttp.open("GET", '/update/' + server + '/' + \
 												cur_user + '/' + s_name + '/' + dummy , true);
 							xhttp.send();
+							*/
 						}
 						else if (data.success == '0') {
 							alert('이미 있는 세트명입니다');
