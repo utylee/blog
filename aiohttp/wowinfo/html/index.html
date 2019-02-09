@@ -756,7 +756,8 @@
 			##http://npay.to/15fe4a50e584e996c30f
 
 			rq_dumptime();
-			rq_fullpage();
+			rq_itemset();
+			//rq_fullpage();
 
 			/*
 			var xhttp2 = new XMLHttpRequest();
@@ -830,6 +831,40 @@
 			</%doc>
 		});
 
+		function rq_itemset() {
+			// 역시 vanilla js 를 사용해 봅니다
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var data = JSON.parse(this.responseText);
+					data = data.data
+					l_ = Object.keys(data);
+					s_ = l_.length;
+					##alert(s_);
+					for (let i=0;i < s_;i++) {
+						##alert(data[i]['item']);
+						rq_itemdata(i, data[i]['item']);
+					}
+				}
+			};
+			var dummy = new Date().getTime();
+			xhttp.open("GET", '/rq_itemset/' + cur_itemset + '/' + dummy, true);
+			xhttp.send();
+		}
+
+		function rq_itemdata(n, name) {
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var data = JSON.parse(this.responseText);
+					update_item_area(data.num, data.data);
+				}
+			};
+			var dummy = new Date().getTime();
+			xhttp.open("GET", '/rq_item/' + n + '/' + name, true);
+			xhttp.send();
+		}
+
 		function rq_dumptime() {
 			// 역시 vanilla js 를 사용해 봅니다
 			var xhttp = new XMLHttpRequest();
@@ -840,8 +875,9 @@
 					update_dumped_time(data);
 				}
 			};
-			var dummy = new Date().getTime();
-			xhttp.open("GET", '/rq_servertime/' + server + '/' + dummy, true);
+			## 캐싱해도 괜찮은 컨텐츠입니다. dummy를 제거합니다
+			##var dummy = new Date().getTime();
+			xhttp.open("GET", '/rq_servertime/' + server , true);
 			xhttp.send();
 		}
 
