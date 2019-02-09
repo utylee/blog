@@ -527,14 +527,16 @@ async def get_decoed_item(engine, server, itemset_, pos_, name_):
         # fame 증가시키는 프로세스를 별도 task로 실행시켜 multitasking을 구현합니다.
         # 사용자 응답시간이 많이 빨라집니다. 1회 업데이트에 0.1초씩 걸리더군요. rpi3b+에서..
         await increase_fame(engine, server, id_, fame)
-        #await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==server))).values(fame=fame))
 
         # 현재 itemset의 해당 아이템 칸 값을 새 아이템명으로 변경해줍니다
         # 별도의 task로 실행시켜 최대한 일단 사용자에게 반응을 먼저하도록 노력합니다
-        set_ = a_cl.Set(itemset_).fork()
-        await set_.update_itemset(engine, itemset_, pos_, name_)
-
+        # itemset이 입력되지 않은 경우(update_indiv가 아닌 rq_item 에서의 요청)는 itemset update를 생략합니다
+        if(itemset_):
+            log.info('itemset이 입력되어 수정해줍니다')
+            set_ = a_cl.Set(itemset_).fork()
+            await set_.update_itemset(engine, itemset_, pos_, name_)
     return dict_
+
 async def increase_fame(engine, srv, id_, fame):
     loop = asyncio.get_event_loop()
     loop.create_task(increase_fame_(engine, srv, id_, fame))
