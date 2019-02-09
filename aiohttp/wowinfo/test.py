@@ -137,6 +137,71 @@ async def update_indiv(request):
 
     return web.json_response(data)
 
+async def rq_itemset(request):
+    global ar
+    global server
+    #global currentset
+    log.info('/rq_itemset handler came in')
+
+    itemset = request.match_info['itemset']
+    log.info(f'itemset:{itemset}')
+    start_time = time.time()
+    set_ = a_cl.Set(itemset).fork()
+    dict_ = await set_.get_only_itemset()
+    finished_time = time.time()
+    proc_time = round(finished_time - start_time, 3)
+    log.info(f'rq_itemset:: fetch elapsed time: {proc_time} 초')
+
+    data = {}
+    data['data'] = dict_
+    log.info(data)
+    return web.json_response(data)
+
+async def rq_item(request):
+    global ar
+    global server
+    #global currentset
+    log.info('/rq_item handler came in')
+
+    num = request.match_info['num']
+    item = request.match_info['item']
+    log.info(f'num:{num} item:{item}')
+    start_time = time.time()
+    #set_ = a_cl.Set(itemset).fork()
+    #dict_ = await set_.get_only_itemset()
+    finished_time = time.time()
+    proc_time = round(finished_time - start_time, 3)
+    log.info(f'rq_item:: fetch elapsed time: {proc_time} 초')
+
+    data = {}
+    #data['data'] = dict_
+    #log.info(data)
+    return web.json_response(data)
+
+async def rq_servertime(request):
+    global ar
+    global server
+    #global currentset
+    log.info('/rq_servertime handler came in')
+    data = {}
+
+    srver = request.match_info['server']
+    start_time = time.time()
+    async with create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.212',
+                            password='sksmsqnwk11') as engine:
+        async with engine.acquire() as conn:
+            async for r in conn.execute(di.tbl_wow_server_info.select().where(di.tbl_wow_server_info.c.server==srver)):
+                data['time'] = r[1]
+    finished_time = time.time()
+    proc_time = round(finished_time - start_time, 3)
+    log.info(f'fetch elapsed time: {proc_time} 초')
+    data['server'] = srver
+    log.info(f'data: {data}')
+
+    return web.json_response(data)
+
 async def update(request):
     global ar
     global server
@@ -230,6 +295,10 @@ async def init(app):
     app.router.add_get('/', handle)
     app.router.add_get('/update/{server}/{cur_user}/{itemset}/{dummy}', update)
     app.router.add_get('/update/{server}/{cur_user}/{itemset}', update)
+    app.router.add_get('/rq_servertime/{server}/{dummy}', rq_servertime)
+    app.router.add_get('/rq_servertime/{server}', rq_servertime)
+    app.router.add_get('/rq_itemset/{itemset}/{dummy}', rq_itemset)
+    app.router.add_get('/rq_item/{num}/{item}', rq_item)
     #app.router.add_get('/update/{server}/{cur_user}/{itemset}/{proto}', update)
     app.router.add_get('/update_indiv/{num}/{server}/{cur_user}/{cur_itemset}/{itemname}', update_indiv)
     app.router.add_get('/create_itemset/{cur_user}/{setname}', create_itemset)

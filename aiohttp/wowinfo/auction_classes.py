@@ -30,6 +30,26 @@ class Set:
             return DefaultSet(self.setname)
         else:
             return NormalSet(self.setname)
+    async def get_only_itemset(self):
+        dict_ = {}
+        fame = 0
+        async with create_engine(user='postgres',
+                                database='auction_db',
+                                host='192.168.0.212',
+                                password='sksmsqnwk11') as engine:
+            async with engine.acquire() as conn:
+                itemlist = await auc.get_item_set(conn, self.setname)
+                #for name_ in itemlist:
+                #itemlist to dict
+                for _ in itemlist:
+                    l_ = _.split('?')
+                    num_ = l_[0]
+                    name_ = l_[1]
+                    dict_[num_] = {}
+                    dict_[num_]['num'] = num_
+                    dict_[num_]['item'] = name_
+        return dict_
+
     async def get_decoed_item_set(self, engine, server):
         pass
     async def update_itemset(self, engine, itemset_, pos_, name_):
