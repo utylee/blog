@@ -115,22 +115,18 @@ class NormalSet(Set):
                 log.info(f'fame ++1({fame}) (id: {id_}, {name_})')
                 # fame 증가시키는 프로세스를 별도 task로 실행시켜 multitasking을 구현합니다.
                 # 사용자 응답시간이 많이 빨라집니다. 1회 업데이트에 0.1초씩 걸리더군요. rpi3b+에서..
-                await self.increase_fame(server, id_, fame)
+                await self.increase_fame(engine, server, id_, fame)
                 #await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==server))).values(fame=fame))
 
         return dict_
 
-    async def increase_fame(self, srv, id_, fame):
+    async def increase_fame(self, engine, srv, id_, fame):
         loop = asyncio.get_event_loop()
-        loop.create_task(self.increase_fame_(srv, id_, fame))
+        loop.create_task(self.increase_fame_(engine, srv, id_, fame))
 
-    async def increase_fame_(self, srv, id_, fame):
-        async with create_engine(user='postgres',
-                                database='auction_db',
-                                host='192.168.0.212',
-                                password='sksmsqnwk11') as engine:
-            async with engine.acquire() as conn:
-                await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==srv))).values(fame=fame))
+    async def increase_fame_(self, engine, srv, id_, fame):
+        async with engine.acquire() as conn:
+            await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==srv))).values(fame=fame))
 
 
 class DefaultSet(Set):

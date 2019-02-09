@@ -99,7 +99,7 @@ async def create_itemset(request):
     log.info('/create_itemset handler came in')
     user = request.match_info['cur_user']
     setname = request.match_info['setname']
-    success = await auc.create_itemset(user, setname, defaultuser, defaultset) 
+    success = await auc.create_itemset(request.app['db'], user, setname, defaultuser, defaultset) 
     data = {}
     data['success'] = success
 
@@ -110,7 +110,7 @@ async def delete_itemset(request):
     log.info('/delete_itemset handler came in')
     user = request.match_info['cur_user']
     setname = request.match_info['setname']
-    success = await auc.delete_itemset(user, setname)
+    success = await auc.delete_itemset(request.app['db'], user, setname)
     data = {}
     data['success'] = success
 
@@ -126,7 +126,7 @@ async def update_indiv(request):
     item_set = request.match_info['cur_itemset']
 
     a = time.time()
-    indiv_ar = await auc.get_decoed_item(srver, item_set, pos_no, item_name)
+    indiv_ar = await auc.get_decoed_item(engine, srver, item_set, pos_no, item_name)
     b = time.time()
     sub = round(b - a,2)
     print(f':{sub}초 소요')
@@ -248,31 +248,32 @@ async def init(app):
     # 웹소켓 핸들러도 get을 통해 정의해줘야합니다
     ws = app.router.add_get('/ws', ws_handle)
 
+    # db에 바로 접속해 놓습니다
+    engine = await create_engine(user='postgres',
+                            database='auction_db',
+                            host='192.168.0.212',
+                            password='sksmsqnwk11')
+
+    app['db'] = engine
     #별도의 db proc을 돌리므로 뺍니다. 불필요한 업데이트가 초반 두번 일어나는 결과를 불러옵니다
     '''
     loop = asyncio.get_event_loop()
     loop.create_task(main_proc(interval))
     '''
     loop = asyncio.get_event_loop()
-    loop.create_task(init_proc())
+    loop.create_task(init_proc(app['db']))
 
-    # db에 바로 접속해 놓습니다
-    engine = await create_engine(user='postgres',
-                            database='auction_db',
-                            host='192.168.0.212',
-                            password='sksmsqnwk11')
-    app['db'] = engine
 
     # 서버리스트를 가져오고 (X 최초아이템 셋도 가져옵니다)
     #init_data()
 
     return app
 
-async def init_proc():
+async def init_proc(engine):
     global serverlist
     #log.info(f'init serverlist size: {len(serverlist)}')
     if(len(serverlist) == 0):
-        serverlist = await auc.get_serverlist()
+        serverlist = await auc.get_serverlist(engine)
         #log.info(f'after serverlist size: {len(serverlist)}')
 
 

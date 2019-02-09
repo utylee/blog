@@ -483,98 +483,87 @@ async def get_item_set(conn, setname):
     log.info(itemlist)
     return itemlist
 
-async def get_decoed_item(server, itemset_, pos_, name_):
+async def get_decoed_item(engine, server, itemset_, pos_, name_):
     dict_ = {}
     fame = 0
-    async with create_engine(user='postgres',
-                            database='auction_db',
-                            host='192.168.0.212',
-                            password='sksmsqnwk11') as engine:
-        async with engine.acquire() as conn:
-            id_ = await get_item_id(conn, name_) 
-            image_path = ''
-            async for it_ in conn.execute(db.tbl_items.select().where(db.tbl_items.c.id==id_)):
-                img_url = it_[2]
-                #img_url = f'https://wow.zamimg.com/images/wow/icons/large/{img_}.jpg'
-            async for tuple_ in conn.execute(db.tbl_arranged_auction.select().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==server)))):
-                #print('name_:{}'.format(name_))
-                dict_['name'] = name_ 
-                dict_['num'] = tuple_[2]
-                #dict_['min'] = tuple_[3]
-                dict_['min_seller'] = tuple_[4]
-                dict_['min_chain'] = tuple_[5].split('?')
-                #dict_['edited_time'] = tuple_[6]
-                dict_['image'] = img_url
-                #print(f'icon_name:{img_url}')
-                fame = tuple_[9]
-                if fame is None:
-                    fame = 0
-                fame += 1
 
-                # 골드,실버,카퍼 를 분리해줍니다
-                price = int(tuple_[3])
+    async with engine.acquire() as conn:
+        id_ = await get_item_id(conn, name_) 
+        image_path = ''
+        async for it_ in conn.execute(db.tbl_items.select().where(db.tbl_items.c.id==id_)):
+            img_url = it_[2]
+            #img_url = f'https://wow.zamimg.com/images/wow/icons/large/{img_}.jpg'
+        async for tuple_ in conn.execute(db.tbl_arranged_auction.select().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==server)))):
+            #print('name_:{}'.format(name_))
+            dict_['name'] = name_ 
+            dict_['num'] = tuple_[2]
+            #dict_['min'] = tuple_[3]
+            dict_['min_seller'] = tuple_[4]
+            dict_['min_chain'] = tuple_[5].split('?')
+            #dict_['edited_time'] = tuple_[6]
+            dict_['image'] = img_url
+            #print(f'icon_name:{img_url}')
+            fame = tuple_[9]
+            if fame is None:
+                fame = 0
+            fame += 1
 
-                if price < 10000:
-                    dict_['gold'] = 0
-                else:
-                    dict_['gold'] = math.floor(price / 10000)
+            # 골드,실버,카퍼 를 분리해줍니다
+            price = int(tuple_[3])
 
-                price = price - dict_['gold'] * 10000
-                if price < 100:
-                    dict_['silver'] = 0
-                else:
-                    dict_['silver'] = math.floor(price / 100)
+            if price < 10000:
+                dict_['gold'] = 0
+            else:
+                dict_['gold'] = math.floor(price / 10000)
 
-                dict_['copper'] = price - dict_['silver'] * 100
-            print(f'fame ++1({fame}) (id: {id_}, {name_})')
-            log.info(f'fame ++1({fame}) (id: {id_}, {name_})')
-            # fame 을 1 증가시켜줍니다
-            # fame 증가시키는 프로세스를 별도 task로 실행시켜 multitasking을 구현합니다.
-            # 사용자 응답시간이 많이 빨라집니다. 1회 업데이트에 0.1초씩 걸리더군요. rpi3b+에서..
-            await increase_fame(server, id_, fame)
-            #await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==server))).values(fame=fame))
+            price = price - dict_['gold'] * 10000
+            if price < 100:
+                dict_['silver'] = 0
+            else:
+                dict_['silver'] = math.floor(price / 100)
 
-            # 현재 itemset의 해당 아이템 칸 값을 새 아이템명으로 변경해줍니다
-            # 별도의 task로 실행시켜 최대한 일단 사용자에게 반응을 먼저하도록 노력합니다
-            set_ = a_cl.Set(itemset_).fork()
-            await set_.update_itemset(itemset_, pos_, name_)
+            dict_['copper'] = price - dict_['silver'] * 100
+        print(f'fame ++1({fame}) (id: {id_}, {name_})')
+        log.info(f'fame ++1({fame}) (id: {id_}, {name_})')
+        # fame 을 1 증가시켜줍니다
+        # fame 증가시키는 프로세스를 별도 task로 실행시켜 multitasking을 구현합니다.
+        # 사용자 응답시간이 많이 빨라집니다. 1회 업데이트에 0.1초씩 걸리더군요. rpi3b+에서..
+        await increase_fame(engine, server, id_, fame)
+        #await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==server))).values(fame=fame))
+
+        # 현재 itemset의 해당 아이템 칸 값을 새 아이템명으로 변경해줍니다
+        # 별도의 task로 실행시켜 최대한 일단 사용자에게 반응을 먼저하도록 노력합니다
+        set_ = a_cl.Set(itemset_).fork()
+        await set_.update_itemset(engine, itemset_, pos_, name_)
 
     return dict_
-async def increase_fame(srv, id_, fame):
+async def increase_fame(engine, srv, id_, fame):
     loop = asyncio.get_event_loop()
-    loop.create_task(increase_fame_(srv, id_, fame))
+    loop.create_task(increase_fame_(engine, srv, id_, fame))
 
-async def increase_fame_(srv, id_, fame):
-    async with create_engine(user='postgres',
-                            database='auction_db',
-                            host='192.168.0.212',
-                            password='sksmsqnwk11') as engine:
-        async with engine.acquire() as conn:
-            await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==srv))).values(fame=fame))
+async def increase_fame_(engine, srv, id_, fame):
+    async with engine.acquire() as conn:
+        await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.item==id_),(db.tbl_arranged_auction.c.server==srv))).values(fame=fame))
 
 
-async def update_itemset(itemset_, pos_, name_):
-    async with create_engine(user='postgres',
-                            database='auction_db',
-                            host='192.168.0.212',
-                            password='sksmsqnwk11') as engine:
-        async with engine.acquire() as conn:
-            itemset_l = await get_item_set(conn, itemset_)
-            temp_l = []
-            for _ in itemset_l:
-                l_ = _.split('?')
-                if l_[0] == pos_:
-                    l_[1] = name_
-                temp_l.append('?'.join(l_))
-            ret_str = ','.join(temp_l)
-            print(f'indiv_update: ret_str: {ret_str}')
-            log.info(f'indiv_update: ret_str: {ret_str}')
+async def update_itemset(engine, itemset_, pos_, name_):
+    async with engine.acquire() as conn:
+        itemset_l = await get_item_set(conn, itemset_)
+        temp_l = []
+        for _ in itemset_l:
+            l_ = _.split('?')
+            if l_[0] == pos_:
+                l_[1] = name_
+            temp_l.append('?'.join(l_))
+        ret_str = ','.join(temp_l)
+        print(f'indiv_update: ret_str: {ret_str}')
+        log.info(f'indiv_update: ret_str: {ret_str}')
 
-            # itemset 테이블을 업데이트해줍니다
-            await conn.execute(db.tbl_item_set.update().where(db.tbl_item_set.c.set_name==itemset_)
-                                .values(itemname_list=ret_str))
+        # itemset 테이블을 업데이트해줍니다
+        await conn.execute(db.tbl_item_set.update().where(db.tbl_item_set.c.set_name==itemset_)
+                            .values(itemname_list=ret_str))
 
-
+## deprecated, itemset동작은 auction_class에서 상속받아서 따로행합니다.
 async def get_decoed_item_set(server, setname):
     dict_ = {}
     async with create_engine(user='postgres',
@@ -631,51 +620,40 @@ async def get_decoed_item_set(server, setname):
 
     return dict_
 
-async def create_itemset(user, setname, defaultuser, defaultset):
+async def create_itemset(engine, user, setname, defaultuser, defaultset):
     success = 0
     dict_ = {}
-    async with create_engine(user='postgres',
-                            database='auction_db',
-                            host='192.168.0.212',
-                            password='sksmsqnwk11') as engine:
-        async with engine.acquire() as conn:
-            found = 0
-            async for r_ in conn.execute(db.tbl_item_set.select().where(and_((db.tbl_item_set.c.user==user),(db.tbl_item_set.c.set_name==setname)))):
-                found += 1
-            # 이미 있는 경우는 생성하지 않습니다
-            if(found == 0):
-                itemlist = await get_item_set(conn, defaultset)    # 초기로 '기본구성'리스트를 넣슴다
-                itemstring = ','.join(itemlist)
-                await conn.execute(db.tbl_item_set.insert().values(set_name=setname,
-                                                        itemname_list=itemstring,
-                                                        edited_time='',
-                                                        user=user))
-                success = 1
-    return success
 
-async def delete_itemset(user, setname):
-    success = 0
-    dict_ = {}
-    async with create_engine(user='postgres',
-                            database='auction_db',
-                            host='192.168.0.212',
-                            password='sksmsqnwk11') as engine:
-        async with engine.acquire() as conn:
-            await conn.execute(db.tbl_item_set.delete().where(and_((db.tbl_item_set.c.user==user),(db.tbl_item_set.c.set_name==setname))))
+    async with engine.acquire() as conn:
+        found = 0
+        async for r_ in conn.execute(db.tbl_item_set.select().where(and_((db.tbl_item_set.c.user==user),(db.tbl_item_set.c.set_name==setname)))):
+            found += 1
+        # 이미 있는 경우는 생성하지 않습니다
+        if(found == 0):
+            itemlist = await get_item_set(conn, defaultset)    # 초기로 '기본구성'리스트를 넣슴다
+            itemstring = ','.join(itemlist)
+            await conn.execute(db.tbl_item_set.insert().values(set_name=setname,
+                                                    itemname_list=itemstring,
+                                                    edited_time='',
+                                                    user=user))
             success = 1
     return success
 
+async def delete_itemset(engine, user, setname):
+    success = 0
+    dict_ = {}
+    async with engine.acquire() as conn:
+        await conn.execute(db.tbl_item_set.delete().where(and_((db.tbl_item_set.c.user==user),(db.tbl_item_set.c.set_name==setname))))
+        success = 1
+    return success
 
-async def get_serverlist():
+
+async def get_serverlist(engine):
     # 한국 와우 서버 리스트를 가져옵니다
     serverlist = []
-    async with create_engine(user='postgres',
-                            database='auction_db',
-                            host='192.168.0.212',
-                            password='sksmsqnwk11') as engine:
-        async with engine.acquire() as conn:
-            async for r in conn.execute(db.tbl_wow_server_info.select()):
-                serverlist.append(r[0])
+    async with engine.acquire() as conn:
+        async for r in conn.execute(db.tbl_wow_server_info.select()):
+            serverlist.append(r[0])
     
     #serverlist = ['아즈샤라']
     log.info(f'serverlist = {serverlist}')
