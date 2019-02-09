@@ -161,7 +161,6 @@ async def update(request):
         ar = await get_decoed_item_set(server, currentset)
     '''
     # 굳이 글로벌로 균일하게 갖고 있는 것은 말이 안됩니다. 사용자가 원하는 상황마다 그대로 전달해줘야합니다
-    log.info(f'들어오긴합니까? {srver}')
     start_time = time.time()
     set_ = a_cl.Set(itemset).fork()
     dict_ = await set_.get_decoed_item_set(request.app['db'], srver)
@@ -177,15 +176,6 @@ async def update(request):
     async with request.app['db'].acquire() as conn:
         async for r in conn.execute(di.tbl_wow_server_info.select().where(di.tbl_wow_server_info.c.server==srver)):
             data['time'] = r[1]
-    '''
-    async with create_engine(user='postgres',
-                            database='auction_db',
-                            host='192.168.0.212',
-                            password='sksmsqnwk11') as engine:
-        async with engine.acquire() as conn:
-            async for r in conn.execute(di.tbl_wow_server_info.select().where(di.tbl_wow_server_info.c.server==srver)):
-                data['time'] = r[1]
-                '''
 
     #data['time'] = ''
     data['ar'] = dict_
