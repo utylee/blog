@@ -328,32 +328,23 @@
 
 		## itemsets의 제일 앞에 생성(+)를 삽입해 줍니다
 		function deco_itemsets() {
-			//itemsets.unshift('+');
-			//alert('deco' + itemsets[0]);
 			if(itemsets[0] != ' 만들기') {
 				itemsets.unshift(' 만들기');
-			/*
-			if(itemsets[0] != '+ 새로 만들기') {
-				itemsets.unshift('+ 새로 만들기');
-				*/
-				//alert(itemsets[0]);
 			}
 		}
 
 		function update_itemset_dropdown() {
 			deco_itemsets();
-			// 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
+			## 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
 			document.getElementById("div_itemlist").innerHTML = ""; 
 			
 			## 새로만들기항목
 			document.getElementById("div_itemlist").innerHTML += "\
 			<a id='itemlist0' class='dropdown-item text-center font-weight-bolder text-info' href='#' onclick='create_itemset();'> <i class='fas fa-folder-open' style='font-weight:lighter;font-size:1.0em;'>&nbsp;</i>" + itemsets[0] + "</a>";
-			//alert(div_itemlist.innerHTML);
 			## 아이템세트들
 			window.dropdown_pair = {};
 			for(let it=1;it<itemsets.length;it++){			//0이 아닌 1부터시작 
-				// cur_itemset이 아닌 항목들만 추가합니다
-				//alert(itemsets[it]);
+				## cur_itemset이 아닌 항목들만 추가합니다
 				var cur = itemsets[it];
 				if(cur != cur_itemset){
 					if(cur == '기본구성') {
@@ -371,7 +362,6 @@
 					}
 				}
 			}
-			//alert(div_itemlist.innerHTML);
 			## 위의 if-else 내에서 innerHTML 작성하면서 addeventlistener를 행하니 동작하지 않았습니다. 
 			## 그래서 for loop 번거롭지만 별도로 뺐습니다.
 			## 또한 inner function closure 문제 관련해서도 추후 별도의 함수선언으로 뺐습니다
@@ -380,18 +370,12 @@
 			}
 			for(let it=1;it<itemsets.length;it++){			//0이 아닌 1부터시작 
 				if(document.getElementById('dropdown-delete'+it)){
-					//alert(document.getElementById('ddelete'+it).innerHTML);
-					//document.getElementById('ddelete'+it).addEventListener("click", function() {getget();}, true); 
 					##document.getElementById('dropdown-delete'+it).addEventListener("click", function(){
 						##show_modal_delete(dropdown_pair[it]);}); 
 					document.getElementById('dropdown-delete'+it).addEventListener("click", \
 																fn_modal_delete(it));
 				}
 			}
-
-			//alert(document.getElementById("button_itemset").innerHTML.trim());
-
-			//document.getElementById("button_itemset").innerHTML = cur_itemset;
 			
 			if(cur_itemset == '기본구성') {
 				document.getElementById("button_itemset").innerHTML = "<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;" + cur_itemset; 
@@ -440,10 +424,10 @@
 				for(let l_=0;l_<chart_column_num;l_++){
 					labels_.push("");
 				}
-				//alert(data_[0]);
-				//eval('chLine' + i).data = min_chain_.slice(,min_chain_.length - 1) / 10000);
-				//eval('chart' + i).data = full_data_; 
-				//eval('chart' + i).data.datasets[0].data = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; 
+				##alert(data_[0]);
+				##eval('chLine' + i).data = min_chain_.slice(,min_chain_.length - 1) / 10000);
+				##eval('chart' + i).data = full_data_; 
+				##eval('chart' + i).data.datasets[0].data = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; 
 				chart[n].data.labels = labels_;
 				chart[n].data.datasets[0].data = data_;
 				chart[n].update();
@@ -456,42 +440,35 @@
 			for(var i=0;i<6;i++) {
 				##if(eval('chart'+i)){
 				if(chart[i]){
-					//min_chain_ = data[Object.keys(data)[i]].min_chain;
 					chart_chains[i] = data[i].min_chain;
 					min_chain_ = chart_chains[i];
-					//alert(min_chain_[min_chain_.length - 1]);
-					//eval('chLine' + i).data = min_chain_[min_chain_.length - 1] / 10000;
 					let data_ = [],
 						len_ = min_chain_.length;
-					//alert(min_chain_[0]);
+					##alert(min_chain_[0]);
 					for (let j=len_ - chart_column_num;j<=len_ - 1;j++){
-					//for (i=0;i<=3;i++){
+					##for (i=0;i<=3;i++){
 						data_.push(min_chain_[j] / 10000);
 					}
 					var labels_ = [];
 					for(let l_=0;l_<chart_column_num;l_++){
 						labels_.push("");
 					}
-					//alert(data_[0]);
-					//eval('chLine' + i).data = min_chain_.slice(,min_chain_.length - 1) / 10000);
-					//eval('chart' + i).data = full_data_; 
-					//eval('chart' + i).data.datasets[0].data = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; 
 					##eval('chart'+i).data.labels = labels_;
 					##eval('chart'+i).data.datasets[0].data = data_;
 					##eval('chart'+i).update();
 					chart[i].data.labels = labels_;
 					chart[i].data.datasets[0].data = data_;
 					chart[i].update();
-					//alert('엄지척');
-					////eval('chLine' + i).addData = data_; 
-					//eval('chLine' + i).update();
+					##alert('엄지척');
+					##eval('chLine' + i).addData = data_; 
+					##eval('chLine' + i).update();
 				}
 			}
 		}
 		function update_serverlist() {
 			document.getElementById("div_serverlist").innerHTML = ""; 
 			for(let i=0;i<serverlist.length;i++){
-				// cur_itemset이 아닌 항목들만 추가합니다
+				## cur_itemset이 아닌 항목들만 추가합니다
 				i_server = serverlist[i];
 				if(i_server != server){
 					document.getElementById("div_serverlist").innerHTML += \
@@ -514,8 +491,8 @@
 			document.getElementById("moneycopper"+n).innerHTML = itemdata.copper;
 			document.getElementById("min_seller"+n).innerHTML = itemdata.min_seller;
 
-			//실제로 클릭액션을 해야하는 클래스라 안먹힙니다
-			//document.getElementById("lb"+i+"0").checked = 1; 
+			##실제로 클릭액션을 해야하는 클래스라 안먹힙니다
+			##document.getElementById("lb"+i+"0").checked = 1; 
 			document.getElementById("lb"+n+"0").click();
 			update_indiv_chart(n, itemdata.min_chain);
 		}
@@ -523,19 +500,15 @@
 
 		## 전체 6개 아이템 업데이트 함수입니다
 		function update_page(data){
-			// data 갯수, 즉 6회동안 각 요소 갱신을 반복합니다
+			## data 갯수, 즉 6회동안 각 요소 갱신을 반복합니다
 			show_spinner();
 			t = data.time;
 			itemsets = data.itemsets;
-			//alert('update:' + itemsets.length);
 			serverlist = data.serverlist;
 			data = data.ar;
-			//alert(data[0]['name']);
 			update_serverlist();
 			## sort를 통해 아래와같이 할수도 있지만 이미 html상 해당id들이 정렬된채 생성된 상태라 상관없습니다
 			for (let i=0;i < Object.keys(data).length;i++) {
-			//Object.keys(data).sort().foreach(function(i) {
-				//alert(i);
 				document.getElementById("image"+i).setAttribute("style", "background-image: url('" + img_host + data[i].image + ".jpg')"); 
 				document.getElementById("itemname"+i).innerHTML = data[i].name;
 				document.getElementById("num"+i).innerHTML = data[i].num;
@@ -544,8 +517,6 @@
 				document.getElementById("moneycopper"+i).innerHTML = data[i].copper;
 				document.getElementById("min_seller"+i).innerHTML = data[i].min_seller;
 
-				//실제로 클릭액션을 해야하는 클래스라 안먹힙니다
-				//document.getElementById("lb"+i+"0").checked = 1; 
 				document.getElementById("lb"+i+"0").click();
 				
 			}
@@ -722,23 +693,10 @@
 			rq_itemset(cur_itemset);
 			update_serverlist();
 			rq_itemsets();
-			/*
-			var xhttp2 = new XMLHttpRequest();
-			xhttp2.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 200) {
-					var data = JSON.parse(this.responseText);
-					update_page(data);
-				}
-			};
-			var dummy2 = new Date().getTime();
-			xhttp2.open("GET", '/update/' + server + '/' + \
-								cur_user + '/' + cur_itemset + '/' + dummy2, true);
-			xhttp2.send();
-			*/
 
 			create_chart_objects();
 
-			// 차트객체 chart.js 6개를 생성합니다
+			## 차트객체 chart.js 6개를 생성합니다
 			<%doc>
 			% for a in ar.keys():
 			var data_ = [];
