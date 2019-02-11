@@ -483,7 +483,7 @@ async def get_item_set(conn, setname):
     log.info(itemlist)
     return itemlist
 
-async def get_decoed_item(engine, server, itemset_, pos_, name_):
+async def get_decoed_item(engine, server, user_, itemset_, pos_, name_, fullstr=''):
     dict_ = {}
     fame = 0
 
@@ -534,7 +534,7 @@ async def get_decoed_item(engine, server, itemset_, pos_, name_):
         if(itemset_):
             log.info('itemset이 입력되어 수정해줍니다')
             set_ = a_cl.Set(itemset_).fork()
-            await set_.update_itemset(engine, itemset_, pos_, name_)
+            await set_.update_itemset(engine, user_, itemset_, pos_, name_, fullstr)
     return dict_
 
 async def increase_fame(engine, srv, id_, fame):
@@ -547,9 +547,15 @@ async def increase_fame_(engine, srv, id_, fame):
     log.info(f'fame ++1({fame}) (id: {id_}, {name_})')
 
 
-async def update_itemset(engine, itemset_, pos_, name_):
+'''
+async def update_itemset(engine, itemset_, pos_, name_, fullstr=''):
     async with engine.acquire() as conn:
         itemset_l = await get_item_set(conn, itemset_)
+        # 해당아이템셋이 없을경우(다른 사용자가 삭제를 했다던지) 해당 아이템셋을 그대로 만들어줍니다
+        b_create = 0
+        if(len(itemset_l) == 0):
+            b_create = 1
+            itemset_l = fullstr.split(',')
         temp_l = []
         for _ in itemset_l:
             l_ = _.split('?')
@@ -560,9 +566,16 @@ async def update_itemset(engine, itemset_, pos_, name_):
         print(f'indiv_update: ret_str: {ret_str}')
         log.info(f'indiv_update: ret_str: {ret_str}')
 
-        # itemset 테이블을 업데이트해줍니다
-        await conn.execute(db.tbl_item_set.update().where(db.tbl_item_set.c.set_name==itemset_)
-                            .values(itemname_list=ret_str))
+        if(not b_create):
+            # itemset 테이블을 업데이트해줍니다
+            await conn.execute(db.tbl_item_set.update().where(db.tbl_item_set.c.set_name==itemset_)
+                                .values(itemname_list=ret_str))
+        else: 
+            # 해당 셋이 삭제되었으므로 itemset 을 그대로 만들어줍니다
+            await conn.execute(db.tbl_item_set.insert().values(set_name=itemset_,
+                                                    itemname_list=ret_str,
+                                                    edited_time='',
+                                                    user=user))
 
 ## deprecated, itemset동작은 auction_class에서 상속받아서 따로행합니다.
 async def get_decoed_item_set(server, setname):
@@ -577,10 +590,6 @@ async def get_decoed_item_set(server, setname):
                 id_ = await get_item_id(conn, name_) 
                 image_path = ''
                 #async for image_ in conn.execute(tbl_images.select([tbl_images.c.file_name]).where(tbl_images.c.item_name==name_)):
-                '''
-                async for image_ in conn.execute(tbl_images.select().where(tbl_images.c.item_name==name_)):
-                    image_path = image_[1]
-                    '''
                 async for it_ in conn.execute(db.tbl_items.select().where(db.tbl_items.c.id==id_)):
                     img_url = it_[2]
                     #img_url = f'https://wow.zamimg.com/images/wow/icons/large/{img_}.jpg'
@@ -620,6 +629,7 @@ async def get_decoed_item_set(server, setname):
                     dict_[name_]['copper'] = price - dict_[name_]['silver'] * 100
 
     return dict_
+'''
 
 async def create_itemset(engine, user, setname, defaultuser, defaultset):
     success = 0

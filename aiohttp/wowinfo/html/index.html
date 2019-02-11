@@ -72,8 +72,8 @@
 				##xhttp.open("GET", '/update_indiv/' + num + '/' + server + '/' + \
 								##cur_user + '/' + cur_itemset + '/' + i_name,true);
 				</%doc>
-				xhttp.open("GET", '/update_indiv/' + num + '/' + server + '/' + \
-								cur_user + '/' + cur_itemset + '/' + fullstr + '/' + dummy,true);
+				xhttp.open("GET", '/update_indiv/' + num + '/' + server + '/' + cur_user 
+								+ '/' + cur_itemset + '/' + i_name + '/' + fullstr + '/' + dummy,true);
 				xhttp.send();
 			}
 		}

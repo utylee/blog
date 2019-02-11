@@ -48,28 +48,43 @@ class Set:
 
     async def get_decoed_item_set(self, engine, server):
         pass
-    async def update_itemset(self, engine, itemset_, pos_, name_):
+    async def update_itemset(self, engine, itemset_, pos_, name_, fullstr=''):
         pass
 class NormalSet(Set):
-    async def update_itemset(self, engine, itemset_, pos_, name_):
+    async def update_itemset(self, engine, user, itemset_, pos_, name_, fullstr=''):
         loop = asyncio.get_event_loop()
-        loop.create_task(self.update_itemset_(engine, itemset_, pos_, name_))
-    async def update_itemset_(self, engine, itemset_, pos_, name_):
+        loop.create_task(self.update_itemset_(engine, user, itemset_, pos_, name_, fullstr))
+    async def update_itemset_(self, engine, user, itemset_, pos_, name_, fullstr):
         async with engine.acquire() as conn:
+            b_create = 0
             itemset_l = await auc.get_item_set(conn, itemset_)
             temp_l = []
-            for _ in itemset_l:
-                l_ = _.split('?')
-                if l_[0] == pos_:
-                    l_[1] = name_
-                temp_l.append('?'.join(l_))
+            if(not len(itemset_l)):
+                b_create = 1
+                itemset_l = fullstr.split(',')
+                i = 0
+                for _ in itemset_l:
+                    temp_l.append('?'.join([str(i), _]))
+                    i += 1
+            else:
+                for _ in itemset_l:
+                    l_ = _.split('?')
+                    if l_[0] == pos_:
+                        l_[1] = name_
+                    temp_l.append('?'.join(l_))
             ret_str = ','.join(temp_l)
-            print(f'indiv_update: ret_str: {ret_str}')
             log.info(f'indiv_update: ret_str: {ret_str}')
 
+        if(not b_create):
             # itemset 테이블을 업데이트해줍니다
             await conn.execute(db.tbl_item_set.update().where(db.tbl_item_set.c.set_name==itemset_)
                                 .values(itemname_list=ret_str))
+        else: 
+            # 해당 셋이 삭제되었으므로 itemset 을 그대로 만들어줍니다
+            await conn.execute(db.tbl_item_set.insert().values(set_name=itemset_,
+                                                    itemname_list=ret_str,
+                                                    edited_time='',
+                                                    user=user))
 
     async def get_decoed_item_set(self, engine, server):
         dict_ = {}

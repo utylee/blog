@@ -120,7 +120,7 @@ async def update_indiv(request):
     print('/update_indiv handler came in')
     log.info('/update_indiv handler came in')
     pos_no = request.match_info['num']
-    #item_name = request.match_info['itemname']
+    item_name = request.match_info['itemname']
     fullstr = request.match_info['fullstr']
     srver = request.match_info['server']
     user = request.match_info['cur_user']
@@ -128,12 +128,14 @@ async def update_indiv(request):
 
     l_full = fullstr.split(',')
     log.info(f'full_str:{l_full}')
+    '''
     num = int(pos_no)
     item_name = l_full[num]
     l_full.pop(num)
     log.info(f'remain_str:{l_full}')
+    '''
     a = time.time()
-    indiv_ar = await auc.get_decoed_item(request.app['db'], srver, item_set, pos_no, item_name)
+    indiv_ar = await auc.get_decoed_item(request.app['db'], srver, user, item_set, pos_no, item_name, fullstr)
     b = time.time()
     sub = round(b - a,2)
     print(f':{sub}초 소요')
@@ -186,10 +188,11 @@ async def rq_item(request):
     item = request.match_info['item']
     #fullstr = request.match_info['fullstr']
     srver = request.match_info['server']
+    #cur_user = request.match_info['cur_user']
 
     #log.info(f'fullstr: {fullstr}')
     a = time.time()
-    indiv_ar = await auc.get_decoed_item(request.app['db'], srver, '', num, item)
+    indiv_ar = await auc.get_decoed_item(request.app['db'], srver, '', '', num, item) #user 및set명은 비워서제출
     b = time.time()
     sub = round(b - a,2)
     log.info(f'rq_item:: fetch elapsed time: {sub} 초')
@@ -317,7 +320,7 @@ async def init(app):
     app.router.add_get('/rq_itemsets/{cur_user}/{dummy}', rq_itemsets)
     app.router.add_get('/rq_item/{num}/{server}/{item}/{dummy}', rq_item)
     #app.router.add_get('/rq_item/{cur_user}/{num}/{server}/{fullstr}/{dummy}', rq_item)
-    app.router.add_get('/update_indiv/{num}/{server}/{cur_user}/{cur_itemset}/{fullstr}/{dummy}',
+    app.router.add_get('/update_indiv/{num}/{server}/{cur_user}/{cur_itemset}/{itemname}/{fullstr}/{dummy}',
                                 update_indiv)
     #app.router.add_get('/update_indiv/{num}/{server}/{cur_user}/{cur_itemset}/{itemname}/{dummy}',
                                 #update_indiv)
