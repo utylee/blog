@@ -25,29 +25,16 @@ fileHandler.setFormatter(logging.Formatter('[%(asctime)s]-(%(name)s)-%(message)s
 log.addHandler(fileHandler)
 
 async def main_proc(intv):
-    serverlist = await get_serverlist()
-    '''
-    # 한국 와우 서버 리스트를 가져옵니다
-    serverlist = []
-    async with create_engine(user='postgres',
+    engine = await create_engine(user='postgres', 
                             database='auction_db',
                             host='192.168.0.212',
-                            password='sksmsqnwk11') as engine:
-        async with engine.acquire() as conn:
-            async for r in conn.execute(db.tbl_wow_server_info.select()):
-                serverlist.append(r[0])
-
-    # 제거해봅니다. 초기에 굳이 하지 않아도 handle(index.html)가 처리합니다
-    #await fetch_auction()
-    
-    #serverlist = ['아즈샤라']
-    log.info(f'serverlist = {serverlist}')
-    '''
+                            password='sksmsqnwk11')
+    serverlist = await get_serverlist(engine)
     size = len(serverlist)
     az = serverlist.index('아즈샤라')
     hj = serverlist.index('하이잘')
     etc_l = [ _ for _ in serverlist if _ != '아즈샤라' and _ != '하이잘']
-    log.info(etc_l)
+    #log.info(etc_l)
     '''
         아즈샤라:   18분
         하이잘:     13분
@@ -79,14 +66,10 @@ async def main_proc(intv):
     while True:
         for serverlist in r_list:
             loop = asyncio.get_event_loop()
-            loop.create_task(timer_proc(serverlist))
+            loop.create_task(timer_proc(engine, serverlist))
             await asyncio.sleep(intv)
 
-async def timer_proc(serverlist):
-    async with create_engine(user='postgres',
-                            database='auction_db',
-                            host='192.168.0.212',
-                            password='sksmsqnwk11') as engine:
+async def timer_proc(engine, serverlist):
         for s_ in serverlist:
             await db_update_from_server(engine, s_, defaultset)
 

@@ -120,11 +120,18 @@ async def update_indiv(request):
     print('/update_indiv handler came in')
     log.info('/update_indiv handler came in')
     pos_no = request.match_info['num']
-    item_name = request.match_info['itemname']
+    #item_name = request.match_info['itemname']
+    fullstr = request.match_info['fullstr']
     srver = request.match_info['server']
     user = request.match_info['cur_user']
     item_set = request.match_info['cur_itemset']
 
+    l_full = fullstr.split(',')
+    log.info(f'full_str:{l_full}')
+    num = int(pos_no)
+    item_name = l_full[num]
+    l_full.pop(num)
+    log.info(f'remain_str:{l_full}')
     a = time.time()
     indiv_ar = await auc.get_decoed_item(request.app['db'], srver, item_set, pos_no, item_name)
     b = time.time()
@@ -174,10 +181,13 @@ async def rq_itemset(request):
 async def rq_item(request):
     log.info('/rq_item handler came in')
 
+    #user = request.match_info['cur_user']
     num = request.match_info['num']
     item = request.match_info['item']
+    #fullstr = request.match_info['fullstr']
     srver = request.match_info['server']
 
+    #log.info(f'fullstr: {fullstr}')
     a = time.time()
     indiv_ar = await auc.get_decoed_item(request.app['db'], srver, '', num, item)
     b = time.time()
@@ -306,7 +316,11 @@ async def init(app):
     app.router.add_get('/rq_itemset/{itemset}/{dummy}', rq_itemset)
     app.router.add_get('/rq_itemsets/{cur_user}/{dummy}', rq_itemsets)
     app.router.add_get('/rq_item/{num}/{server}/{item}/{dummy}', rq_item)
-    app.router.add_get('/update_indiv/{num}/{server}/{cur_user}/{cur_itemset}/{itemname}', update_indiv)
+    #app.router.add_get('/rq_item/{cur_user}/{num}/{server}/{fullstr}/{dummy}', rq_item)
+    app.router.add_get('/update_indiv/{num}/{server}/{cur_user}/{cur_itemset}/{fullstr}/{dummy}',
+                                update_indiv)
+    #app.router.add_get('/update_indiv/{num}/{server}/{cur_user}/{cur_itemset}/{itemname}/{dummy}',
+                                #update_indiv)
     app.router.add_get('/create_itemset/{cur_user}/{setname}', create_itemset)
     app.router.add_get('/delete_itemset/{cur_user}/{setname}', delete_itemset)
 
@@ -316,7 +330,7 @@ async def init(app):
     # db에 바로 접속해 놓습니다
     engine = await create_engine(user='postgres',
                             database='auction_db',
-                            host='192.168.0.212',
+                            host='localhost',
                             password='sksmsqnwk11')
 
     app['db'] = engine

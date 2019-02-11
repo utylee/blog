@@ -21,6 +21,7 @@
 		window.socket = 0;
 		window.cur_user = 'guest';
 		window.itemsets = [];
+		window.items = {};
 		window.img_host = 'https://wow.zamimg.com/images/wow/icons/large/';
 		window.chart_chains = new Array;
 		window.chart = new Array;
@@ -61,11 +62,18 @@
 				xhttp.onreadystatechange = function() {
 					if(this.readyState == 4 && this.status == 200) {
 						var data = JSON.parse(this.responseText);
-						update_indiv(data);
+						##update_indiv(data);
+						update_item_area(data.num, data.indiv_ar);
 					}
 				};
+				fullstr = collect_items_tostring(num, i_name);
+				var dummy = new Date().getTime();
+				<%doc>
+				##xhttp.open("GET", '/update_indiv/' + num + '/' + server + '/' + \
+								##cur_user + '/' + cur_itemset + '/' + i_name,true);
+				</%doc>
 				xhttp.open("GET", '/update_indiv/' + num + '/' + server + '/' + \
-								cur_user + '/' + cur_itemset + '/' + i_name,true);
+								cur_user + '/' + cur_itemset + '/' + fullstr + '/' + dummy,true);
 				xhttp.send();
 			}
 		}
@@ -483,6 +491,7 @@
 		}
 
 		function update_item_area(n, itemdata) {
+			items[n] = itemdata.name;
 			document.getElementById("image"+n).setAttribute("style", "background-image: url('" + img_host + itemdata.image + ".jpg')"); 
 			document.getElementById("itemname"+n).innerHTML = itemdata.name;
 			document.getElementById("num"+n).innerHTML = itemdata.num;
@@ -776,12 +785,16 @@
 			xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
 					var data = JSON.parse(this.responseText);
-					data = data.data
-					l_ = Object.keys(data);
+					data_ = data.data
+					l_ = Object.keys(data_);
+					if(l_ < 5) {
+						alert('이미 삭제된 세트입니다');
+						setTimeout(rq_itemsets(function (){change_itemset('기본구성');}),100);
+						##setTimeout(change_itemset('기본구성'),100);
+					}
 					s_ = l_.length;
-					##alert(s_);
 					for (let i=0;i < s_;i++) {
-						rq_itemdata(i, data[i]['item']);
+						rq_itemdata(i, data_[i]['item']);
 					}
 				}
 			};
@@ -800,9 +813,27 @@
 					hide_spinner();
 				}
 			};
+			##fullstr = collect_items_tostring(n, name);
 			var dummy = new Date().getTime();
 			xhttp.open("GET", '/rq_item/' + n + '/' + server + '/' + name + '/' + dummy, true);
+			##xhttp.open("GET", '/rq_item/' + cur_user + '/' + n + '/' + server + '/' 
+									##+ fullstr + '/' + dummy, true);
 			xhttp.send();
+		}
+
+		function collect_items_tostring(n, name) {
+			var str = '';
+			for(let i=0;i<5;i++) {
+				if(i==Number(n)) {
+					str += name.trim();
+				}
+				else {
+					str += document.getElementById('itemname'+i).innerHTML.trim();
+				}
+				str += ',';
+			}
+			str += document.getElementById('itemname5').innerHTML.trim();
+			return str;
 		}
 
 		function rq_dumptime() {
