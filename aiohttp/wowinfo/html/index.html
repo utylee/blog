@@ -492,6 +492,7 @@
 
 		function update_item_area(n, itemdata) {
 			items[n] = itemdata.name;
+			document.getElementById("input-item"+n).value = '';
 			document.getElementById("image"+n).setAttribute("style", "background-image: url('" + img_host + itemdata.image + ".jpg')"); 
 			document.getElementById("itemname"+n).innerHTML = itemdata.name;
 			document.getElementById("num"+n).innerHTML = itemdata.num;
