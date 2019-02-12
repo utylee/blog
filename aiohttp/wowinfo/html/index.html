@@ -14,6 +14,261 @@
 	##<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/regular.css" integrity="sha384-aubIA90W7NxJ+Ly4QHAqo1JBSwQ0jejV75iHhj59KRwVjLVHjuhS3LkDAoa/ltO4" crossorigin="anonymous">
 	##<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/fontawesome.css" integrity="sha384-jLuaxTTBR42U2qJ/pm4JRouHkEDHkVqH0T1nyQXn1mZ7Snycpf6Rl25VBNthU4z0" crossorigin="anonymous">
 	##<script src="/static/js/spin.js"></script>
+</%block>
+
+<%block name="content">
+<div class="my-container" >
+
+	## ---------------------------------------------------------------
+	## 상단 row
+	<div class="my-header">
+		## 서버 선택
+		<div class="server_btn">
+		<div id="div-srv-screener"></div>
+		<div class="dropdown menu_wide_narrow" >
+			<button id="button_serverlist" class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown" >
+				##<span class="glyphicon glyphicon-grain" aria-hidden="true"></span>
+				<i class="fas fa-check-circle text-success">&nbsp;</i>
+				아즈샤라
+				##<span class="icon-checkcircle" >아즈샤라</span>
+			</button>
+			<div id="div_serverlist" class="dropdown-menu scrollable-menu"  style="width:100%">
+				<%doc>
+				% for i in serverlist:
+				<a id="${'server'+str(loop.index)}" class="dropdown-item text-center" href="#" onclick="change_server('${i}');">${i}</a>
+				% endfor
+				</%doc>
+			</div>
+		</div>
+		</div> 
+		## 아이템 세트 셀렉트 
+		<div class="temple_btn">
+		<div id="div-spinner"><div class="spinner"></div></div>
+		<div class="dropdown menu_wide" >
+			<button id="button_itemset" class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown"></button>
+			<%doc>
+			% if current_itemset == '기본구성':
+			<button id="button_itemset" class="btn btn-secondary btn-large btn-block dropdown-toggle text-warning" type="button" data-toggle="dropdown">
+				<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;${current_itemset}</button>
+			% else:
+			<button id="button_itemset" class="btn btn-secondary btn-large btn-block dropdown-toggle text-muted" type="button" data-toggle="dropdown">${current_itemset}</button>
+			% endif
+			</%doc>
+			<div id="div_itemlist" class="dropdown-menu scrollable-menu"  style="width:100%">
+				<%doc>
+				<a id="itemlist0" class="dropdown-item text-center text-primary" href="#">dummy</a>
+				% for i in itemsets:
+					% if i == '만들기':
+				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center text-primary" href="#" onclick="change_itemset('${i}');"><h2>${i}</h2></a>
+					% elif i == '기본구성':
+				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center text-warning" href="#" onclick="change_itemset('${i}');">${i}</a>
+					% else:
+				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center" href="#" onclick="change_itemset('${i}');">${i}</a>
+					% endif
+				% endfor
+				</%doc>
+			</div>
+		</div>
+			<div id="div-form-itemset" class="input_wide" align="center">
+				<form action="javascript:submit_itemset_form();" >
+					<input id="input-itemset" class="form-control-itemset" type="text" placeholder="만들 세트명을 입력하세요">
+					<button id="itemset-confirm" class="btn btn-lg btn-success " type="submit">
+						확인
+					</button>
+				</form>
+				<div id="icon-set-cancel" >
+					X		
+				</div>
+			</div>
+		</div>
+		## 로그인 
+		<div class="login_btn"> 
+		<div id="div-login-screener"></div>
+		<div class="menu_narrow">
+			<button id="button_login" class="btn btn-info btn-block " type="button" onclick="modal_login();">
+				로그인	
+			</button>
+		</div>
+		</div>
+	</div>
+
+	## 로그인 modal 
+	<div id="modal_login" class="modal fade">
+		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-myflex-outer">
+					<div style="height:5px"></div>
+					<div style="width:92%;">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div style='height:10px;'></div>
+					<div class="modal-loginform-outer">
+						<form id="login-form" action="javascript:submit_item_form();" method="get">
+							<input id="input-login" class="form-control-login" type="text" placeholder="아이디를 입력하세요" >
+							<input id="submit-login-form" type="submit" style="display:none;"/>
+						</form>
+						<div id="icon-login-cancel">X</div>
+					</div>
+					<div style='height:12px;'></div>
+					<div class="confirm_or_cancel">
+						<!-- <label for="submit-login-form" tabindex="0">로그인</label> -->
+						<button type="button" style="width:90px;height:45px;font-size:1.1rem" class="btn btn-info" type="submit" onclick="document.getElementById('login-form').submit();">로그인</button>
+						<div style="width:10px;"></div>
+						<button type="button" style="width:90px;height:45px;font-size:1.1rem" class="btn btn-secondary" data-dismiss="modal">취소</button>
+					</div>
+					<div style='height:25px;'></div>
+					<div style='width:85%;height:1px;background:#444;'></div>
+					<div style='height:10px;'></div>
+					<span class="text-muted" style="font-size:0.7rem;">
+					  아니면
+					</span>
+					<div style="height:5px;"></div>
+					<button type="button" class="btn btn-large btn-outline-success create-id" style="border-radius:12px;font-size:0.9rem;width:200px;"><i class="fas fa-pencil-alt" style='font-size:1.2rem;'></i>&nbsp;새로운 아이디 만들기</button>
+					<div style="height:15px;"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="modal_delete" class="modal fade">
+		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-content">
+					<div class="modal-body">
+						<p style="font-size:1.3rem;">
+						<span id="delete_name">
+						</span>
+						, 삭제합니까?
+						<br>
+						</p>
+						<div class="confirm_or_cancel" style="display:flex;flex-wrap:nowrap;">
+						<button class="btn btn-large btn-danger" style="width:80px;height:40px;font-size:1.1rem" onclick="delete_confirm();">삭제</button>
+						<div style="width:10px;"></div>
+						<button class="btn btn-large btn-secondary" style="width:80px;height:40px;font-size:1.1rem" data-dismiss="modal">취소</button>
+						<br>
+						<br>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	## ---------------------------------------------------------------
+	## ---------------------------------------------------------------
+	## 메인 row
+	<div class="my-main">
+			## % for a in ar.keys():
+			##% for a, b in sorted(ar.items()):
+			% for a in range(0, 6):
+			<div class="card" >
+				<div class="card-img-top bg-secondary"  >
+					<center>
+						<%doc>
+						border를 img태그를 이용하고 아이템이미지를 div의 백그라운드로 거꾸로
+						사용해서border가 잘리는문제를 해결하였습니다
+						</%doc>
+						##<div id="image${loop.index}" class="iconlarge" style="background-image: url('${imageroot + ar[a]['image']}'+'.jpg')">
+						##<div id="image${a}" class="iconlarge" style="background-image: url('${imageroot + b['image'] + '.jpg'}')">
+						<div id="image${a}" class="iconlarge" style="">
+							<a href="javascript:show_item_form(${a});">
+								## nginx 에서 static 을 호스팅하느라 상대경로를 바꿨습니다
+								##<img src="../static/css/images/border.png"/>
+								<img src="/static/css/images/border.png"/>
+							</a>
+						</div>
+					</center>
+				</div>
+
+				<div class="card-body main-item" >
+					## 아이템명 변경 입력 팝업입니다
+					<div id="div-form-item${a}" align="center">
+						<form action="javascript:submit_item_form(${a});" >
+							<input id="input-item${a}" class="form-control-item" type="text" placeholder="아이템명을 입력하세요">
+							<button class="btn btn-info btn-lg item-confirm" type="submit">
+								확인
+							</button>
+						</form>
+					</div>
+					<div id="icon-cancel${a}" >
+						X		
+					</div>
+					<div class="card-title" align="center"  >
+						##<a href="javascript:show_item_form(${a});"><span id="itemname${a}" style="font-size:1.2rem">${b['name']}</span><span id="num${a}" class="badge badge-success badge-pill" >${b['num']}</span>
+						<a href="javascript:show_item_form(${a});"><span id="itemname${a}" style="font-size:1.2rem">WoW 토큰</span><span id="num${a}" class="badge badge-success badge-pill" >1111</span>
+						</a>
+					</div>
+					<ul class="list-group list-group-flush">
+					<li class="list-group-item">
+					<p class="card-text" align="center">
+					##<span id="moneygold${loop.index}" class="moneygold">${int(b['gold'])}</span>
+					##<span id="moneysilver${loop.index}" class="moneysilver">${int(b['silver'])}</span>
+					##<span id="moneycopper${loop.index}" class="moneycopper">${int(b['copper'])}</span>
+					<span id="moneygold${a}" class="moneygold">11</span>
+					<span id="moneysilver${a}" class="moneysilver">11</span>
+					<span id="moneycopper${a}" class="moneycopper">11</span>
+					<br>
+					##<span id="min_seller${loop.index}" class="badge badge-secondary text-muted" >${b['min_seller']}</span>
+					<span id="min_seller${a}" class="badge badge-secondary text-muted" ></span>
+					</p>
+					</li>
+					<div style="font-size:12px;margin-top:0px;" align="center">
+						##차트
+						<li class="list-group-item" align="center">
+							##<canvas id="chLine${loop.index}" style="width:200px;"></canvas>
+							<canvas id="chLine${a}" style="width:200px;"></canvas>
+						##주기선택
+							##<div align="center" class="btn-block btn-group-sm btn-group-toggle center" style="transform:scale(0.6);" data-toggle="buttons">
+							<div align="center" class="btn-group btn-group-toggle center"  data-toggle="buttons">
+								##<label id="lb${loop.index}0" class="btn btn-outline-primary text-muted active">
+								<label id="lb${a}0" class="btn btn-outline-primary text-muted active">
+									<input type="radio" name="options" id="option1" autocomplete="off">12시
+								</label>
+								##<label id="lb${loop.index}1" class="btn btn-outline-primary text-muted">
+								<label id="lb${a}1" class="btn btn-outline-primary text-muted">
+									<input type="radio" name="options" id="option2" autocomplete="off">24시
+								</label>
+								##<label id="lb${loop.index}2" class="btn btn-outline-primary text-muted">
+								<label id="lb${a}2" class="btn btn-outline-primary text-muted">
+									<input type="radio" name="options" id="option3" autocomplete="off">48시
+								</label>
+								##<label id="lb${loop.index}3" class="btn btn-outline-primary text-muted">
+								<label id="lb${a}3" class="btn btn-outline-primary text-muted">
+									<input type="radio" name="options" id="option3" autocomplete="off">주일
+								</label>
+								##<label id="lb${loop.index}4" class="btn btn-outline-primary text-muted">
+								<label id="lb${a}4" class="btn btn-outline-primary text-muted">
+									<input type="radio" name="options" id="option4" autocomplete="off">30일
+								</label>
+							</div>
+						</li>
+					</div>
+					</ul>
+				</div>
+			</div>
+			% endfor
+	</div>
+
+	## ---------------------------------------------------------------
+	## bottom row
+	<div class="my-footer">
+		<div >
+			<span id="designed_by" class="text-secondary "></span>
+			<span id="gathered_from" class="text-secondary "></span>
+			<span id="dumped_at" class="text-secondary "></span>
+			<span id="update_time" class="text-primary "></span>
+			<br>
+			<%doc>
+			<span id="thx_for" class="text-secondary "></span>
+			<span id="donation" class="text-muted"></span>
+			</%doc>
+		</div>
+	</div>
+</div>
+
+
 	<script charset="utf-8">
 		// 차트에서 포인트 갯수를 정의합니다
 		window.chart_column_num = 24;
@@ -905,257 +1160,4 @@
 			} // end-for
 		} // end-function create-chart-objects()
 	</script>
-</%block>
-
-<%block name="content">
-<div class="my-container" >
-
-	## ---------------------------------------------------------------
-	## 상단 row
-	<div class="my-header">
-		## 서버 선택
-		<div class="server_btn">
-		<div id="div-srv-screener"></div>
-		<div class="dropdown menu_wide_narrow" >
-			<button id="button_serverlist" class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown" >
-				##<span class="glyphicon glyphicon-grain" aria-hidden="true"></span>
-				<i class="fas fa-check-circle text-success">&nbsp;</i>
-				아즈샤라
-				##<span class="icon-checkcircle" >아즈샤라</span>
-			</button>
-			<div id="div_serverlist" class="dropdown-menu scrollable-menu"  style="width:100%">
-				<%doc>
-				% for i in serverlist:
-				<a id="${'server'+str(loop.index)}" class="dropdown-item text-center" href="#" onclick="change_server('${i}');">${i}</a>
-				% endfor
-				</%doc>
-			</div>
-		</div>
-		</div> 
-		## 아이템 세트 셀렉트 
-		<div class="temple_btn">
-		<div id="div-spinner"><div class="spinner"></div></div>
-		<div class="dropdown menu_wide" >
-			<button id="button_itemset" class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown"></button>
-			<%doc>
-			% if current_itemset == '기본구성':
-			<button id="button_itemset" class="btn btn-secondary btn-large btn-block dropdown-toggle text-warning" type="button" data-toggle="dropdown">
-				<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;${current_itemset}</button>
-			% else:
-			<button id="button_itemset" class="btn btn-secondary btn-large btn-block dropdown-toggle text-muted" type="button" data-toggle="dropdown">${current_itemset}</button>
-			% endif
-			</%doc>
-			<div id="div_itemlist" class="dropdown-menu scrollable-menu"  style="width:100%">
-				<%doc>
-				<a id="itemlist0" class="dropdown-item text-center text-primary" href="#">dummy</a>
-				% for i in itemsets:
-					% if i == '만들기':
-				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center text-primary" href="#" onclick="change_itemset('${i}');"><h2>${i}</h2></a>
-					% elif i == '기본구성':
-				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center text-warning" href="#" onclick="change_itemset('${i}');">${i}</a>
-					% else:
-				<a id="${'itemlist'+str(loop.index)}" class="dropdown-item text-center" href="#" onclick="change_itemset('${i}');">${i}</a>
-					% endif
-				% endfor
-				</%doc>
-			</div>
-		</div>
-			<div id="div-form-itemset" class="input_wide" align="center">
-				<form action="javascript:submit_itemset_form();" >
-					<input id="input-itemset" class="form-control-itemset" type="text" placeholder="만들 세트명을 입력하세요">
-					<button id="itemset-confirm" class="btn btn-lg btn-success " type="submit">
-						확인
-					</button>
-				</form>
-				<div id="icon-set-cancel" >
-					X		
-				</div>
-			</div>
-		</div>
-		## 로그인 
-		<div class="login_btn"> 
-		<div id="div-login-screener"></div>
-		<div class="menu_narrow">
-			<button id="button_login" class="btn btn-info btn-block " type="button" onclick="modal_login();">
-				로그인	
-			</button>
-		</div>
-		</div>
-	</div>
-
-	## 로그인 modal 
-	<div id="modal_login" class="modal fade">
-		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-			<div class="modal-content">
-				<div class="modal-myflex-outer">
-					<div style="height:5px"></div>
-					<div style="width:92%;">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div style='height:10px;'></div>
-					<div class="modal-loginform-outer">
-						<form id="login-form" action="javascript:submit_item_form();" method="get">
-							<input id="input-login" class="form-control-login" type="text" placeholder="아이디를 입력하세요" >
-							<input id="submit-login-form" type="submit" style="display:none;"/>
-						</form>
-						<div id="icon-login-cancel">X</div>
-					</div>
-					<div style='height:12px;'></div>
-					<div class="confirm_or_cancel">
-						<!-- <label for="submit-login-form" tabindex="0">로그인</label> -->
-						<button type="button" style="width:90px;height:45px;font-size:1.1rem" class="btn btn-info" type="submit" onclick="document.getElementById('login-form').submit();">로그인</button>
-						<div style="width:10px;"></div>
-						<button type="button" style="width:90px;height:45px;font-size:1.1rem" class="btn btn-secondary" data-dismiss="modal">취소</button>
-					</div>
-					<div style='height:25px;'></div>
-					<div style='width:85%;height:1px;background:#444;'></div>
-					<div style='height:10px;'></div>
-					<span class="text-muted" style="font-size:0.7rem;">
-					  아니면
-					</span>
-					<div style="height:5px;"></div>
-					<button type="button" class="btn btn-large btn-outline-success create-id" style="border-radius:12px;font-size:0.9rem;width:200px;"><i class="fas fa-pencil-alt" style='font-size:1.2rem;'></i>&nbsp;새로운 아이디 만들기</button>
-					<div style="height:15px;"></div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div id="modal_delete" class="modal fade">
-		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-			<div class="modal-content">
-				<div class="modal-content">
-					<div class="modal-body">
-						<p style="font-size:1.3rem;">
-						<span id="delete_name">
-						</span>
-						, 삭제합니까?
-						<br>
-						</p>
-						<div class="confirm_or_cancel" style="display:flex;flex-wrap:nowrap;">
-						<button class="btn btn-large btn-danger" style="width:80px;height:40px;font-size:1.1rem" onclick="delete_confirm();">삭제</button>
-						<div style="width:10px;"></div>
-						<button class="btn btn-large btn-secondary" style="width:80px;height:40px;font-size:1.1rem" data-dismiss="modal">취소</button>
-						<br>
-						<br>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	## ---------------------------------------------------------------
-	## ---------------------------------------------------------------
-	## 메인 row
-	<div class="my-main">
-			## % for a in ar.keys():
-			##% for a, b in sorted(ar.items()):
-			% for a in range(0, 6):
-			<div class="card" >
-				<div class="card-img-top bg-secondary"  >
-					<center>
-						<%doc>
-						border를 img태그를 이용하고 아이템이미지를 div의 백그라운드로 거꾸로
-						사용해서border가 잘리는문제를 해결하였습니다
-						</%doc>
-						##<div id="image${loop.index}" class="iconlarge" style="background-image: url('${imageroot + ar[a]['image']}'+'.jpg')">
-						##<div id="image${a}" class="iconlarge" style="background-image: url('${imageroot + b['image'] + '.jpg'}')">
-						<div id="image${a}" class="iconlarge" style="">
-							<a href="javascript:show_item_form(${a});">
-								## nginx 에서 static 을 호스팅하느라 상대경로를 바꿨습니다
-								##<img src="../static/css/images/border.png"/>
-								<img src="/static/css/images/border.png"/>
-							</a>
-						</div>
-					</center>
-				</div>
-
-				<div class="card-body main-item" >
-					## 아이템명 변경 입력 팝업입니다
-					<div id="div-form-item${a}" align="center">
-						<form action="javascript:submit_item_form(${a});" >
-							<input id="input-item${a}" class="form-control-item" type="text" placeholder="아이템명을 입력하세요">
-							<button class="btn btn-info btn-lg item-confirm" type="submit">
-								확인
-							</button>
-						</form>
-					</div>
-					<div id="icon-cancel${a}" >
-						X		
-					</div>
-					<div class="card-title" align="center"  >
-						##<a href="javascript:show_item_form(${a});"><span id="itemname${a}" style="font-size:1.2rem">${b['name']}</span><span id="num${a}" class="badge badge-success badge-pill" >${b['num']}</span>
-						<a href="javascript:show_item_form(${a});"><span id="itemname${a}" style="font-size:1.2rem">WoW 토큰</span><span id="num${a}" class="badge badge-success badge-pill" >1111</span>
-						</a>
-					</div>
-					<ul class="list-group list-group-flush">
-					<li class="list-group-item">
-					<p class="card-text" align="center">
-					##<span id="moneygold${loop.index}" class="moneygold">${int(b['gold'])}</span>
-					##<span id="moneysilver${loop.index}" class="moneysilver">${int(b['silver'])}</span>
-					##<span id="moneycopper${loop.index}" class="moneycopper">${int(b['copper'])}</span>
-					<span id="moneygold${a}" class="moneygold">11</span>
-					<span id="moneysilver${a}" class="moneysilver">11</span>
-					<span id="moneycopper${a}" class="moneycopper">11</span>
-					<br>
-					##<span id="min_seller${loop.index}" class="badge badge-secondary text-muted" >${b['min_seller']}</span>
-					<span id="min_seller${a}" class="badge badge-secondary text-muted" ></span>
-					</p>
-					</li>
-					<div style="font-size:12px;margin-top:0px;" align="center">
-						##차트
-						<li class="list-group-item" align="center">
-							##<canvas id="chLine${loop.index}" style="width:200px;"></canvas>
-							<canvas id="chLine${a}" style="width:200px;"></canvas>
-						##주기선택
-							##<div align="center" class="btn-block btn-group-sm btn-group-toggle center" style="transform:scale(0.6);" data-toggle="buttons">
-							<div align="center" class="btn-group btn-group-toggle center"  data-toggle="buttons">
-								##<label id="lb${loop.index}0" class="btn btn-outline-primary text-muted active">
-								<label id="lb${a}0" class="btn btn-outline-primary text-muted active">
-									<input type="radio" name="options" id="option1" autocomplete="off">12시
-								</label>
-								##<label id="lb${loop.index}1" class="btn btn-outline-primary text-muted">
-								<label id="lb${a}1" class="btn btn-outline-primary text-muted">
-									<input type="radio" name="options" id="option2" autocomplete="off">24시
-								</label>
-								##<label id="lb${loop.index}2" class="btn btn-outline-primary text-muted">
-								<label id="lb${a}2" class="btn btn-outline-primary text-muted">
-									<input type="radio" name="options" id="option3" autocomplete="off">48시
-								</label>
-								##<label id="lb${loop.index}3" class="btn btn-outline-primary text-muted">
-								<label id="lb${a}3" class="btn btn-outline-primary text-muted">
-									<input type="radio" name="options" id="option3" autocomplete="off">주일
-								</label>
-								##<label id="lb${loop.index}4" class="btn btn-outline-primary text-muted">
-								<label id="lb${a}4" class="btn btn-outline-primary text-muted">
-									<input type="radio" name="options" id="option4" autocomplete="off">30일
-								</label>
-							</div>
-						</li>
-					</div>
-					</ul>
-				</div>
-			</div>
-			% endfor
-	</div>
-
-	## ---------------------------------------------------------------
-	## bottom row
-	<div class="my-footer">
-		<div >
-			<span id="designed_by" class="text-secondary "></span>
-			<span id="gathered_from" class="text-secondary "></span>
-			<span id="dumped_at" class="text-secondary "></span>
-			<span id="update_time" class="text-primary "></span>
-			<br>
-			<%doc>
-			<span id="thx_for" class="text-secondary "></span>
-			<span id="donation" class="text-muted"></span>
-			</%doc>
-		</div>
-	</div>
-</div>
 </%block>
