@@ -93,6 +93,17 @@ async def ws_handle(request):
         '''
 
     return ws
+async def login(request):
+    data = {}
+    return web.json_response(data)
+
+async def create_user(request):
+    log.info('/create_user handler came in')
+    data = {}
+    data['name'] = 
+    data['code'] = 
+
+    return web.json_response(data)
 
 async def create_itemset(request):
     print('/create_itemset handler came in')

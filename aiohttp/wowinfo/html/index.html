@@ -86,8 +86,9 @@
 		<div id="div-login-screener"></div>
 		<div class="menu_narrow">
 			<button id="button_login" class="btn btn-info btn-block " type="button" onclick="modal_login();">
+				<!-- <button id="button_login" class="btn btn-info btn-block " type="button" onclick="openLoginForm();">-->
 				로그인	
-			</button>
+			</button> 
 		</div>
 		</div>
 	</div>
@@ -97,40 +98,85 @@
 		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
 			<div class="modal-content">
 				<div class="modal-myflex-outer">
-					<div style="height:5px"></div>
-					<div style="width:92%;">
+					<div style="width:92%;margin-top:5px;">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<div style='height:10px;'></div>
+
 					<div class="modal-loginform-outer">
-						<form id="login-form" action="javascript:submit_item_form();" method="get">
+						<form id="login-form" action="javascript:submit_login_form();" method="get">
 							<input id="input-login" class="form-control-login" type="text" placeholder="아이디를 입력하세요" >
 							<input id="submit-login-form" type="submit" style="display:none;"/>
 						</form>
 						<div id="icon-login-cancel">X</div>
 					</div>
-					<div style='height:12px;'></div>
 					<div class="confirm_or_cancel">
 						<!-- <label for="submit-login-form" tabindex="0">로그인</label> -->
 						<button type="button" style="width:90px;height:45px;font-size:1.1rem" class="btn btn-info" type="submit" onclick="document.getElementById('login-form').submit();">로그인</button>
-						<div style="width:10px;"></div>
-						<button type="button" style="width:90px;height:45px;font-size:1.1rem" class="btn btn-secondary" data-dismiss="modal">취소</button>
+						<button type="button" style="margin-left:10px;width:90px;height:45px;font-size:1.1rem" class="btn btn-secondary" data-dismiss="modal">취소</button>
 					</div>
-					<div style='height:25px;'></div>
-					<div style='width:85%;height:1px;background:#444;'></div>
-					<div style='height:10px;'></div>
-					<span class="text-muted" style="font-size:0.7rem;">
-					  아니면
-					</span>
-					<div style="height:5px;"></div>
-					<button type="button" class="btn btn-large btn-outline-success create-id" style="border-radius:12px;font-size:0.9rem;width:200px;"><i class="fas fa-pencil-alt" style='font-size:1.2rem;'></i>&nbsp;새로운 아이디 만들기</button>
-					<div style="height:15px;"></div>
+					<div id='modal-login-letscreate'>
+						<div style='width:100%;height:1px;background:#444;'></div>
+						<div style="margin-top:10px;">
+							<span class="text-muted" style="font-size:0.7rem;">
+							  아니면
+							</span>
+						</div>
+						<div style="margin-top:5px;margin-bottom:15px">
+							<button type="button" class="btn btn-large btn-outline-success create-id" style="border-radius:12px;font-size:0.9rem;width:200px;" onclick="letscreate();"><i class="fas fa-pencil-alt" style='font-size:1.2rem;'></i>&nbsp;새로운 아이디 만들기</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	## createid modal
+	<div id="modal_createid" class="modal fade">
+		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-myflex-outer">
+					<div style="width:92%;margin-top:5px;">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+
+					<div class="modal-createidform-outer">
+						<form id="createid-form" action="javascript:submit_createid_form();" method="get">
+							<input id="input-createid" class="form-control-createid" type="text" placeholder="생성할 아이디" >
+							<input id="submit-createid-form" type="submit" style="display:none;"/>
+						</form>
+						<div id="icon-createid-cancel">X</div>
+					</div>
+					<div class="confirm_or_cancel">
+						<!-- <label for="submit-login-form" tabindex="0">로그인</label> -->
+						<button type="button" style="width:90px;height:45px;font-size:1.1rem" class="btn btn-success" type="submit" onclick="document.getElementById('createid-form').submit();">만들기</button>
+						<button type="button" style="margin-left:10px;width:90px;height:45px;font-size:1.1rem" class="btn btn-secondary" data-dismiss="modal">취소</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="modal_info" class="modal fade">
+		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div style="height:10px;"></div>
+						<p style="font-size:1.3rem;">
+							<span id="modal_info_text">
+							</span>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 	<div id="modal_delete" class="modal fade">
 		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
@@ -286,14 +332,18 @@
 		for (let i=0;i<6;i++) {
 			form_opened[i] = 0;
 		}
+		function modal_createid(){
+			$('#modal_createid').on('shown.bs.modal', function () {
+				$('#input-createid').focus();
+			});
+			$('#modal_createid').modal();
+		}
 		function modal_login(){
-			##alert('모달');
-			##document.getElementById('modal_login').style.display = 'block';
-			##openLoginForm();
 			$('#modal_login').on('shown.bs.modal', function () {
 				$('#input-login').focus();
 			});
 			$('#modal_login').modal();
+
 		}
 		function show_item_form(num) {
 			##alert('div-form-item'+num);
@@ -304,6 +354,13 @@
 			else {
 				openForm(num);
 			}
+		}
+
+		function submit_createid_form() {
+			alert('생성 서밋');
+		}
+		function submit_login_form() {
+			alert('로긴 서밋');
 		}
 		function submit_item_form(num) {
 			##alert('div-form-item'+num);
@@ -790,6 +847,12 @@
 			hide_spinner();
 		} //function update_page() ends
 
+		function show_modal_info(text, time) {
+			document.getElementById('modal_info_text').innerHTML = text;
+			$('#modal_info').modal();
+			setTimeout(function () {$('#modal_info').modal('hide');}, time);
+		}
+
 		function show_modal_delete(setname) {
 			window.delete_name = setname;
 			document.getElementById('delete_name').innerHTML = setname;
@@ -815,7 +878,9 @@
 							rq_itemsets();
 						}
 						else if (data.success == '0') {
-							alert('이미 없는 세트명입니다');
+							show_modal_info('이미 없는 세트명입니다', 1300);
+							rq_itemsets();
+							##alert('이미 없는 세트명입니다');
 						}
 					}
 				}
@@ -826,6 +891,8 @@
 		function openLoginForm() {
 			document.getElementById("input-login").focus();
 			document.getElementById('icon-login-cancel').style.display = 'flex';
+			document.getElementById('modal-createid-outer').style.display = 'none';
+			document.getElementById('modal-login-outer').style.display = 'block';
 		}
 
 		function closeLoginForm() {
@@ -857,6 +924,12 @@
 			document.getElementById('icon-cancel'+num).style.display = 'flex';
 			form_opened[num] = 1;
 		}
+
+		function letscreate() {
+			$('#modal_login').modal('hide');
+			modal_createid();
+		}
+
 		// jQuery document ready 를 대신하는 자바스크립트입니다 다만 익스플로러 9이하에선 안된다는 말도 있네요
 		document.addEventListener("DOMContentLoaded", function(){
 			itemsets = ${itemsets};
@@ -1044,7 +1117,7 @@
 					data_ = data.data
 					l_ = Object.keys(data_);
 					if(l_ < 5) {
-						alert('이미 삭제된 세트입니다');
+						##alert('이미 삭제된 세트입니다');
 						setTimeout(rq_itemsets(function (){change_itemset('기본구성');}),100);
 						##setTimeout(change_itemset('기본구성'),100);
 					}

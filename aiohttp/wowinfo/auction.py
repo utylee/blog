@@ -654,8 +654,12 @@ async def delete_itemset(engine, user, setname):
     success = 0
     dict_ = {}
     async with engine.acquire() as conn:
+        async for r in conn.execute(db.tbl_item_set.select().where(and_((db.tbl_item_set.c.user==user),(db.tbl_item_set.c.set_name==setname)))):
+            success = 1
         await conn.execute(db.tbl_item_set.delete().where(and_((db.tbl_item_set.c.user==user),(db.tbl_item_set.c.set_name==setname))))
-        success = 1
+    log.info(f'success:{success}')
+
+        #success = 1
     return success
 
 

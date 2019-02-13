@@ -37,16 +37,31 @@ input[type=radio] {
 }
 .modal-myflex-outer {
 	display: flex;
+	position: relative;
 	flex-direction : column;
 	align-items: center;
 }
-.modal-loginform-outer {
+#modal-login-outer {
+	display: flex;
+	/* position: absolute; */
+	flex-direction: column;
+	align-items: center;
+	margin-top: 30px;
+}
+#modal-createid-outer {
+	display: none;
+	/* position: absolute; */
+	flex-direction: column;
+	align-items: center;
+	margin-top: 30px;
+}
+.modal-createidform-outer,  .modal-loginform-outer {
 	display: flex;
 	position:relative;
 	width: 250px;
 	justify-content: center;
 }
-.form-control-login {
+.form-control-login, .form-control-createid {
 	/* width: 250px; */
 	width: 100%;
 	height: 60px;
@@ -57,7 +72,15 @@ input[type=radio] {
 	border-radius: 8px;
 	padding-left: 10px;
 }
-#icon-login-cancel {
+.confirm_or_cancel{
+	display:flex;
+	flex-wrap:nowrap;
+	align-content:center;	
+	justify-content:center;	
+	margin-top:12px;
+	margin-bottom:20px;
+}
+#icon-login-cancel, #icon-createid-cancel {
 	display:flex;			/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
 	flex-direction:row;	/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
 	position: absolute;
@@ -77,18 +100,26 @@ input[type=radio] {
 	z-index:6;
 }
 
-#modal_login {
-	display: none;
+#modal-login-letscreate {
+	width: 80%;
+	justify-items:center;
+	justify-content:center;
+	/* margin-top: 120px; */
 }
+
+#modal_login {
+	/*
+	width: auto;
+	height: auto;
+	*/
+}
+/*
 #modal_delete {
 	display: none;
 }
-.confirm_or_cancel{
-	display:flex;
-	flex-wrap:nowrap;
-	align-content:center;	
-	justify-content:center;	
-
+*/
+#modal_info, #modal_delete, #modal_login {
+	display: none;
 }
 .my-center {
 	display: flex;
