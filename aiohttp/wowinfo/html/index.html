@@ -319,8 +319,11 @@
 		// 차트에서 포인트 갯수를 정의합니다
 		window.chart_column_num = 24;
 		window.cur_itemset = '${current_itemset}';
+		window.cur_itemset_code = '${current_itemset_code}';
 		window.socket = 0;
-		window.cur_user = 'guest';
+		##window.cur_user = 'guest';
+		window.cur_user = '${user}';
+		window.cur_user_code = '${user_code}';
 		window.itemsets = [];
 		window.items = {};
 		window.img_host = 'https://wow.zamimg.com/images/wow/icons/large/';
@@ -355,9 +358,35 @@
 				openForm(num);
 			}
 		}
+		function loginned() {
+			## 로그인 버튼을 변경해줍니다
+		}
 
 		function submit_createid_form() {
-			alert('생성 서밋');
+			show_spinner();
+			var name = document.getElementById('input-createid').value;
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var data = JSON.parse(this.responseText);
+					if(data.success == '1') {
+						document.getElementById('input-createid').value = '';
+						$('#modal_createid').modal('hide');
+						code = data.code;
+						cur_user_code = code;
+						window.history.pushState('', '', '/u/' + cur_user_code + '/default');
+						cur_user = data.name;
+						rq_itemsets(function (){change_itemset(cur_user);});
+						loginned();
+					}
+					else {
+						show_modal_info('이미 있는 이름입니다', 1100);
+					}
+					hide_spinner();
+				}
+			};
+			xhttp.open("GET", '/create_user/' + name , true);
+			xhttp.send();
 		}
 		function submit_login_form() {
 			alert('로긴 서밋');
@@ -518,9 +547,18 @@
 		function create_itemset() {
 			openSetForm();
 		}
+		function checkif_defaultset(itemset) {	
+			var ret = 0;
+			if((cur_user=='guest' && itemset == '기본구성') || (cur_user!='guest' && itemset==cur_user)) {
+				ret = 1;
+			}
+			return ret;
+		}
 
-		function coloring_setbutton(cur_set) {
-			if(cur_set.trim() == '기본구성') {
+		function coloring_setbutton(cur_itemset) {
+			##if((cur_user=='guest' && cur_itemset == '기본구성') || (cur_user!='guest' && cur_itemset==cur_user)) {
+			if(checkif_defaultset(cur_itemset)) {
+			##if(cur_set.trim() == '기본구성') {
 				document.getElementById("button_itemset").className = \
 					'btn btn-secondary btn-large btn-block dropdown-toggle text-warning';
 			}
@@ -543,7 +581,8 @@
 				i_server = serverlist[i];
 				if(i_server != server){
 					document.getElementById("div_serverlist").innerHTML += \
-						"<a id='server" + i + "' class='dropdown-item text-center' href='#'" + \
+						"<a id='server" + i + \
+						"' class='dropdown-item text-center' href='javascript:;'" + \
 						"onclick='change_server(\""+ i_server + "\")';>" + i_server + "</a>";
 				}
 			}
@@ -560,14 +599,16 @@
 			// 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
 			cur_itemset = itemset;
 			document.getElementById("div_itemlist").innerHTML = ""; 
-			for(let it=0;it<itemsets.length;it++){
+			ilen = itemsets.length;
+			for(let it=0;it<ilen;it++){
 				// cur_itemset이 아닌 항목들만 추가합니다
 				if(itemsets[it] != itemset){
 					document.getElementById("div_itemlist").innerHTML += "\
-				<a id='itemlist" + it +"' class='dropdown-item text-center' href='#' onclick='change_itemset(\"" + itemsets[it] + "\");'>" + itemsets[it] + "</a>";
+				<a id='itemlist" + it +"' class='dropdown-item text-center' href='javascript:;' onclick='change_itemset(\"" + itemsets[it] + "\");'>" + itemsets[it] + "</a>";
 				}
 			}
-			if(itemset == '기본구성') {
+			if(checkif_defaultset(itemset)) {
+			##if((cur_user=='guest' && itemset == '기본구성') || (cur_user!='guest' && itemset==cur_user)) {
 				document.getElementById("button_itemset").innerHTML = \
 				"<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;" + itemset;
 			}
@@ -585,6 +626,9 @@
 			// 역시 vanilla js 로 변경해봅니다
 			rq_itemset(itemset);
 			update_itemset_dropdown();
+			if(cur_user != 'guest') {
+				window.history.pushState('', '', '/u/' + cur_user_code + '/' + cur_itemset_code);
+			}
 		}
 
 		function progress_start(id_, color_){
@@ -660,16 +704,18 @@
 			
 			## 새로만들기항목
 			document.getElementById("div_itemlist").innerHTML += "\
-			<a id='itemlist0' class='dropdown-item text-center font-weight-bolder text-info' href='#' onclick='create_itemset();'> <i class='fas fa-folder-open' style='font-weight:lighter;font-size:1.0em;'>&nbsp;</i>" + itemsets[0] + "</a>";
+			<a id='itemlist0' class='dropdown-item text-center font-weight-bolder text-info' href='javascript:;' onclick='create_itemset();'> <i class='fas fa-folder-open' style='font-weight:lighter;font-size:1.0em;'>&nbsp;</i>" + itemsets[0] + "</a>";
 			## 아이템세트들
 			window.dropdown_pair = {};
 			for(let it=1;it<itemsets.length;it++){			//0이 아닌 1부터시작 
 				## cur_itemset이 아닌 항목들만 추가합니다
 				var cur = itemsets[it];
 				if(cur != cur_itemset){
-					if(cur == '기본구성') {
+					##alert(cur + ',' + cur_user);
+					if(checkif_defaultset(cur)) {
+					##if((cur_user=='guest' && cur == '기본구성') || (cur_user!='guest' && cur==cur_user)) {
 						document.getElementById("div_itemlist").innerHTML += " \
-						<a id='itemlist" + it +"' class='dropdown-item text-center text-warning' href='#' onclick='change_itemset(\"" + cur + "\");'><i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;" + cur + "</a>";
+						<a id='itemlist" + it +"' class='dropdown-item text-center text-warning' href='javascript:;' onclick='change_itemset(\"" + cur + "\");'><i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;" + cur + "</a>";
 					}
 					else {
 						## 아이템명 뒤에 휴지통을 추가합니다
@@ -678,7 +724,7 @@
 							"<div id='dropdown-delete" + it + "' class='dropdown-delete'>" + 
 							"<i class='far fa-trash-alt text-muted'></i></div>" +
 							"<a id='itemlist" + it +"' class='dropdown-item text-center'" +
-							"href='#' onclick='change_itemset(\"" + cur + "\");'>" + cur + "</a>";
+							"href='javascript:;' onclick='change_itemset(\"" + cur + "\");'>" + cur + "</a>";
 					}
 				}
 			}
@@ -697,7 +743,10 @@
 				}
 			}
 			
-			if(cur_itemset == '기본구성') {
+			## 아이콘 데코레이션 작업
+			if(checkif_defaultset(cur_itemset)) {
+			##if((cur_user=='guest' && cur_itemset == '기본구성') || (cur_user!='guest' && cur_itemset==cur_user)) {
+			##if(cur_itemset == '기본구성') {
 				document.getElementById("button_itemset").innerHTML = "<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;" + cur_itemset; 
 			}
 			else {
@@ -792,7 +841,7 @@
 				i_server = serverlist[i];
 				if(i_server != server){
 					document.getElementById("div_serverlist").innerHTML += \
-						"<a id='server" + i + "' class='dropdown-item text-center' href='#'" + \
+						"<a id='server" + i + "' class='dropdown-item text-center' href='javascript:;'" + \
 						"onclick='change_server(\""+ i_server + "\")';>" + i_server + "</a>";
 				}
 			}
@@ -871,7 +920,6 @@
 					if (this.status == 200) {
 						var data = JSON.parse(this.responseText);
 						if(data.success == '1') {
-							## 생성성공하였을 경우 처리합니다
 							document.getElementById('input-itemset').value = '';
 							## 아래 생성 주석과 달리 delete는 콜백으로 추가 아이템 선택 루틴이 필요없습니다
 							## callback을 추가하여 itemsets 업데이트 후 해당이름의 아이템으로 change합니다
@@ -900,6 +948,9 @@
 		}
 		function closeDeleteModal() {
 			$('#modal_delete').modal('hide');
+		}
+		function closeCreateIDModal() {
+			$('#modal_createid').modal('hide');
 		}
 
 		function openSetForm() {
@@ -946,6 +997,7 @@
 						closeSetForm();
 						closeLoginForm();
 						closeDeleteModal();
+						closeCreateIDModal();
 					}
 				});
 			}
@@ -1118,17 +1170,22 @@
 					l_ = Object.keys(data_);
 					if(l_ < 5) {
 						##alert('이미 삭제된 세트입니다');
+						show_modal_info('없는 세트명입니다', 1300);
 						setTimeout(rq_itemsets(function (){change_itemset('기본구성');}),100);
 						##setTimeout(change_itemset('기본구성'),100);
 					}
-					s_ = l_.length;
-					for (let i=0;i < s_;i++) {
-						rq_itemdata(i, data_[i]['item']);
+					else {
+						s_ = l_.length;
+						cur_itemset_code = data.code; 
+						alert(cur_itemset_code);
+						for (let i=0;i < s_;i++) {
+							rq_itemdata(i, data_[i]['item']);
+						}
 					}
 				}
 			};
 			var dummy = new Date().getTime();
-			xhttp.open("GET", '/rq_itemset/' + itemset + '/' + dummy, true);
+			xhttp.open("GET", '/rq_itemset/' + cur_user + '/' + itemset + '/' + dummy, true);
 			xhttp.send();
 		}
 

@@ -59,7 +59,8 @@ tbl_item_set = sa.Table('item_set', metadata,
         sa.Column('set_name', sa.String(128)),
         sa.Column('itemname_list', sa.String(512)),
         sa.Column('edited_time', sa.String(128)),
-        sa.Column('user', sa.String(128)))
+        sa.Column('user', sa.String(128)),
+        sa.Column('set_code', sa.String(16)))
 
 # wow_server_info 테이블입니다
 tbl_wow_server_info = sa.Table('wow_server_info', metadata,
@@ -67,3 +68,8 @@ tbl_wow_server_info = sa.Table('wow_server_info', metadata,
         sa.Column('dumped_time', sa.String(128)),
         sa.Column('region', sa.String(128)),
         sa.Column('info', sa.Text))
+# users 테이블입니다
+tbl_users = sa.Table('users', metadata,
+        sa.Column('name', sa.String(255)),
+        sa.Column('code', sa.String(128)),
+        sa.Column('last_access', sa.Numeric))

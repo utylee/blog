@@ -9,6 +9,8 @@ from collections import defaultdict
 import math
 import datetime
 import time
+import random
+import string
 
 import sqlalchemy as sa
 from sqlalchemy import select
@@ -470,18 +472,19 @@ async def deco_dictset(data):
 
     return data
 '''
-async def get_item_set(conn, setname):
+async def get_item_set(conn, user, setname):
     itemlist = []
 
     #async for r in conn.execute(tbl_item_set.select(tbl_item_set.c.itemname_list).where(tbl_item_set.c.set_name==setname)) :
-    print(f'setname:{setname}');
     log.info(f'setname:{setname}');
-    async for r in conn.execute(db.tbl_item_set.select().where(db.tbl_item_set.c.set_name==setname)) :
+    #async for r in conn.execute(db.tbl_item_set.select().where(db.tbl_item_set.c.set_name==setname)) :
+    async for r in conn.execute(select([db.tbl_item_set.c.set_code, db.tbl_item_set.c.itemname_list])
+            .where(and_((db.tbl_item_set.c.user==user),(db.tbl_item_set.c.set_name==setname)))):
+        code = r[0]
         itemlist = r[1].split(',')
 
-    print(itemlist)
-    log.info(itemlist)
-    return itemlist
+    log.info(f'{code}, {itemlist}')
+    return code, itemlist
 
 async def get_decoed_item(engine, server, user_, itemset_, pos_, name_, fullstr=''):
     dict_ = {}
@@ -630,6 +633,27 @@ async def get_decoed_item_set(server, setname):
 
     return dict_
 '''
+async def create_user(engine, name, defaultset):
+    success = 0
+    dict_ = {}
+    code = ''
+
+    async with engine.acquire() as conn:
+        found = 0
+        async for r_ in conn.execute(db.tbl_users.select().where(db.tbl_users.c.name==name)):
+            found += 1
+        # 이미 있는 경우는 생성하지 않습니다
+        if(found == 0):
+            _, itemlist = await get_item_set(conn, 'guest', defaultset)    # 초기로 '기본구성'리스트를 넣슴다
+            itemstring = ','.join(itemlist)
+            code = randomstring(7)
+            cur = round(time.time())
+            await conn.execute(db.tbl_users.insert().values(name=name,
+                                                    code=code,
+                                                    last_access=cur))
+            await create_itemset(engine, name, name, '', defaultset) # defaultuser = ''
+            success = 1
+    return success, code
 
 async def create_itemset(engine, user, setname, defaultuser, defaultset):
     success = 0
@@ -637,15 +661,23 @@ async def create_itemset(engine, user, setname, defaultuser, defaultset):
 
     async with engine.acquire() as conn:
         found = 0
+        code = ''
         async for r_ in conn.execute(db.tbl_item_set.select().where(and_((db.tbl_item_set.c.user==user),(db.tbl_item_set.c.set_name==setname)))):
             found += 1
         # 이미 있는 경우는 생성하지 않습니다
         if(found == 0):
-            itemlist = await get_item_set(conn, defaultset)    # 초기로 '기본구성'리스트를 넣슴다
+            code, itemlist = await get_item_set(conn, 'guest', defaultset)    # 초기로 '기본구성'리스트를 넣슴다
             itemstring = ','.join(itemlist)
+            #생성시 setname이 user이름과 동일하므로 이걸로 유저생성시 요청을 분간합니다
+            log.info(f'user:{user}, setname:{setname}')
+            if(user == setname):
+                code = 'default'
+            else:
+                code = randomstring(5)
             await conn.execute(db.tbl_item_set.insert().values(set_name=setname,
                                                     itemname_list=itemstring,
                                                     edited_time='',
+                                                    set_code=code,
                                                     user=user))
             success = 1
     return success
@@ -673,3 +705,13 @@ async def get_serverlist(engine):
     #serverlist = ['아즈샤라']
     log.info(f'serverlist = {serverlist}')
     return sorted(serverlist)
+
+async def get_user_from_code(engine, code):
+    async with engine.acquire() as conn:
+        async for r in conn.execute(db.tbl_users.select().where(db.tbl_users.c.code==code)):
+            user = r[0]
+    return user
+
+def randomstring(length):
+    return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(length))
+

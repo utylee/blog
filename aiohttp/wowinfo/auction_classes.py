@@ -30,11 +30,12 @@ class Set:
             return DefaultSet(self.setname)
         else:
             return NormalSet(self.setname)
-    async def get_only_itemset(self, engine):
+    async def get_only_itemset(self, engine, user):
         dict_ = {}
         fame = 0
         async with engine.acquire() as conn:
-            itemlist = await auc.get_item_set(conn, self.setname)
+            #itemlist = await auc.get_item_set(conn, self.setname)
+            code, itemlist = await auc.get_item_set(conn, user, self.setname)
             #for name_ in itemlist:
             #itemlist to dict
             for _ in itemlist:
@@ -44,7 +45,7 @@ class Set:
                 dict_[num_] = {}
                 dict_[num_]['num'] = num_
                 dict_[num_]['item'] = name_
-        return dict_
+        return code, dict_
 
     async def get_decoed_item_set(self, engine, server):
         pass
@@ -57,7 +58,7 @@ class NormalSet(Set):
     async def update_itemset_(self, engine, user, itemset_, pos_, name_, fullstr):
         async with engine.acquire() as conn:
             b_create = 0
-            itemset_l = await auc.get_item_set(conn, itemset_)
+            code, itemset_l = await auc.get_item_set(conn, user, itemset_)
             temp_l = []
             if(not len(itemset_l)):
                 b_create = 1
@@ -81,9 +82,11 @@ class NormalSet(Set):
                                 .values(itemname_list=ret_str))
         else: 
             # 해당 셋이 삭제되었으므로 itemset 을 그대로 만들어줍니다
+            code = auc.randomstring(5) 
             await conn.execute(db.tbl_item_set.insert().values(set_name=itemset_,
                                                     itemname_list=ret_str,
                                                     edited_time='',
+                                                    set_code=code, 
                                                     user=user))
 
     async def get_decoed_item_set(self, engine, server):
