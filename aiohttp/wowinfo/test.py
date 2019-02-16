@@ -102,6 +102,7 @@ async def user(request):
     global serverlist
     log.info('/user handler came in')
     user_code = request.match_info['user_code']
+    currentset = ''
     currentset_code = ''
     try: 
         currentset_code = request.match_info['itemset_code']
@@ -111,8 +112,13 @@ async def user(request):
         log.info(f'exeption!! itemset_code: {currentset_code}')
     
     user = await auc.get_user_from_code(request.app['db'], user_code)
-    itemset = await auc.get_itemset_from_code(request.app['db'], user_code)
-    currentset = user
+    log.info(f'{user}')
+    currentset = await auc.get_itemset_from_code(request.app['db'], user, currentset_code)
+    log.info(f'{currentset}')
+    #해당코드의 아이템셋이 없을 경우 default인 user를 줍니다
+    if(not currentset):
+        currentset = user
+        currentset_code = 'default'
     #최적화를 위해서 굳이 db에서 가져오지 않습니다. 0.2초 단축 200ms
     #itemsets = await get_itemsets()
     itemsets = []
@@ -121,6 +127,7 @@ async def user(request):
     #dict_ = await set_.get_decoed_item_set(server)
     dict_ = {}
 
+    log.info('last')
     return {'name': '7', 'imageroot': imageroot ,'ar':dict_, 'server':server, 'user':user, 
             'user_code':user_code, 'serverlist':serverlist, 'itemsets': itemsets,
             'current_itemset':currentset, 'current_itemset_code':currentset_code}

@@ -1018,6 +1018,10 @@
 		document.addEventListener("DOMContentLoaded", function(){
 			itemsets = ${itemsets};
 			serverlist = ${serverlist};
+			if(cur_user!='guest') {
+				window.history.pushState('', '', '/u/' + cur_user_code + '/' + cur_itemset_code);
+			}
+
 			window.checked = new Array;
 			if(window.addEventListener) {
 				window.addEventListener("keydown", function (event) {

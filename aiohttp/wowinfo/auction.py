@@ -727,6 +727,22 @@ async def get_user_from_code(engine, code):
             user = r[0]
     return user
 
+async def get_itemset_from_code(engine, user, code):
+    itemset = ''
+    log.info('comein')
+    log.info(f'{user},{code}')
+    async with engine.acquire() as conn:
+        #async for r in conn.execute(select([db.tbl_item_set.c.set_name]).where(and_(db.tbl_item_set.c.set_code==code),(db.tbl_item_set.c.user==user))):
+        try:
+            async for r in conn.execute(db.tbl_item_set.select().where(and_((db.tbl_item_set.c.set_code==code),(db.tbl_item_set.c.user==user)))):
+            #async for r in conn.execute(select([db.tbl_arranged_auction.c.item]).where(and_(db.tbl_arranged_auction.c.server==server),(db.tbl_arranged_auction.c.item==id_))):
+                log.info('comein')
+                itemset = r[0]
+        except:
+            log.info('why??')
+    log.info(f'{itemset}')
+    return itemset
+
 def randomstring(length):
     return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(length))
 
