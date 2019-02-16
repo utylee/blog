@@ -102,9 +102,16 @@ async def user(request):
     global serverlist
     log.info('/user handler came in')
     user_code = request.match_info['user_code']
-    currentset_code = request.match_info['itemset_code']
+    currentset_code = ''
+    try: 
+        currentset_code = request.match_info['itemset_code']
+        log.info(f'itemset_code: {currentset_code}')
+    except:
+        currentset_code = 'default'
+        log.info(f'exeption!! itemset_code: {currentset_code}')
     
     user = await auc.get_user_from_code(request.app['db'], user_code)
+    itemset = await auc.get_itemset_from_code(request.app['db'], user_code)
     currentset = user
     #최적화를 위해서 굳이 db에서 가져오지 않습니다. 0.2초 단축 200ms
     #itemsets = await get_itemsets()
@@ -120,7 +127,25 @@ async def user(request):
 
 
 async def login(request):
+    log.info('/login handler came in')
+    user = request.match_info['user_name']
     data = {}
+    start_time = time.time()
+    success, code = await auc.login(request.app['db'], user)
+    finished_time = time.time()
+    proc_time = round(finished_time - start_time, 3)
+    log.info(f'login success: {success}, code:{code} ({proc_time})초')
+    data['name'] = user
+    data['code'] = code
+    data['success'] = success
+
+    start_time = time.time()
+    data['itemsets'] = await get_itemsets(request, user)
+    finished_time = time.time()
+    proc_time = round(finished_time - start_time, 3)
+    log.info(data)
+    log.info(f'login get_itemsets:: fetch elapsed time: {proc_time} 초')
+
     return web.json_response(data)
 
 async def create_user(request):
@@ -330,7 +355,7 @@ async def handle(request):
     set_ = a_cl.Set(currentset).fork()
     #dict_ = await set_.get_decoed_item_set(server)
     dict_ = {}
-    currentset_code = ''
+    currentset_code = 'default'
 
     '''
     return {'name': '7', 'imageroot': '../static/images/' ,'ar':ar, 'server':server,
@@ -357,7 +382,8 @@ async def init(app):
 
     #app.router.add_static('/static', 'static')
     app.router.add_get('/', handle)
-    app.router.add_get('/u/{user_code}/{itemset_code}', user)
+    app.router.add_get('/u/{user_code}/{itemset_code:.*}', user)
+    app.router.add_get('/u/{user_code}', user)
     app.router.add_get('/update/{server}/{cur_user}/{itemset}/{dummy}', update)
     app.router.add_get('/update/{server}/{cur_user}/{itemset}', update)
     app.router.add_get('/rq_servertime/{server}/{dummy}', rq_servertime)
@@ -371,6 +397,7 @@ async def init(app):
     #app.router.add_get('/update_indiv/{num}/{server}/{cur_user}/{cur_itemset}/{itemname}/{dummy}',
                                 #update_indiv)
     app.router.add_get('/create_user/{user_name}', create_user)
+    app.router.add_get('/login/{user_name}', login)
     app.router.add_get('/create_itemset/{cur_user}/{setname}', create_itemset)
     app.router.add_get('/delete_itemset/{cur_user}/{setname}', delete_itemset)
 
@@ -481,7 +508,7 @@ async def get_itemsets(request, user):
     async with request.app['db'].acquire() as conn:
         async for r in conn.execute(di.tbl_item_set.select().where(di.tbl_item_set.c.user==user)):
             itemset_names.append(r[0])
-    return itemset_names
+    return sorted(itemset_names)
 
 #web.run_app(init(),port=7777)
 if __name__ == '__main__':

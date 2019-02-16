@@ -374,13 +374,16 @@
 						$('#modal_createid').modal('hide');
 						code = data.code;
 						cur_user_code = code;
-						window.history.pushState('', '', '/u/' + cur_user_code + '/default');
+						cur_itemset_code = 'default';
+						##window.history.pushState('', '', '/u/' + cur_user_code + '/default');
 						cur_user = data.name;
 						rq_itemsets(function (){change_itemset(cur_user);});
 						loginned();
 					}
 					else {
+						$('#modal_createid').modal('hide');
 						show_modal_info('이미 있는 이름입니다', 1100);
+						setTimeout(function (){$('#modal_createid').modal();}, 1000);
 					}
 					hide_spinner();
 				}
@@ -388,8 +391,36 @@
 			xhttp.open("GET", '/create_user/' + name , true);
 			xhttp.send();
 		}
+
 		function submit_login_form() {
-			alert('로긴 서밋');
+			show_spinner();
+			var name = document.getElementById('input-login').value;
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var data = JSON.parse(this.responseText);
+					if(data.success == '1') {
+						document.getElementById('input-login').value = '';
+						$('#modal_login').modal('hide');
+						cur_user_code = data.code;
+						cur_user = data.name;
+						itemsets = data.itemsets;
+						update_itemset_dropdown();
+						## 해당아이디의 디폴트 세트명은 유저이름이라
+						change_itemset(cur_user);	
+						##rq_itemsets(function (){change_itemset(cur_user);});
+						loginned();
+					}
+					else {
+						$('#modal_login').modal('hide');
+						show_modal_info('없는 사용자입니다', 1100);
+						setTimeout(function (){$('#modal_login').modal();}, 1000);
+					}
+					hide_spinner();
+				}
+			};
+			xhttp.open("GET", '/login/' + name , true);
+			xhttp.send();
 		}
 		function submit_item_form(num) {
 			##alert('div-form-item'+num);
@@ -570,7 +601,6 @@
 
 		function change_server(srver){
 			## 이후 각 드롭다운 항목들을 새로 만들어 교체해줍니다
-			##window.history.pushState("", "", "/blog/blog/");
 			show_spinner();
 			window.server = srver;
 			rq_itemset(cur_itemset);
@@ -624,11 +654,14 @@
 			## xmlrequest 전송전 버튼색상을 변경합니다
 			show_spinner();
 			// 역시 vanilla js 로 변경해봅니다
-			rq_itemset(itemset);
-			update_itemset_dropdown();
-			if(cur_user != 'guest') {
-				window.history.pushState('', '', '/u/' + cur_user_code + '/' + cur_itemset_code);
-			}
+			rq_itemset(itemset, function () {
+					if(cur_user != 'guest') {
+						window.history.pushState('', '', '/u/' + cur_user_code + '/' + cur_itemset_code);
+					}
+					update_itemset_dropdown();
+			});
+			##alert('in change_itemset: ' + cur_user + '/'+ cur_itemset_code +' 들와야하는디');
+			##update_itemset_dropdown();
 		}
 
 		function progress_start(id_, color_){
@@ -1066,6 +1099,16 @@
 					document.getElementById("input-login").focus();
 				}
 			}, false);
+			document.getElementById("icon-createid-cancel").addEventListener('click', function() { \
+				tt = document.getElementById("input-createid").value; 
+				if(tt == '') {
+					closeCreateIDModal();
+				}
+				else {
+					document.getElementById("input-createid").value=''; 
+					document.getElementById("input-createid").focus();
+				}
+			}, false);
 
 			//update_charts(${ar});
 			setupWebSocket();
@@ -1160,7 +1203,7 @@
 			xhttp.send();
 		}
 
-		function rq_itemset(itemset) {
+		function rq_itemset(itemset, fn_callback=0) {
 			// 역시 vanilla js 를 사용해 봅니다
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
@@ -1177,9 +1220,13 @@
 					else {
 						s_ = l_.length;
 						cur_itemset_code = data.code; 
-						alert(cur_itemset_code);
+						##alert('in rq_itemset:' + cur_itemset_code);
+						##window.history.pushState('', '', '/u/' + cur_user_code + '/' + cur_itemset_code);
 						for (let i=0;i < s_;i++) {
 							rq_itemdata(i, data_[i]['item']);
+						}
+						if(fn_callback) {
+							fn_callback();
 						}
 					}
 				}

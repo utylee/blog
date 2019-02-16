@@ -363,6 +363,7 @@ async def get_item(id):
         async with sess.get(item_req_url) as resp:
             js = json.loads(await resp.text())
 
+    #log.info(js)
     #print(js['name'])
     # 데이터를 못가져오는 경우가 발생해 아래와 같은 루틴을 추가했습니다. 
     if js.get('status') is not None:
@@ -652,6 +653,20 @@ async def create_user(engine, name, defaultset):
                                                     code=code,
                                                     last_access=cur))
             await create_itemset(engine, name, name, '', defaultset) # defaultuser = ''
+            success = 1
+    return success, code
+
+async def login(engine, name):
+    success = 0
+    dict_ = {}
+    code = ''
+
+    async with engine.acquire() as conn:
+        found = 0
+        code = ''
+        async for _ in conn.execute(select([db.tbl_users.c.code]).where(db.tbl_users.c.name==name)):
+            code = _[0]
+            found += 1
             success = 1
     return success, code
 
