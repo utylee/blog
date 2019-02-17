@@ -535,9 +535,13 @@ async def get_decoed_item(engine, server, user_, itemset_, pos_, name_, fullstr=
         # 현재 itemset의 해당 아이템 칸 값을 새 아이템명으로 변경해줍니다
         # 별도의 task로 실행시켜 최대한 일단 사용자에게 반응을 먼저하도록 노력합니다
         # itemset이 입력되지 않은 경우(update_indiv가 아닌 rq_item 에서의 요청)는 itemset update를 생략합니다
-        if(itemset_):
-            log.info('itemset이 입력되어 수정해줍니다')
+        #log.info(f'itemset_:{itemset_}, dict_:{dict_}')
+        if(itemset_ and dict_):
+            log.info('itemset은 입력된 update_indiv의 콜입니다. 세트종류를 보고 수정해줍니다')
+            log.info(f'cur_itemset:{itemset_}')
             set_ = a_cl.Set(itemset_).fork()
+            log.info('forked')
+            log.info(f'user_:{user_}, pos_:{pos_}, name_:{name_}, fullstr:{fullstr}')
             await set_.update_itemset(engine, user_, itemset_, pos_, name_, fullstr)
     return dict_
 

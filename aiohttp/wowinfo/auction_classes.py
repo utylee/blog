@@ -49,10 +49,11 @@ class Set:
 
     async def get_decoed_item_set(self, engine, server):
         pass
-    async def update_itemset(self, engine, itemset_, pos_, name_, fullstr=''):
+    async def update_itemset(self, engine, user, itemset_, pos_, name_, fullstr=''):
         pass
 class NormalSet(Set):
     async def update_itemset(self, engine, user, itemset_, pos_, name_, fullstr=''):
+        log.info('came into NormalSet::update_itemset')
         loop = asyncio.get_event_loop()
         loop.create_task(self.update_itemset_(engine, user, itemset_, pos_, name_, fullstr))
     async def update_itemset_(self, engine, user, itemset_, pos_, name_, fullstr):
@@ -160,8 +161,9 @@ class NormalSet(Set):
 
 
 class DefaultSet(Set):
-    async def update_itemset(self, engine, itemset_, pos_, name_):
+    async def update_itemset(self, engine, user, itemset_, pos_, name_, fullstr=''):
         #업데이트하지 않습니다
+        log.info('came into Defaultset::update_itemset')
         return
     async def get_decoed_item_set(self, engine, server):
         print('fetch with NO fame ')

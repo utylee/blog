@@ -118,7 +118,7 @@ input[type=radio] {
 	display: none;
 }
 */
-#modal_info, #modal_delete, #modal_login {
+#modal_info, #modal_delete, #modal_login, #modal_login_with_createid {
 	display: none;
 }
 .my-center {

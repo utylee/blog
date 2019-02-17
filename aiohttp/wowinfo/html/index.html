@@ -177,6 +177,29 @@
 		</div>
 	</div>
 
+	<div id="modal_login_with_createid" class="modal fade">
+		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div style="height:10px;"></div>
+						<p style="font-size:1.1rem;">
+							이미 있는 이름입니다.<br>
+							<span id="modal_login_create_confirm_text" class="text-success">
+							</span>
+							(으)로 로그인할까요?
+							<br>
+						</p>
+						<div class="confirm_or_cancel" style="display:flex;flex-wrap:nowrap;margin-top:10px;">
+						<button class="btn btn-large btn-info" style="width:80px;height:40px;font-size:1.1rem" onclick="login_with_createid_confirm();">로그인</button>
+						<div style="width:10px;"></div>
+						<button class="btn btn-large btn-secondary" style="width:80px;height:40px;font-size:1.1rem" data-dismiss="modal">취소</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<div id="modal_delete" class="modal fade">
 		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
@@ -346,7 +369,6 @@
 				$('#input-login').focus();
 			});
 			$('#modal_login').modal();
-
 		}
 		function show_item_form(num) {
 			##alert('div-form-item'+num);
@@ -382,8 +404,9 @@
 					}
 					else {
 						$('#modal_createid').modal('hide');
-						show_modal_info('이미 있는 이름입니다', 1100);
-						setTimeout(function (){$('#modal_createid').modal();}, 1000);
+						show_modal_login_confirm(data.name);
+						##show_modal_info('이미 있는 이름입니다', 1100);
+						##setTimeout(function (){$('#modal_createid').modal();}, 1000);
 					}
 					hide_spinner();
 				}
@@ -434,16 +457,16 @@
 				xhttp.onreadystatechange = function() {
 					if(this.readyState == 4 && this.status == 200) {
 						var data = JSON.parse(this.responseText);
-						##update_indiv(data);
-						update_item_area(data.num, data.indiv_ar);
+						if(data.success) {
+							update_item_area(data.num, data.indiv_ar);
+						}
+						else {
+							show_modal_info('없는 아이템입니다', 800);
+						}
 					}
 				};
 				fullstr = collect_items_tostring(num, i_name);
 				var dummy = new Date().getTime();
-				<%doc>
-				##xhttp.open("GET", '/update_indiv/' + num + '/' + server + '/' + \
-								##cur_user + '/' + cur_itemset + '/' + i_name,true);
-				</%doc>
 				xhttp.open("GET", '/update_indiv/' + num + '/' + server + '/' + cur_user 
 								+ '/' + cur_itemset + '/' + i_name + '/' + fullstr + '/' + dummy,true);
 				xhttp.send();
@@ -936,9 +959,12 @@
 		}
 
 		function show_modal_delete(setname) {
-			window.delete_name = setname;
 			document.getElementById('delete_name').innerHTML = setname;
 			$('#modal_delete').modal();
+		}
+		function show_modal_login_confirm(id) {
+			document.getElementById('modal_login_create_confirm_text').innerHTML = id;
+			$('#modal_login_with_createid').modal();
 		}
 
 		function delete_confirm() {
@@ -984,6 +1010,9 @@
 		}
 		function closeCreateIDModal() {
 			$('#modal_createid').modal('hide');
+		}
+		function closeLoginWithCreateIDModal() {
+			$('#modal_login_with_createid').modal('hide');
 		}
 
 		function openSetForm() {
@@ -1035,6 +1064,7 @@
 						closeLoginForm();
 						closeDeleteModal();
 						closeCreateIDModal();
+						closeLoginWithCreateIDModal();
 					}
 				});
 			}

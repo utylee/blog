@@ -190,7 +190,6 @@ async def delete_itemset(request):
     return web.json_response(data)
 
 async def update_indiv(request):
-    print('/update_indiv handler came in')
     log.info('/update_indiv handler came in')
     pos_no = request.match_info['num']
     item_name = request.match_info['itemname']
@@ -207,15 +206,19 @@ async def update_indiv(request):
     l_full.pop(num)
     log.info(f'remain_str:{l_full}')
     '''
+    success = 1
     a = time.time()
     indiv_ar = await auc.get_decoed_item(request.app['db'], srver, user, item_set, pos_no, item_name, fullstr)
     b = time.time()
     sub = round(b - a,2)
     print(f':{sub}초 소요')
     log.info(f':{sub}초 소요')
+    if(not indiv_ar):
+        success = 0
     data = {}
     data['indiv_ar'] = indiv_ar 
     data['num'] = pos_no
+    data['success'] = success
 
     return web.json_response(data)
 
