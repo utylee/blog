@@ -1,0 +1,7 @@
+*.min.css
+*.min.js
+*.*.min.js
+*.*.min.css
+*bootswatch*css
+*.json
+*.bak
