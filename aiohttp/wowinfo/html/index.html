@@ -177,7 +177,8 @@
 		</div>
 	</div>
 
-	<div id="modal_login_with_createid" class="modal fade">
+	## addeventlistener 'keydown' 이 가능하려면 아래처럼 div에 tabindex를 줘야한다고 합니다 -1부터 가능
+	<div tabindex="0" id="modal_login_with_createid" class="modal fade">
 		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
 			<div class="modal-content">
 				<div class="modal-content">
@@ -415,9 +416,15 @@
 			xhttp.send();
 		}
 
-		function submit_login_form() {
+		function submit_login_form(str='') {
 			show_spinner();
-			var name = document.getElementById('input-login').value;
+			var name = '';
+			if(str) {
+				name = str;
+			}
+			else {
+				name = document.getElementById('input-login').value;
+			}
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
@@ -462,6 +469,7 @@
 						}
 						else {
 							show_modal_info('없는 아이템입니다', 800);
+							setTimeout(function (){openForm(num);}, 900);
 						}
 					}
 				};
@@ -967,6 +975,14 @@
 			$('#modal_login_with_createid').modal();
 		}
 
+		function login_with_createid_confirm() {
+			$('#modal_login_with_createid').modal('hide');
+			var id = document.getElementById('modal_login_create_confirm_text').innerHTML;
+			submit_login_form(id); 
+			document.getElementById('modal_login_create_confirm_text').innerHTML = '';
+			document.getElementById('input-createid').value='';
+		}
+
 		function delete_confirm() {
 			setname = delete_name;
 			$('#modal_delete').modal('hide');
@@ -1086,6 +1102,12 @@
 				alert('??');
 			}
 			</%doc>
+
+			document.getElementById('modal_login_with_createid').addEventListener('keydown', function (event) {
+				if(event.key == "Enter"){
+					login_with_createid_confirm();
+				}
+			});
 
 			## explorer 11 에서 let 이 제대로 지원안된다고 합니다.MDN에 따르면,
 			## function scope밖에 없으므로classic한 방법인 별도의 function에서 생성하는 방법을 택했습니다
