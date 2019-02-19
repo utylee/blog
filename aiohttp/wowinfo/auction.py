@@ -3,7 +3,8 @@ import asyncio
 #import requests        # 비동기 방식인 aiohttp.ClientSession().get()으로 바꾸기로 합니다
 import aiohttp
 import aiofiles
-import json
+#import json
+import ujson as json
 import pycurl
 from collections import defaultdict
 import math
@@ -203,7 +204,6 @@ async def db_update_from_server(engine, server, defaultset):
         end_a = time.time()
         elap_a = round(end_a - start_a, 2)
         elap_a_min = round(elap_a / 60)
-        print(f'JSON 파싱 소요시간: {elap_a} 초({elap_a_min}분)')
         log.info(f'JSON 파싱 소요시간: {elap_a} 초({elap_a_min}분)')
 
 
@@ -424,17 +424,13 @@ async def get_item_name_and_icon(conn, item_id):
             result = 2  # 모두 있는 경우
     #해당 아이템이 로컬 테이블에 없다면 받아온 후 로컬 테이블에 저정합니다
     if result == 0:
-        print(f'### item no. {item_id} 이 로컬에 없기에 battlenet dev를 통해 가져옵니다...')
         log.info(f'### item no. {item_id} 이 로컬에 없기에 battlenet dev를 통해 가져옵니다...')
         name, icon_name = await get_item(item_id)
-        print(f'name: {name}, icon_name: {icon_name}')
         log.info(f'name: {name}, icon_name: {icon_name}')
         await conn.execute(db.tbl_items.insert().values(id=int(item_id), name=name, icon_name=icon_name))
     elif result == 1:
-        print(f'### item no. {item_id} 의 icon_name은 비어있기에 battlenetdev를 통해 icon_name만 가져옵니다...')
         log.info(f'### item no. {item_id} 의 icon_name은 비어있기에 battlenetdev를 통해 icon_name만 가져옵니다...')
         name, icon_name = await get_item(item_id)
-        print(f'name: {name}, icon_name: {icon_name}')
         log.info(f'name: {name}, icon_name: {icon_name}')
         await conn.execute(db.tbl_items.update().where(db.tbl_items.c.id==int(item_id)).values(icon_name=icon_name))
 
@@ -664,14 +660,21 @@ async def login(engine, name):
     success = 0
     dict_ = {}
     code = ''
+    login_num = 0
 
     async with engine.acquire() as conn:
         found = 0
         code = ''
-        async for _ in conn.execute(select([db.tbl_users.c.code]).where(db.tbl_users.c.name==name)):
+        async for _ in conn.execute(select([db.tbl_users.c.code, db.tbl_users.c.login_num]).where(db.tbl_users.c.name==name)):
             code = _[0]
             found += 1
             success = 1
+            login_num = _[1]
+    '''
+        await conn.execute(db.tbl_users.update().where().values(name=name,
+                                                    code=code,
+                                                    last_access=cur))
+                                                    '''
     return success, code
 
 async def create_itemset(engine, user, setname, defaultuser, defaultset):

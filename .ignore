@@ -4,4 +4,7 @@
 *.*.min.css
 *bootswatch*css
 *.json
+*.svg
 *.bak
+*.log
+tags
