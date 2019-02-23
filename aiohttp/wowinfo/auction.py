@@ -22,6 +22,8 @@ import db_tableinfo as db
 import auction_classes as a_cl
 import logging
 
+import libruststringlib
+
 # db_proc에서 사용되느냐 wowinfo에서 사용되느냐에 따라 log 설정을 바뀌되록 합니다
 if(sys.argv[0][-10:] == 'db_proc.py'):
     log = logging.getLogger('dbproc')
@@ -186,7 +188,6 @@ async def db_update_from_server(engine, server, defaultset):
             # 해당아이템 딕트가 이미 존재할 경우
             else:
                 temp_dict[cur]['num'] = temp_dict[cur]['num'] + l['quantity']
-                temp_dict[cur]['num'] = temp_dict[cur]['num'] + l['quantity']
 
                 if (int(temp_dict[cur]['min']) == 0) or (price < temp_dict[cur]['min']):
                     temp_dict[cur]['min'] = price
@@ -234,9 +235,21 @@ async def db_update_from_server(engine, server, defaultset):
                 # min_chain 초기스트링만들기
                 # 30분씩 하루 48 데이터, 그것을 30배(한달치) 한 1440개의 데이터를 보관하기로 합니다
                 #1439개의 0을 ?로 구분하고 마지막은 현재 최저가 min을 넣어놓습니다
+
+                #<<optimized
+                _first = time.time()
                 for i_ in range(0, 1439):
                     str_chain = str_chain + '0?'
                 str_chain = str_chain + str(dict_['min'])
+                _last = time.time()
+                _before_op = _last - _first
+                #<------->
+                #_first = time.time()
+                #libruststringlib.make_init_chainstring(1440, dict_['min'])
+                #_last = time.time()
+                #_after_op = _last - _first
+                #>>
+                #log.info(f'<<op:: before:{_before_op}, after:{_after_op}>>')
 
                 await conn.execute(db.tbl_arranged_auction.insert().values(server=server,
                                                     item=id_,
@@ -252,16 +265,39 @@ async def db_update_from_server(engine, server, defaultset):
             else:
                 do_ = 0       # 튜플 업데이트 여부를 결정합니다.시간이 30분 이내면 삽입하지 않습니다
                 # str_chain 을 가져온 후 새 가격을 추가해줍니다
-                async for sel_ in conn.execute(db.tbl_arranged_auction.select().where(
-                        and_((db.tbl_arranged_auction.c.server==server),(db.tbl_arranged_auction.c.item==id_)))):
-                    last_timestamp = sel_[7]
+                _a = time.time()
+                async for sel_ in conn.execute(select([db.tbl_arranged_auction.c.min_chain, 
+                    db.tbl_arranged_auction.c.edited_timestamp])
+                    .where(and_((db.tbl_arranged_auction.c.server==server),
+                                (db.tbl_arranged_auction.c.item==id_)))):
+                #async for sel_ in conn.execute(db.tbl_arranged_auction.select().where(
+                        #and_((db.tbl_arranged_auction.c.server==server),(db.tbl_arranged_auction.c.item==id_)))):
+                    _b = time.time()
+                    _db_sel_time = _b - _a
+                    _a = time.time()
+                    #last_timestamp = sel_[7]
+                    last_timestamp = sel_[1]
                     cur_timestamp = round(time.time())
                     q_ = 0
                     if(last_timestamp is not None):
                         q_ = round((cur_timestamp - last_timestamp) / 1800) - 1 #반올림
                     #print(f'q_: {q_}')
-                    str_chain = sel_[5]
+                    #str_chain = sel_[5]
+                    str_chain = sel_[0]
                     l_chain = str_chain.split('?')
+
+                    #디버깅 중 숫자가 아닌 값이 잘못들어간 값이 있을 때 수동으로 주석지우고 행합니다.
+                    _n = 0
+                    for _ in l_chain:
+                        try:
+                            int(_)
+                        except:
+                            log.info('chain중 문자가 들어갔기에 수정합니다: {}->{}'.format(l_chain[_n],
+                                                                                    l_chain[_n-3]))
+                            l_chain[_n] = l_chain[_n-3]  # 두번이상 문자가 들어갔을 경우를 대비해 3개 전 값삽입
+                        finally:
+                            _n += 1
+
                     l_chain_len = len(l_chain)
                     if(l_chain_len != 1440):
                         print('!!! 가격 chain 개수가 맞지 않습니다. --> id: {}, {} 개'.format(id_,l_chain_len))
@@ -277,9 +313,21 @@ async def db_update_from_server(engine, server, defaultset):
                     if (q_ > 0):
                         last_cell = l_chain[-1]
                         # 30분 경과 횟수만큼 반복하여 마지막 값을 추가합니다
-                        for _ in range(0, q_):
-                            l_chain.append(last_cell)
-                        str_chain = '?'.join(l_chain[q_+1:]) + '?' + str(dict_['min'])
+                        #<<optimized
+                        #for _ in range(0, q_):
+                            #l_chain.append(last_cell)
+                        #<--->
+                        l_chain.extend([last_cell for _ in range(0, q_)])
+                        #>>
+
+                        #<<optimized #이건 벤치마트결과 차이가 없었습니다. 1개추가갖다가 해봤자라는 거
+                        #str_chain = '?'.join(l_chain[q_+1:]) + '?' + str(dict_['min'])
+                        #<---->
+                        l_chain_aug = l_chain[q_+1:]
+                        l_chain_aug.append(str(dict_['min']))
+                        str_chain = '?'.join(l_chain_aug)
+                        #>>
+
                         if(do_ == 2):
                             size_ = len(str_chain.split('?'))
                             print(f'수정후 사이즈:{size_}')
@@ -297,6 +345,10 @@ async def db_update_from_server(engine, server, defaultset):
                 if do_ == 0:
                     continue
 
+                _b = time.time()
+                _proc_time = _b - _a
+                _a = time.time()
+
                 await conn.execute(db.tbl_arranged_auction.update().where(and_((db.tbl_arranged_auction.c.server==server),(db.tbl_arranged_auction.c.item==id_))).values(num=dict_['num'],
                                                     min=dict_['min'],
                                                     min_seller=dict_['min_seller'],
@@ -304,6 +356,11 @@ async def db_update_from_server(engine, server, defaultset):
                                                     edited_time=dump_ts_str,
                                                     edited_timestamp=dump_ts,
                                                     image=dict_['image']))
+
+                _b = time.time()
+                _update_time = _b - _a
+                #print(f'each: db_select:{_db_sel_time}, proc:{_proc_time}, db_update:{_update_time}')
+                #log.info(f'each: db_select:{_db_sel_time}, proc:{_proc_time}, db_update:{_update_time}')
             #top_six = await worldcup_six(conn)
     
 
