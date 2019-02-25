@@ -113,6 +113,12 @@ input[type=radio] {
 	height: auto;
 	*/
 }
+#modal_logout {
+	/*
+	width: auto;
+	height: auto;
+	*/
+}
 /*
 #modal_delete {
 	display: none;
@@ -477,8 +483,17 @@ input[type="search"]::-webkit-search-decoration {
 }
 .menu_narrow {
 	width: 150px;
+	position:absolute;
 	height: 70px;
 	padding: 8px;
+}
+.menu_narrow_logout {
+	display: none;
+	position: absolute;
+	width: 150px;
+	height: 70px;
+	padding: 8px;
+	z-index: 10;
 }
 .icon-checkcircle {
 	padding-left:2rem;

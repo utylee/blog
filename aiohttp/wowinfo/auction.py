@@ -244,12 +244,12 @@ async def db_update_from_server(engine, server, defaultset):
                 _last = time.time()
                 _before_op = _last - _first
                 #<------->
-                #_first = time.time()
-                #libruststringlib.make_init_chainstring(1440, dict_['min'])
-                #_last = time.time()
-                #_after_op = _last - _first
+                _first = time.time()
+                str_chain = libruststringlib.make_init_chainstring(1440, dict_['min'])
+                _last = time.time()
+                _after_op = _last - _first
                 #>>
-                #log.info(f'<<op:: before:{_before_op}, after:{_after_op}>>')
+                log.info(f'<<op:: before:{_before_op}, after:{_after_op}>>')
 
                 await conn.execute(db.tbl_arranged_auction.insert().values(server=server,
                                                     item=id_,

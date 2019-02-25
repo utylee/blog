@@ -72,4 +72,5 @@ tbl_wow_server_info = sa.Table('wow_server_info', metadata,
 tbl_users = sa.Table('users', metadata,
         sa.Column('name', sa.String(255)),
         sa.Column('code', sa.String(128)),
-        sa.Column('last_access', sa.Numeric))
+        sa.Column('last_access', sa.Numeric),
+        sa.Column('login_num', sa.Numeric))

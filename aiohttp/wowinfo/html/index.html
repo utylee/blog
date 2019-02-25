@@ -83,13 +83,80 @@
 		</div>
 		## 로그인 
 		<div class="login_btn"> 
-		<div id="div-login-screener"></div>
-		<div class="menu_narrow">
-			<button id="button_login" class="btn btn-info btn-block " type="button" onclick="modal_login();">
-				<!-- <button id="button_login" class="btn btn-info btn-block " type="button" onclick="openLoginForm();">-->
-				로그인	
-			</button> 
+			<div id="div-login-screener"></div>
+			<div id="div-btn-loginned" class="menu_narrow_logout">
+				<button id="button_logout" class="btn btn-primary btn-block text-muted" type="button" onclick="modal_logout();">
+					로그아웃	
+				</button>
+			</div>
+			<div class="menu_narrow">
+				<button id="button_login" class="btn btn-info btn-block " type="button" onclick="modal_login();">
+					<!-- <button id="button_login" class="btn btn-info btn-block " type="button" onclick="openLoginForm();">-->
+					로그인	
+				</button> 
+			</div>
 		</div>
+	</div>
+
+	##로그아웃 모달
+	<div tabindex="0" id="modal_logout" class="modal fade">
+		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div style="height:10px;"></div>
+						<p style="font-size:1.1rem;">
+							이미 있는 이름입니다.<br>
+							<span id="modal_login_create_confirm_text" class="text-success">
+							</span>
+							(으)로 로그인할까요?
+							<br>
+						</p>
+						<div class="confirm_or_cancel" style="display:flex;flex-wrap:nowrap;margin-top:10px;">
+						<button class="btn btn-large btn-info" style="width:80px;height:40px;font-size:1.1rem" onclick="login_with_createid_confirm();">로그인</button>
+						<div style="width:10px;"></div>
+						<button class="btn btn-large btn-secondary" style="width:80px;height:40px;font-size:1.1rem" data-dismiss="modal">취소</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="modal_logout" class="modal fade">
+		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-myflex-outer">
+					<div style="width:92%;margin-top:5px;">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+
+					<div class="modal-loginform-outer">
+						<form id="login-form" action="javascript:submit_login_form();" method="get">
+							<input id="input-login" class="form-control-login" type="text" placeholder="아이디를 입력하세요" >
+							<input id="submit-login-form" type="submit" style="display:none;"/>
+						</form>
+						<div id="icon-login-cancel">X</div>
+					</div>
+					<div class="confirm_or_cancel">
+						<!-- <label for="submit-login-form" tabindex="0">로그인</label> -->
+						<button type="button" style="width:90px;height:45px;font-size:1.1rem" class="btn btn-info" type="submit" onclick="document.getElementById('login-form').submit();">로그인</button>
+						<button type="button" style="margin-left:10px;width:90px;height:45px;font-size:1.1rem" class="btn btn-secondary" data-dismiss="modal">취소</button>
+					</div>
+					<div id='modal-login-letscreate'>
+						<div style='width:100%;height:1px;background:#444;'></div>
+						<div style="margin-top:10px;">
+							<span class="text-muted" style="font-size:0.7rem;">
+							  아니면
+							</span>
+						</div>
+						<div style="margin-top:5px;margin-bottom:15px">
+							<button type="button" class="btn btn-large btn-outline-success create-id" style="border-radius:12px;font-size:0.9rem;width:200px;" onclick="letscreate();"><i class="fas fa-pencil-alt" style='font-size:1.2rem;'></i>&nbsp;새로운 아이디 만들기</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -381,8 +448,14 @@
 				openForm(num);
 			}
 		}
+		function logout() {
+			##document.getElementById('modal_login_create_confirm_text').innerHTML = id;
+			$('#modal_logout').modal();
+		}
 		function loginned() {
 			## 로그인 버튼을 변경해줍니다
+			document.getElementById("div-btn-loginned").style.display = "flex";
+			##document.getElementById("button_logout").innerHTML = cur_user;
 		}
 
 		function submit_createid_form() {
@@ -1065,6 +1138,7 @@
 			serverlist = ${serverlist};
 			if(cur_user!='guest') {
 				window.history.pushState('', '', '/u/' + cur_user_code + '/' + cur_itemset_code);
+				loginned();
 			}
 
 			window.checked = new Array;
