@@ -764,6 +764,7 @@ async def create_itemset(engine, user, setname, defaultuser, defaultset):
 async def delete_itemset(engine, user, setname):
     success = 0
     dict_ = {}
+    log.info(f'user:{user}, setname{setname}')
     async with engine.acquire() as conn:
         async for r in conn.execute(db.tbl_item_set.select().where(and_((db.tbl_item_set.c.user==user),(db.tbl_item_set.c.set_name==setname)))):
             success = 1
