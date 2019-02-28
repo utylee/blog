@@ -21,6 +21,7 @@ import auction_classes as a_cl
 #from db_tableinfo import *
 import db_tableinfo as di 
 import pathlib
+import aioredis
 '''
 metadata = sa.MetaData()
 items = {}
@@ -358,6 +359,16 @@ async def handle(request):
     global imageroot
     global serverlist
     
+    #redis로부터 top5 가져옴
+    loop = request.app['loop']
+    redis = await aioredis.create_redis('redis://localhost', loop=loop)
+    keys_top5 = ['1','2']
+    redis_top5 = []
+
+    for i in keys_top5:
+        val = await redis.get(i)
+        redis_top5.append(val)
+    
     #최적화를 위해서 굳이 db에서 가져오지 않습니다. 0.2초 단축 200ms
     #itemsets = await get_itemsets()
     itemsets = []
@@ -427,6 +438,7 @@ async def init(app):
     loop.create_task(main_proc(interval))
     '''
     loop = asyncio.get_event_loop()
+    app['loop'] = loop
     loop.create_task(init_proc(app['db']))
 
 

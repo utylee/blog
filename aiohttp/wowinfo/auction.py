@@ -12,6 +12,7 @@ import datetime
 import time
 import random
 import string
+import aioredis
 
 import sqlalchemy as sa
 #from sqlalchemy import select as select_
@@ -73,7 +74,6 @@ async def get_wowtoken(tok):
 #async def proc(server, item_list):
 #async def db_update_from_server(engine, server, defaultset):
 async def db_update_from_server(engine, server, defaultset):
-    global tok
     # 임시 딕셔너리를 만듭니다. 전체 db를 아이템별로 처리합니다
     temp_dict = {}
     # DB에 접속해둡니다
