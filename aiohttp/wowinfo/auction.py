@@ -14,7 +14,8 @@ import random
 import string
 
 import sqlalchemy as sa
-from sqlalchemy import select
+#from sqlalchemy import select as select_
+from sqlalchemy import select 
 from sqlalchemy.sql import and_, or_, not_
 from aiopg.sa import create_engine
 
@@ -70,12 +71,16 @@ async def get_wowtoken(tok):
     return price
 
 #async def proc(server, item_list):
+#async def db_update_from_server(engine, server, defaultset):
 async def db_update_from_server(engine, server, defaultset):
     global tok
     # 임시 딕셔너리를 만듭니다. 전체 db를 아이템별로 처리합니다
     temp_dict = {}
     # DB에 접속해둡니다
     async with engine.acquire() as conn:
+        #top_six = await worldcup_six(conn, server)
+        #top_six = await worldcup_six(engine, server)
+
         #battle dev api 로서 api key를 사용해 일단 json 주소를 전송받습니다
         print('json주소를 받아옵니다')
         log.info('json주소를 받아옵니다')
@@ -89,7 +94,6 @@ async def db_update_from_server(engine, server, defaultset):
         https://us.api.blizzard.com/wow/auction/data/medivh?locale=en_US&access_token=USt2y7pxKKiJ1yLYDjshaEM2k71sXdbCp3
         '''
         req_url = f'https://{domain}/wow/auction/data/{server}?locale={locale}&access_token={tok}' 
-        print(req_url)
         log.info(req_url)
 
         # .loads 함수인 것을 봅니다. s가 없는 load 함수는 파일포인터를 받더군요
@@ -244,12 +248,12 @@ async def db_update_from_server(engine, server, defaultset):
                 _last = time.time()
                 _before_op = _last - _first
                 #<------->
-                _first = time.time()
-                str_chain = libruststringlib.make_init_chainstring(1440, dict_['min'])
-                _last = time.time()
-                _after_op = _last - _first
+                #_first = time.time()
+                #str_chain = libruststringlib.make_init_chainstring(1440, dict_['min'])
+                #_last = time.time()
+                #_after_op = _last - _first
                 #>>
-                log.info(f'<<op:: before:{_before_op}, after:{_after_op}>>')
+                #log.info(f'<<op:: before:{_before_op}, after:{_after_op}>>')
 
                 await conn.execute(db.tbl_arranged_auction.insert().values(server=server,
                                                     item=id_,
@@ -287,6 +291,7 @@ async def db_update_from_server(engine, server, defaultset):
                     l_chain = str_chain.split('?')
 
                     #디버깅 중 숫자가 아닌 값이 잘못들어간 값이 있을 때 수동으로 주석지우고 행합니다.
+                    '''
                     _n = 0
                     for _ in l_chain:
                         try:
@@ -297,16 +302,19 @@ async def db_update_from_server(engine, server, defaultset):
                             l_chain[_n] = l_chain[_n-3]  # 두번이상 문자가 들어갔을 경우를 대비해 3개 전 값삽입
                         finally:
                             _n += 1
+                    '''
 
                     l_chain_len = len(l_chain)
                     if(l_chain_len != 1440):
-                        print('!!! 가격 chain 개수가 맞지 않습니다. --> id: {}, {} 개'.format(id_,l_chain_len))
-                        print('!!!  마지막 5개 값:{}'.format(l_chain[-5:]))
-                        print('!!!  (잠재적위험) 자동수정1440개로 조정합니다')
                         log.info('!!! 가격 chain 개수가 맞지 않습니다. --> id: {}, {} 개'.format(id_,l_chain_len))
                         log.info('!!!  마지막 5개 값:{}'.format(l_chain[-5:]))
                         log.info('!!!  (잠재적위험) 자동수정1440개로 조정합니다')
-                        l_chain = l_chain[l_chain_len - 1440:]
+                        #개수가 1440이상일 경우에만 맞아들어가는 로직같습니다 수정해야할 것 같습니다
+                        _lastval = l_chain[-1]
+                        if l_chain_len < 1440:
+                            l_chain.extend([_lastval for _ in range(0, 1440-l_chain_len)])
+                        else:
+                            l_chain = l_chain[l_chain_len - 1440:]
                         str_chain = '?'.join(l_chain)
                         do_ = 2
                     # 텀이 길어 빈 30분횟수가 있을 경우
@@ -365,17 +373,18 @@ async def db_update_from_server(engine, server, defaultset):
     
 
         #인기 탑5를 선별합니다
+        log.info('top5 phaze')
         top_six = {}
         top_six = await worldcup_six(conn, server)
         #5개만 취해서 기본구성 set를 업데이트합니다
         # loop 내에서 y를 통한 dict 아이템 찾을 시 다시 해싱을 하므로 좀 변경해봤습니다
+        log.info('top_six end')
         for k, v in top_six.items():
             #top_six[k] = str(k) + '?' + str(top_six[k])
             top_six[k] = str(k) + '?' + str(v)  # top_six[k]는 v로 바꾸면 변수 변경은 안되더군여
         top_six.pop(6)        #마지막 아이템을 제거합니다
         top_six[0] = "0?WoW 토큰"
         top_six_str = ','.join(top_six.values())
-        print(f'top_six string: {top_six_str}')
         log.info(f'top_six string: {top_six_str}')
 
         #기본구성 db에 삽입해줍니다
@@ -396,15 +405,24 @@ async def db_update_from_server(engine, server, defaultset):
         return 
 
 async def worldcup_six(conn, server):       # server는 받습니다만 실제로 아즈샤라 서버 인기도
+#async def worldcup_six(egn, server):       # server는 받습니다만 실제로 아즈샤라 서버 인기도
     ret_dict = {}
     ind = 1         # 0번은 후에 WoW 토큰을 위해 남겨두고 1부터 시작합니다
-    async for result in conn.execute(
-            select([db.tbl_arranged_auction.c.item, db.tbl_arranged_auction.c.fame])
-            .order_by(sa.desc(db.tbl_arranged_auction.c.fame)).limit(6)
-            .where(db.tbl_arranged_auction.c.server=='아즈샤라')):
-        ret_dict[ind] = await get_item_name(conn, result[0])
-        ind += 1
-    #print(ret_dict)
+    try:
+        _top_res = []
+        #async with egn.acquire() as conn:
+        async for r in conn.execute(
+                        select([db.tbl_arranged_auction.c.item, db.tbl_arranged_auction.c.fame])
+                        .order_by(sa.desc(db.tbl_arranged_auction.c.fame)).limit(6)
+                        .where(db.tbl_arranged_auction.c.server=='아즈샤라')):
+            _top_res.append(r[0])
+
+        for _ in _top_res:
+            ret_dict[ind] = await get_item_name(conn, int(_))
+            ind += 1
+            #log.info(f'topsix id:{ret_dict[0]}')
+    except:
+        log.info('exception')
     return ret_dict
 
 # battle dev 로부터 아이템을 가져옵니다
@@ -434,14 +452,18 @@ async def get_item(id):
             return ['', '']
   
 # 로컬 db에서 id를 통해 이름을 가져옵니다
-async def get_item_name(conn, id):
+async def get_item_name(conn, _id):
+#async def get_item_name(egn, _id):
     name = ''
-    result = 0
-    #async for r in conn.execute(tbl_items.select().where(tbl_items.c.name==name)):
-        #id = r[0]
-    async for r in conn.execute(select([db.tbl_items.c.name]).where(db.tbl_items.c.id==id)):
-        name = r[0]
-        result = 1
+    res = 0
+    try:
+        async for r in conn.execute(select([db.tbl_items.c.name]).where(db.tbl_items.c.id==_id)):
+            name = r[0]
+            res = 1
+    except:
+        log.inf('except in get_item_name')
+        
+    log.info(f'name:{name}')
     return name 
 
 # 로컬 db에서 이름을 통해 id를 가져옵니다

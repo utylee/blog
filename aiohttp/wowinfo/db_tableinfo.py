@@ -50,8 +50,8 @@ tbl_arranged_auction = sa.Table('arranged_auction', metadata,
         sa.Column('min_seller', sa.String(128)),
         sa.Column('min_chain', sa.Text),
         sa.Column('edited_time', sa.String(128)),
-        sa.Column('edited_timestamp', sa.Numeric),
         sa.Column('image', sa.String(255)),
+        sa.Column('edited_timestamp', sa.Numeric),
         sa.Column('fame', sa.Numeric))
 
 # itemset 테이블입니다

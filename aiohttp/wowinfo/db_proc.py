@@ -1,3 +1,6 @@
+import asyncio
+import uvloop
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 from auction import *
 import logging
 import logging.handlers
@@ -25,15 +28,16 @@ fileHandler.setFormatter(logging.Formatter('[%(asctime)s]-(%(name)s)-%(message)s
 log.addHandler(fileHandler)
 
 async def main_proc(intv):
+    global defaultset
     engine = await create_engine(user='postgres', 
                             database='auction_db',
                             host='192.168.0.212',
                             password='sksmsqnwk11')
-    serverlist = await get_serverlist(engine)
-    size = len(serverlist)
-    az = serverlist.index('아즈샤라')
-    hj = serverlist.index('하이잘')
-    etc_l = [ _ for _ in serverlist if _ != '아즈샤라' and _ != '하이잘']
+    #serverlist = await get_serverlist(engine)
+    #size = len(serverlist)
+    #az = serverlist.index('아즈샤라')
+    #hj = serverlist.index('하이잘')
+    #etc_l = [ _ for _ in serverlist if _ != '아즈샤라' and _ != '하이잘']
     #log.info(etc_l)
     '''
         아즈샤라:   18분
