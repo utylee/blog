@@ -79,7 +79,6 @@ async def db_update_from_server(engine, server, defaultset):
     # DB에 접속해둡니다
     async with engine.acquire() as conn:
         #top_six = await worldcup_six(conn, server)
-        #top_six = await worldcup_six(engine, server)
 
         #battle dev api 로서 api key를 사용해 일단 json 주소를 전송받습니다
         print('json주소를 받아옵니다')
@@ -183,7 +182,7 @@ async def db_update_from_server(engine, server, defaultset):
                 #   없습니다. 속도도 해당아이템 최초의 경우에만 가져오고 속도도 빨라서 큰 영향
                 #   없다고 생각됩니다.
                 #temp_name = ''
-                res_ = await get_item_name_and_icon(conn, cur)
+                res_ = await get_item_name_and_icon(conn, cur, tok)
                 temp_name, temp_image = res_
 
                 #print(temp_name)
@@ -412,26 +411,35 @@ async def worldcup_six(conn, server):       # server는 받습니다만 실제�
         _top_res = []
         #async with egn.acquire() as conn:
         async for r in conn.execute(
-                        select([db.tbl_arranged_auction.c.item, db.tbl_arranged_auction.c.fame])
-                        .order_by(sa.desc(db.tbl_arranged_auction.c.fame)).limit(6)
-                        .where(db.tbl_arranged_auction.c.server=='아즈샤라')):
-            _top_res.append(r[0])
+                select([db.tbl_arranged_auction.c.item, db.tbl_arranged_auction.c.fame, 
+                    db.tbl_arranged_auction.c.image])
+                .order_by(sa.desc(db.tbl_arranged_auction.c.fame)).limit(6)
+                .where(db.tbl_arranged_auction.c.server=='아즈샤라')):
+            _top_res.append([r[0], r[2]])
 
+        loop = asyncio.get_event_loop()
+        redis = await aioredis.create_redis('redis://localhost', loop = loop)
+        assert(redis)
         for _ in _top_res:
-            ret_dict[ind] = await get_item_name(conn, int(_))
+            ret_dict[ind] = await get_item_name(conn, int(_[0]))
+            log.info(f'image[{ind}]={_[1]}')
+            await redis.set(str(ind), _[1])
             ind += 1
             #log.info(f'topsix id:{ret_dict[0]}')
+        redis.close()
+        await redis.wait_closed()
     except:
-        log.info('exception')
+        log.info('exception @worldcup_six')
+    
     return ret_dict
 
 # battle dev 로부터 아이템을 가져옵니다
-async def get_item(id):
-    global tok
+async def get_item(id, tok):
     #print(f'토큰:{tok}')
     if(id == 999999):   #WoW 토큰
         return ['WoW 토큰', 'wow_token01']
     item_req_url = f'https://kr.api.blizzard.com/wow/item/{id}?locale=ko_KR&access_token={tok}'
+    log.info(f'item_req_url:{item_req_url}')
     # requests를 비동기형 aiohttp 의 clientssion get 으로 대치합니다
     async with aiohttp.ClientSession() as sess:
         #async with sess.get('https://kr.api.battle.net/wow/item/{}?locale={}&apikey={}'.format(id, locale, myapi)) as resp:
@@ -487,7 +495,7 @@ async def get_item_id(conn, name):
     return id 
 
 # 로컬 db에서 id를 통해 이름를 가져옵니다
-async def get_item_name_and_icon(conn, item_id):
+async def get_item_name_and_icon(conn, item_id, tok):
     result = 0          # 아무것도 없는 경우
     name = ''
     icon_name = ''
@@ -504,12 +512,12 @@ async def get_item_name_and_icon(conn, item_id):
     #해당 아이템이 로컬 테이블에 없다면 받아온 후 로컬 테이블에 저정합니다
     if result == 0:
         log.info(f'### item no. {item_id} 이 로컬에 없기에 battlenet dev를 통해 가져옵니다...')
-        name, icon_name = await get_item(item_id)
+        name, icon_name = await get_item(item_id, tok)
         log.info(f'name: {name}, icon_name: {icon_name}')
         await conn.execute(db.tbl_items.insert().values(id=int(item_id), name=name, icon_name=icon_name))
     elif result == 1:
         log.info(f'### item no. {item_id} 의 icon_name은 비어있기에 battlenetdev를 통해 icon_name만 가져옵니다...')
-        name, icon_name = await get_item(item_id)
+        name, icon_name = await get_item(item_id, tok)
         log.info(f'name: {name}, icon_name: {icon_name}')
         await conn.execute(db.tbl_items.update().where(db.tbl_items.c.id==int(item_id)).values(icon_name=icon_name))
 

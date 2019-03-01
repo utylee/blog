@@ -361,10 +361,11 @@ async def handle(request):
     
     #redis로부터 top5 가져옴
     loop = request.app['loop']
-    redis = await aioredis.create_redis('redis://localhost', loop=loop)
-    keys_top5 = ['1','2']
+    keys_top5 = ['1','2', '3', '4', '5']
     redis_top5 = []
+    redis = request.app['redis']
 
+    log.info(f'redis')
     for i in keys_top5:
         val = await redis.get(i)
         redis_top5.append(val)
@@ -384,7 +385,8 @@ async def handle(request):
     '''
     return {'name': '7', 'imageroot': imageroot ,'ar':dict_, 'server':server, 'user':'guest','user_code':'',
                     'serverlist':serverlist, 'itemsets': itemsets, 
-                    'current_itemset':currentset, 'current_itemset_code':currentset_code}
+                    'current_itemset':currentset, 'current_itemset_code':currentset_code,
+                    'top_5':redis_top5}
 
 async def init(app):
     global interval
@@ -441,6 +443,7 @@ async def init(app):
     app['loop'] = loop
     loop.create_task(init_proc(app['db']))
 
+    app['redis'] = await aioredis.create_redis('redis://localhost', loop=loop)
 
     # 서버리스트를 가져오고 (X 최초아이템 셋도 가져옵니다)
     #init_data()
