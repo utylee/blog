@@ -77,7 +77,7 @@ input[type=radio] {
 	flex-wrap:nowrap;
 	align-content:center;	
 	justify-content:center;	
-	margin-top:12px;
+	margin-top:12px !important;
 	margin-bottom:20px;
 }
 #icon-login-cancel, #icon-createid-cancel {
