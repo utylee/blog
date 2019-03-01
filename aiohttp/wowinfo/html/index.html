@@ -100,7 +100,7 @@
 	</div>
 
 	##로그아웃 모달
-	<div id="modal_logout" class="modal fade">
+	<div tabindex="0" id="modal_logout" class="modal fade">
 		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
 			<div class="modal-content">
 				<div class="modal-content">
@@ -1101,6 +1101,9 @@
 		function closeLoginForm() {
 			$('#modal_login').modal('hide');
 		}
+		function closeLogoutForm() {
+			$('#modal_logout').modal('hide');
+		}
 		function closeDeleteModal() {
 			$('#modal_delete').modal('hide');
 		}
@@ -1164,6 +1167,7 @@
 						closeDeleteModal();
 						closeCreateIDModal();
 						closeLoginWithCreateIDModal();
+						closeLogoutForm();
 					}
 				});
 			}
@@ -1191,6 +1195,12 @@
 					login_with_createid_confirm();
 				}
 			});
+			document.getElementById('modal_logout').addEventListener('keydown', function (event) {
+				if(event.key == "Enter"){
+					logout_confirm();
+				}
+			});
+
 
 			## explorer 11 에서 let 이 제대로 지원안된다고 합니다.MDN에 따르면,
 			## function scope밖에 없으므로classic한 방법인 별도의 function에서 생성하는 방법을 택했습니다

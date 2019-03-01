@@ -111,6 +111,12 @@ async def user(request):
     except:
         currentset_code = 'default'
         log.info(f'exeption!! itemset_code: {currentset_code}')
+
+    redis_top5 = []
+    redis = request.app['redis']
+    for i in ['1','2','3','4','5']:
+        val = await redis.get(i)
+        redis_top5.append(val)
     
     user = await auc.get_user_from_code(request.app['db'], user_code)
     log.info(f'{user}')
@@ -131,7 +137,7 @@ async def user(request):
     log.info('last')
     return {'name': '7', 'imageroot': imageroot ,'ar':dict_, 'server':server, 'user':user, 
             'user_code':user_code, 'serverlist':serverlist, 'itemsets': itemsets,
-            'current_itemset':currentset, 'current_itemset_code':currentset_code}
+            'current_itemset':currentset, 'current_itemset_code':currentset_code, 'top_5':redis_top5}
 
 
 async def login(request):
@@ -360,12 +366,9 @@ async def handle(request):
     global serverlist
     
     #redis로부터 top5 가져옴
-    loop = request.app['loop']
     keys_top5 = ['1','2', '3', '4', '5']
     redis_top5 = []
     redis = request.app['redis']
-
-    log.info(f'redis')
     for i in keys_top5:
         val = await redis.get(i)
         redis_top5.append(val)
