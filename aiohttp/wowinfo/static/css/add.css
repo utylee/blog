@@ -78,7 +78,7 @@ input[type=radio] {
 	align-content:center;	
 	justify-content:center;	
 	margin-top:12px !important;
-	margin-bottom:20px;
+	margin-bottom:10px;
 }
 #icon-login-cancel, #icon-createid-cancel {
 	display:flex;			/* text를 상하로 가운데 배치하기 위해 이 두줄을 추가했습니다 */
