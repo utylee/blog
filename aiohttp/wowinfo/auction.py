@@ -79,6 +79,7 @@ async def db_update_from_server(engine, server, defaultset):
     # DB에 접속해둡니다
     async with engine.acquire() as conn:
         #top_six = await worldcup_six(conn, server)
+        #return
 
         #battle dev api 로서 api key를 사용해 일단 json 주소를 전송받습니다
         print('json주소를 받아옵니다')
