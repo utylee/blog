@@ -1,22 +1,22 @@
 // 차트에서 포인트 갯수를 정의합니다
+window.checked = new Array;
+window.chart_chains = new Array;
+window.chart = new Array;
+window.form_opened = new Array;
+window.itemsets = [];
+window.items = {};
+window.serverlist = [];
+window.socket = 0;
 
 function init(cnum, is, isc, u, uc, ih, sv){
 	//alert('hahaha');
 	window.chart_column_num = cnum;
 	window.cur_itemset = is;
 	window.cur_itemset_code = isc;
-	window.socket = 0;
 	window.cur_user = u;
 	window.cur_user_code = uc;
-	window.itemsets = [];
-	window.items = {};
 	window.img_host = ih;
-	window.chart_chains = new Array;
-	window.chart = new Array;
 	window.server = sv;
-	window.serverlist = [];
-	window.form_opened = new Array;
-	window.checked = new Array;
 	for (let i=0;i<6;i++) {
 		form_opened[i] = 0;
 	}
@@ -176,6 +176,7 @@ function submit_itemset_form(num) {
 }
 
 function update_chart(a, b) {
+	var checked = window.checked;
 	if(checked[a] != b){
 		checked[a] = b;
 		min_chain_ = window.chart_chains[a];
