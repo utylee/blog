@@ -5,10 +5,11 @@
 	## bootswatch 에서 사용하는 lato 폰트를 아예 다운받지 않아봤습니다. 한글만 쓰여서리
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
 	<link rel="stylesheet" href="/static/css/add.css">
+	<link rel="stylesheet" href="/static/webfonts/icomoon.css">
 	##<link rel="stylesheet" href="/static/css/spin.css">
 	## fontawesome 직접 호스팅(:by nginx)
 	## ../ 에 webfonts 폴더만 추가로 넣으니 되었습니다
-	<link rel="stylesheet" href="/static/css/fontawesome.all.min.css">
+	##<link rel="stylesheet" href="/static/css/fontawesome.all.min.css">
 	## fontawemsome 호스팅을 받는 방법
 	##<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 	##<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/regular.css" integrity="sha384-aubIA90W7NxJ+Ly4QHAqo1JBSwQ0jejV75iHhj59KRwVjLVHjuhS3LkDAoa/ltO4" crossorigin="anonymous">
@@ -31,7 +32,8 @@
 		<div class="dropdown menu_wide_narrow" >
 			<button id="button_serverlist" class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown" >
 				##<span class="glyphicon glyphicon-grain" aria-hidden="true"></span>
-				<i class="fas fa-check-circle text-success">&nbsp;</i>
+				##<i class="fas fa-check-circle text-success">&nbsp;</i>
+				<i class="icon-check-circle text-success">&nbsp;</i>
 				아즈샤라
 				##<span class="icon-checkcircle" >아즈샤라</span>
 			</button>
@@ -49,14 +51,6 @@
 		<div id="div-spinner"><div class="spinner"></div></div>
 		<div class="dropdown menu_wide" >
 			<button id="button_itemset" class="btn btn-secondary btn-large btn-block text-muted dropdown-toggle " type="button" data-toggle="dropdown"></button>
-			<%doc>
-			% if current_itemset == '기본구성':
-			<button id="button_itemset" class="btn btn-secondary btn-large btn-block dropdown-toggle text-warning" type="button" data-toggle="dropdown">
-				<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;${current_itemset}</button>
-			% else:
-			<button id="button_itemset" class="btn btn-secondary btn-large btn-block dropdown-toggle text-muted" type="button" data-toggle="dropdown">${current_itemset}</button>
-			% endif
-			</%doc>
 			<div id="div_itemlist" class="dropdown-menu scrollable-menu"  style="width:100%">
 				<%doc>
 				<a id="itemlist0" class="dropdown-item text-center text-primary" href="#">dummy</a>
@@ -119,10 +113,13 @@
 						</div>
 						<div class="text-muted" style="letter-spacing:-1px;font-size:0.8em;margin-top:15px">
 							<span>
-								지금 주소를 
+								<i class="icon-alert-triangle1 text-warning" style="font-size:1.2em;"></i>
+							</span>
+							<span>
+								&nbsp;&nbsp;지금 주소를 &nbsp;
 							</span>
 							<span class="text-success">
-								즐겨찾기
+								<i class="icon-star"></i> 즐겨찾기
 							</span>
 							<span class="text-muted">
 								하면<br> 지금 설정 그대로 접속할 수 있습니다
@@ -166,7 +163,7 @@
 							</span>
 						</div>
 						<div style="margin-top:5px;margin-bottom:15px">
-							<button type="button" class="btn btn-large btn-outline-success create-id" style="border-radius:12px;font-size:0.9rem;width:200px;" onclick="letscreate();"><i class="fas fa-pencil-alt" style='font-size:1.2rem;'></i>&nbsp;새로운 아이디 만들기</button>
+							<button type="button" class="btn btn-large btn-outline-success create-id" style="border-radius:12px;font-size:0.9rem;width:200px;" onclick="letscreate();"><i class="icon-pencil" style='font-size:1.2rem;'></i>&nbsp;새로운 아이디 만들기</button>
 						</div>
 					</div>
 				</div>
@@ -405,14 +402,15 @@
 	</script>
 </div>
 
-<script src="/static/js/import.js"></script>
-<script src="/static/js/functions.js"></script>
+<script type='text/javascript' src="/static/js/import.js"></script>
+<script type='text/javascript' src="/static/js/functions.js"></script>
 <script charset="utf-8">
-	init(24, '${current_itemset}', '${current_itemset_code}', '${user}', '${user_code}',\
-				'https://wow.zamimg.com/images/wow/icons/large/', '아즈샤라');
-
+	##init(24, '${current_itemset}', '${current_itemset_code}', '${user}', '${user_code}',\
+				##'https://wow.zamimg.com/images/wow/icons/large/', '아즈샤라');
 	// jQuery document ready 를 대신하는 자바스크립트입니다 다만 익스플로러 9이하에선 안된다는 말도 있네요
 	document.addEventListener("DOMContentLoaded", function(){
+		init(24, '${current_itemset}', '${current_itemset_code}', '${user}', '${user_code}',\
+				'https://wow.zamimg.com/images/wow/icons/large/', '아즈샤라');
 		window.modalInfo = new InfoModal();
 		window.modalLogout = new LogoutModal();
 		itemsets = ${itemsets};

@@ -83,7 +83,8 @@ function submit_createid_form() {
 	xhttp.send();
 }
 
-function submit_login_form(str='') {
+//function submit_login_form(str='') {
+function submit_login_form(str) {
 	show_spinner();
 	var name = '';
 	if(str) {
@@ -320,7 +321,8 @@ function change_server(srver){
 	}
 	
 	document.getElementById("button_serverlist").innerHTML = 
-		"<i class='fas fa-check-circle text-success'>&nbsp;</i>" + server;
+		//"<i class='fas fa-check-circle text-success'>&nbsp;</i>" + server;
+		"<i class='icon-check-circle text-success'>&nbsp;</i>" + server;
 }
 
 function change_itemset(itemset){
@@ -338,7 +340,8 @@ function change_itemset(itemset){
 	if(checkif_defaultset(itemset)) {
 	//if((cur_user=='guest' && itemset == '기본구성') || (cur_user!='guest' && itemset==cur_user)) {
 		document.getElementById("button_itemset").innerHTML = 
-		"<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;" + itemset;
+		//"<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;" + itemset;
+		"<i class='icon-thumb-tack' style='font-weight:lighter;font-size:1.2em'></i>&nbsp;&nbsp;" + itemset;
 	}
 	else {
 		document.getElementById("button_itemset").innerHTML = itemset; 
@@ -435,7 +438,8 @@ function update_itemset_dropdown() {
 	
 	// 새로만들기항목
 	document.getElementById("div_itemlist").innerHTML += 
-	"<a id='itemlist0' class='dropdown-item text-center font-weight-bolder text-info' href='javascript:;' onclick='create_itemset();'> <i class='fas fa-folder-open' style='font-weight:lighter;font-size:1.0em;'>&nbsp;</i>" + itemsets[0] + "</a>";
+	//"<a id='itemlist0' class='dropdown-item text-center font-weight-bolder text-info' href='javascript:;' onclick='create_itemset();'> <i class='fas fa-folder-open' style='font-weight:lighter;font-size:1.0em;'>&nbsp;</i>" + itemsets[0] + "</a>";
+	"<a id='itemlist0' class='dropdown-item text-center font-weight-bolder text-info' href='javascript:;' onclick='create_itemset();'> <i class='icon-cogs' style='font-weight:lighter;font-size:1.2em;'>&nbsp;</i>" + itemsets[0] + "</a>";
 	// 아이템세트들
 	window.dropdown_pair = {};
 	for(let it=1;it<itemsets.length;it++){			//0이 아닌 1부터시작 
@@ -446,14 +450,16 @@ function update_itemset_dropdown() {
 			if(checkif_defaultset(cur)) {
 			//if((cur_user=='guest' && cur == '기본구성') || (cur_user!='guest' && cur==cur_user)) {
 				document.getElementById("div_itemlist").innerHTML +=  
-				"<a id='itemlist" + it +"' class='dropdown-item text-center text-warning' href='javascript:;' onclick='change_itemset(\"" + cur + "\");'><i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;" + cur + "</a>";
+				//"<a id='itemlist" + it +"' class='dropdown-item text-center text-warning' href='javascript:;' onclick='change_itemset(\"" + cur + "\");'><i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;" + cur + "</a>";
+				"<a id='itemlist" + it +"' class='dropdown-item text-center text-warning' href='javascript:;' onclick='change_itemset(\"" + cur + "\");'><i class='icon-thumb-tack' style='font-weight:lighter;font-size:1.2em'></i>&nbsp;&nbsp;" + cur + "</a>";
 			}
 			else {
 				// 아이템명 뒤에 휴지통을 추가합니다
 				dropdown_pair[it] = cur;
 				document.getElementById("div_itemlist").innerHTML += 
 					"<div id='dropdown-delete" + it + "' class='dropdown-delete'>" + 
-					"<i class='far fa-trash-alt text-muted'></i></div>" +
+					//"<i class='far fa-trash-alt text-muted'></i></div>" +
+					"<i class='icon-trash-o text-muted' style='font-size:1.2em'></i></div>" +
 					"<a id='itemlist" + it +"' class='dropdown-item text-center'" +
 					"href='javascript:;' onclick='change_itemset(\"" + cur + "\");'>" + cur + "</a>";
 			}
@@ -478,7 +484,8 @@ function update_itemset_dropdown() {
 	if(checkif_defaultset(cur_itemset)) {
 	//if((cur_user=='guest' && cur_itemset == '기본구성') || (cur_user!='guest' && cur_itemset==cur_user)) {
 	//if(cur_itemset == '기본구성') {
-		document.getElementById("button_itemset").innerHTML = "<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;" + cur_itemset; 
+		//document.getElementById("button_itemset").innerHTML = "<i class='far fa-file-alt' style='font-weight:lighter;font-size:1.0em'></i>&nbsp;&nbsp;" + cur_itemset; 
+		document.getElementById("button_itemset").innerHTML = "<i class='icon-thumb-tack' style='font-weight:lighter;font-size:1.2em'></i>&nbsp;&nbsp;" + cur_itemset; 
 	}
 	else {
 		document.getElementById("button_itemset").innerHTML = cur_itemset;
@@ -860,7 +867,8 @@ function rq_itemsets(fn_callback) {
 	xhttp.send();
 }
 
-function rq_itemset(itemset, fn_callback=0) {
+//function rq_itemset(itemset, fn_callback=0) {
+function rq_itemset(itemset, fn_callback) {
 	// 역시 vanilla js 를 사용해 봅니다
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
