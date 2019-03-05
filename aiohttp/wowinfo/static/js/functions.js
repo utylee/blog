@@ -167,7 +167,8 @@ function submit_itemset_form(num) {
 					//change_itemset(s_name);
 				}
 				else if (data.success == '0') {
-					alert('이미 있는 세트명입니다');
+					modalInfo.Show('이미 있는 세트명입니다', 1000);
+					//alert('이미 있는 세트명입니다');
 				}
 			}
 		};
