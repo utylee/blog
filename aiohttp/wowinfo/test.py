@@ -178,7 +178,7 @@ async def create_itemset(request):
     print('/create_itemset handler came in')
     log.info('/create_itemset handler came in')
     user = request.match_info['cur_user']
-    setname = request.match_info['setname']
+    setname = request.match_info['setname'].strip()
     success = await auc.create_itemset(request.app['db'], user, setname, defaultuser, defaultset) 
     data = {}
     data['success'] = success

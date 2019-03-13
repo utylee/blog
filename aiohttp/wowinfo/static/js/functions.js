@@ -55,7 +55,7 @@ function loginned() {
 }
 function submit_createid_form() {
 	show_spinner();
-	var name = document.getElementById('input-createid').value;
+	var name = document.getElementById('input-createid').value.trim();
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
@@ -79,7 +79,12 @@ function submit_createid_form() {
 			hide_spinner();
 		}
 	};
-	xhttp.open("GET", '/create_user/' + name , true);
+	if(name){
+		xhttp.open("GET", '/create_user/' + name , true);
+	}
+	else{ 
+		hide_spinner();
+	}
 	xhttp.send();
 }
 
@@ -91,7 +96,7 @@ function submit_login_form(str) {
 		name = str;
 	}
 	else {
-		name = document.getElementById('input-login').value;
+		name = document.getElementById('input-login').value.trim();
 	}
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
@@ -118,8 +123,13 @@ function submit_login_form(str) {
 			hide_spinner();
 		}
 	};
-	xhttp.open("GET", '/login/' + name , true);
-	xhttp.send();
+	if(name) {
+		xhttp.open("GET", '/login/' + name , true);
+		xhttp.send();
+	}
+	else{
+		hide_spinner();
+	}
 }
 function submit_item_form(num) {
 	//alert('div-form-item'+num);
@@ -840,7 +850,7 @@ document.getElementById("icon-login-cancel").addEventListener('click', function(
 	}
 }, false);
 document.getElementById("icon-createid-cancel").addEventListener('click', function() { 
-	tt = document.getElementById("input-createid").value; 
+	tt = document.getElementById("input-createid").value.trim(); 
 	if(tt == '') {
 		closeCreateIDModal();
 	}
