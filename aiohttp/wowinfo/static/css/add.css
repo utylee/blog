@@ -630,10 +630,20 @@ input[type="search"]::-webkit-search-decoration {
 	background: no-repeat right center;
 	background-image: url(images/icons/money-copper.gif);
 }
+
+.icon-flexy {
+	display: flex;
+	align-items: center;
+	align-content: center;
+}
 .iconlarge {
 	background: no-repeat center;
 	position: relative;
 	z-index: 10;
+}
+.iconlarge-caret {
+	position: relative;
+	z-index: 11;
 }
 
 .scrollable-menu {
@@ -648,4 +658,9 @@ input[type="search"]::-webkit-search-decoration {
     max-height: 250px;
     overflow-x: hidden;
     overflow-y: auto;
+}
+
+.caret-overlay {
+	position:relative;
+
 }
