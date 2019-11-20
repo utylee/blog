@@ -255,8 +255,8 @@ function update_chart(a, b) {
 	}
 }
 function setupWebSocket(){
-	this.socket = new WebSocket('wss://'+window.location.host+'/ws');
-	//this.socket = new WebSocket('ws://'+window.location.host+'/ws');
+	//this.socket = new WebSocket('wss://'+window.location.host+'/ws');
+	this.socket = new WebSocket('ws://'+window.location.host+'/ws');
 	this.socket.onopen = function(){
 		socket.send('connect');
 	}
