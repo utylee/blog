@@ -24,7 +24,7 @@ import db_tableinfo as db
 import auction_classes as a_cl
 import logging
 
-import libruststringlib
+#import libruststringlib
 
 # db_proc에서 사용되느냐 wowinfo에서 사용되느냐에 따라 log 설정을 바뀌되록 합니다
 if(sys.argv[0][-10:] == 'db_proc.py'):
