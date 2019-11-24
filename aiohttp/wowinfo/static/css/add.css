@@ -633,16 +633,17 @@ input[type="search"]::-webkit-search-decoration {
 
 .icon-flexy {
 	display: flex;
+	position:relative;
+	justify-content: center;
 	align-items: center;
-	align-content: center;
 }
 .iconlarge {
 	background: no-repeat center;
-	position: relative;
 	z-index: 10;
 }
 .iconlarge-caret {
-	position: relative;
+	position: absolute;
+	margin-left: 90px;
 	z-index: 11;
 }
 

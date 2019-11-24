@@ -281,21 +281,22 @@ test
 						</%doc>
 						##<div id="image${loop.index}" class="iconlarge" style="background-image: url('${imageroot + ar[a]['image']}'+'.jpg')">
 						##<div id="image${a}" class="iconlarge" style="background-image: url('${imageroot + b['image'] + '.jpg'}')">
-						##<div class="icon-flexy">
-						##<center>
-						<div id="image${a}" class="iconlarge" style="">
-							<a href="javascript:show_item_form(${a});">
-								## nginx 에서 static 을 호스팅하느라 상대경로를 바꿨습니다
-								##<img src="../static/css/images/border.png"/>
-								<img src="/static/css/images/border.png"/>
-								##<i class="icon-caret-down"></i>
-							</a>
+
+						<div class="icon-flexy">
+							<div id="image${a}" class="iconlarge" style="">
+								<a href="javascript:show_item_form(${a});">
+									## nginx 에서 static 을 호스팅하느라 상대경로를 바꿨습니다
+									##<img src="../static/css/images/border.png"/>
+									<img src="/static/css/images/border.png"/>
+									##<i class="icon-caret-down"></i>
+								</a>
+							</div>
+							<div class="iconlarge-caret" >
+								<a href="javascript:show_item_form(${a});">
+								<i class="icon-caret-down" style="font-size:1.3rem;"></i>
+								</a>
+							</div>
 						</div>
-						<div class="iconlarge-caret text-muted" >
-							<i class="icon-caret-down"></i>
-						</div>
-						##</center>
-						##</div>
 					</center>
 				</div>
 
