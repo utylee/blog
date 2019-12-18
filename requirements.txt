@@ -40,7 +40,7 @@ pytest==4.3.0
 pytest-benchmark==3.2.2
 python-engineio==1.7.0
 python-socketio==1.7.6
-PyYAML==3.13
+PyYAML==5.1
 Represent==1.5.1
 requests==2.21.0
 selenium==3.141.0
