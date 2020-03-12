@@ -7,7 +7,8 @@ import logging.handlers
 import pathlib
 
 #interval = 1800 #초
-interval = 3600 #초
+#interval = 3600 #초
+interval = 6000 #초
 tok = ''
 defaultset = '기본구성'
 locale = 'ko_KR'

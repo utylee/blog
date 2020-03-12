@@ -167,6 +167,7 @@ async def db_update_from_server(engine, server, defaultset):
 
         start_a = time.time()
         for l in js['auctions']:
+            l['owner'] = 'AH'
             num = 0
             cur = int(l['item'])
             price = 0
@@ -191,6 +192,7 @@ async def db_update_from_server(engine, server, defaultset):
                 temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner'], 'image': temp_image}
             # 해당아이템 딕트가 이미 존재할 경우
             else:
+                #log.info(f'come to else')
                 temp_dict[cur]['num'] = temp_dict[cur]['num'] + l['quantity']
 
                 if (int(temp_dict[cur]['min']) == 0) or (price < temp_dict[cur]['min']):
