@@ -75,11 +75,11 @@ async def get_wowtoken(tok):
 #async def proc(server, item_list):
 #async def db_update_from_server(engine, server, defaultset):
 async def db_update_from_server(engine, server_tup, defaultset):
-    log.info(f'** 서버 {server}에 대한 프로세스를 시작합니다')
     # 임시 딕셔너리를 만듭니다. 전체 db를 아이템별로 처리합니다
     temp_dict = {}
     server = server_tup[0]
     server_id = server_tup[1]
+    log.info(f'** 서버 {server}에 대한 프로세스를 시작합니다')
     # DB에 접속해둡니다
     async with engine.acquire() as conn:
         #top_six = await worldcup_six(conn, server)

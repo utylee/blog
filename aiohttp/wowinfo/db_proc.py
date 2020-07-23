@@ -72,8 +72,6 @@ async def main_proc(intv):
     #l_servers_pair = await get_realm(tok)
     await get_realm(tok)
 
-
-
     # 아즈샤라, 하이잘은 매시간 탐색, 나머지 16개 서버는 세시간 단위로 나눠서탐색합니다
 
     r_list = [['아즈샤라', '하이잘', '헬스크림', '말퓨리온'],
@@ -91,6 +89,7 @@ async def timer_proc(engine, serverlist):
         for s_ in serverlist:
             #await db_update_from_server(engine, s_, defaultset)
             # 서버이름과 아이디모두를 튜플로 넘겨줍니다
+
             await db_update_from_server(engine, (s_,servers_dict[s_]), defaultset)
 
 async def get_oauth():
