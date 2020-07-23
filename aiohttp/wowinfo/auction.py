@@ -13,6 +13,7 @@ import time
 import random
 import string
 import aioredis
+import re
 
 import sqlalchemy as sa
 #from sqlalchemy import select as select_
@@ -73,9 +74,12 @@ async def get_wowtoken(tok):
 
 #async def proc(server, item_list):
 #async def db_update_from_server(engine, server, defaultset):
-async def db_update_from_server(engine, server, defaultset):
+async def db_update_from_server(engine, server_tup, defaultset):
+    log.info(f'** 서버 {server}에 대한 프로세스를 시작합니다')
     # 임시 딕셔너리를 만듭니다. 전체 db를 아이템별로 처리합니다
     temp_dict = {}
+    server = server_tup[0]
+    server_id = server_tup[1]
     # DB에 접속해둡니다
     async with engine.acquire() as conn:
         #top_six = await worldcup_six(conn, server)
@@ -92,13 +96,15 @@ async def db_update_from_server(engine, server, defaultset):
         tok = await get_oauth()
         '''
         https://us.api.blizzard.com/wow/auction/data/medivh?locale=en_US&access_token=USt2y7pxKKiJ1yLYDjshaEM2k71sXdbCp3
+        https://us.api.blizzard.com/data/wow/connected-realm/1146/auctions?namespace=dynamic-us&locale=en_US&access_token=US4uLYR6CkMOk066Dv8om5O2P3oBRdm53m
         '''
-        req_url = f'https://{domain}/wow/auction/data/{server}?locale={locale}&access_token={tok}' 
+        #req_url = f'https://{domain}/wow/auction/data/{server}?locale={locale}&access_token={tok}' 
+        #req_url = f'https://{domain}/data/wow/connected-realm/{server}/auctions?/data/{server}?locale={locale}&access_token={tok}' 
+        req_url = f'https://{domain}/data/wow/connected-realm/{server_id}/auctions?namespace=dynamic-kr&locale={locale}&access_token={tok}'
         log.info(req_url)
 
         # .loads 함수인 것을 봅니다. s가 없는 load 함수는 파일포인터를 받더군요
         # requests가 아닌 aiohttp.ClientSession get 을 사용한 비동기방식으로 변경합니다
-        start_time = time.time()
         dump_ts = 0             # 블리자드서버 경매데이터 덤프 시각 timestamp
         dump_ts_str = ''        # 블리자드서버 경매데이터 덤프 시각 timestamp 스트링
 
@@ -107,12 +113,53 @@ async def db_update_from_server(engine, server, defaultset):
         print(f'토큰가격:{wowtoken_price}')
         log.info(f'토큰가격:{wowtoken_price}')
 
+        dump_ts = 0
+        dump_ts_str = ''
+        start_time = time.time()
+        server_time = ''
+
+        # 변경된 api에 맞춘auctionhouse 프로시져입니다
+        async with aiohttp.ClientSession() as sess:
+            async with sess.get(req_url) as resp:
+                #Sat, 18 Jul 2020 16:05:42 GMT
+                #fmt = '%a, %d %b %Y %H:%M:%S GMT'
+                fmt = '%d %b %Y %H:%M:%S'
+                server_time = resp.headers['Last-Modified']
+                #log.info(datetime.datetime.now())
+                #log.info(resp.headers['Last-Modified'])
+                server_time = server_time[5:-4]
+                #log.info(server_time)
+                KST = datetime.timezone(datetime.timedelta(hours=9))
+                dump_ts_str = datetime.datetime.strptime(server_time, fmt)
+                dump_ts_str = dump_ts_str.replace(tzinfo=datetime.timezone.utc).astimezone(tz=KST)
+                dump_ts = time.mktime(dump_ts_str.timetuple())
+                dump_ts_str = dump_ts_str.strftime('%H:%M-%m/%d/%y')
+                log.info('timestamp')
+                #dump_ts = datetime.datetime.timestamp(dump_ts_str)
+                log.info(f'{dump_ts}')
+
+                #js 라는 변수에 모두 저장합니다
+                js = json.loads(await resp.text())
+                end_time = time.time()
+                elapsed_time = round(end_time - start_time)
+
+                #dump_ts = round(int(load['files'][0]['lastModified']) / 1000)
+                #str_now = datetime.datetime.fromtimestamp(ts).strftime('%H:%M-%m/%d/%y')
+                #dump_ts_str = datetime.datetime.fromtimestamp(dump_ts).strftime('%H:%M-%m/%d/%y')
+
+        #print('.auction data 받기 종료')
+        #log.info('.auction data 받기 종료')
+        print(f'get에 총 {elapsed_time}초 소요')
+        log.info(f'get에 총 {elapsed_time}초 소요')
+
         # ssl 체크에서 에러가 나서 ssl 체크를 빼주는 옵션을 찾아서 넣어주었습니다
         #async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as sess:
+        '''
         async with aiohttp.ClientSession() as sess:
             async with sess.get(req_url) as resp:
                 #print(await resp.text())
                 load = json.loads(await resp.text())
+                
                 js_url = load['files'][0]['url']
                 dump_ts = round(int(load['files'][0]['lastModified']) / 1000)
                 #str_now = datetime.datetime.fromtimestamp(ts).strftime('%H:%M-%m/%d/%y')
@@ -124,30 +171,25 @@ async def db_update_from_server(engine, server, defaultset):
                 log.info('주소:{} \n로부터 json 덤프 파일을 다운로드합니다...\n'.format(js_url))
                 async with aiofiles.open(f'auction-{server}.json', 'wb') as f:
                     await f.write(await resp.read())
+        '''
         # 덤프 시각을 db에 기록합니다
         #str_now = datetime.datetime.now().strftime('%H:%M-%m/%d/%y')
-        print(f'dumped_time:{dump_ts_str}')
-        log.info(f'dumped_time:{dump_ts_str}')
+        #print(f'dumped_time:{dump_ts_str}')
+        log.info(f'dumped_time: {dump_ts_str}')
         await conn.execute(db.tbl_wow_server_info.update().where(db.tbl_wow_server_info.c.server==server).values
                                     (dumped_time=dump_ts_str))
 
-        end_time = time.time()
-        elapsed_time = round(end_time - start_time)
-        # 가격 삽입시 30분 단위로 몇 번 지났는지 확인하기 위한 변수
-        #elapsed_quot_for_chain = round((dump_ts - start_time) / 1800)
-        # 받아온 json에 옥션 json 파일의 주소를 포함한 리스폰스를 보내줍니다. 
-        print('.다운로드 완료!')
-        log.info('.다운로드 완료!')
-        print(f'다운로드에 총 {elapsed_time}초 소요')
-        log.info(f'다운로드에 총 {elapsed_time}초 소요')
         #print(f'서버 덤프시각에 비해 [30분단위]{elapsed_quot_for_chain}회가 경과하였습니다({dump_ts_str})')
         print('.파싱을 시작합니다')
         log.info('.파싱을 시작합니다')
+
+        ''' 
+        #json 파일 저장및 로드 프로세스는 필요하지 않게됐습니다
         async with aiofiles.open(f'auction-{server}.json', 'r') as f:
             js = json.loads(await f.read())
-        #print(js['auctions'])
+        '''
 
-        target_item_name = "하늘 골렘"
+        #target_item_name = "하늘 골렘"
         # 저장된 파일을 읽은 후 한줄씩 탐색합니다
         sellers = []
         min_seller = ''
@@ -158,23 +200,74 @@ async def db_update_from_server(engine, server, defaultset):
         avg = 0
         sum = 0
 
-
         total = len(js['auctions'])
         print('-- 총 {} 개의 경매 아이템이 등록되어있습니다'.format(total))
         log.info('-- 총 {} 개의 경매 아이템이 등록되어있습니다'.format(total))
         # wow token 가격도 추가로 마지막에 넣어줍니다
-        js['auctions'].append({'item': 999999, 'buyout': wowtoken_price, 'quantity': 1, 'owner': 'BLIZZARD Ent.'})
+        '''
+            {
+              "id": 1621241080,
+              "item": {
+                "id": 159482,
+                "context": 0,
+                "bonus_lists": [
+                  4796,
+                  1714
+                ],
+                "modifiers": [
+                  {
+                    "type": 9,
+                    "value": 120
+                  }
+                ]
+              },
+              "buyout": 2002600,
+              "quantity": 1,
+              "time_left": "SHORT"
+            },
 
+            {
+              "id": 587560853,
+              "item": {
+                "id": 14047
+              },
+              "quantity": 23,
+              "unit_price": 10000,
+              "time_left": "LONG"
+            },
+        '''
+        #js['auctions'].append({'item': 999999, 'buyout': wowtoken_price, 'quantity': 1, 'owner': 'BLIZZARD Ent.'})
+        #변경된 auction에 따라 마지막추가해주던 wow token 가격도 형식을 바꾸어줍니다
+        js['auctions'].append({'id': 999999999, 'item': {'id': 999999}, 'quantity': 1, 'buyout': wowtoken_price,  'time_left': 'SHORT'})
+
+        # 파싱 시작시간측정을 시작합니다
         start_a = time.time()
+        inc = 0
         for l in js['auctions']:
-            l['owner'] = 'AH'
+            #log.info(inc)
+            inc = inc + 1
+            '''
+            {"auc":1810115556,"item":59463,"ownerRealm":"데스윙","bid":0,"buyout":100000000,"quantity":1,"ti     meLeft":"VERY_LONG","rand":0,"seed":0,"context":0},
+            '''
+            #l['owner'] = 'AH'
             num = 0
-            cur = int(l['item'])
+            #cur = int(l['item'])
+            #log.info(l)
+            cur = int(l['item']['id'])
+            price = 0
+            # buyout과 unit_price 라는 두가지 경우의 수가 있습니다
+            if l.get('buyout') is None:
+                price = int(l['unit_price'])
+            else:
+                price = int(l['buyout'])
+
+            '''
             price = 0
             if l['buyout'] == 0:
                 price = int(l['bid'] / int(l['quantity']))
             else:
                 price = int(l['buyout'] / int(l['quantity'])) # 묶음 가격을 감안하지 못해서 추가합니다
+            '''
 
             # 해당아이템에 대한 딕트-리스트가 존재하지 않을경우
             if temp_dict.get(cur) is None:
@@ -189,7 +282,10 @@ async def db_update_from_server(engine, server, defaultset):
 
                 #print(temp_name)
                 #temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner']}
-                temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner'], 'image': temp_image}
+
+                #temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': l['owner'], 'image': temp_image}
+                # 변경된 auction에서는 min_seller와 bid가 없어졌습니다
+                temp_dict[cur] = {'item_name': temp_name, 'num': int(l['quantity']), 'min': price, 'min_seller': 'AH', 'image': temp_image}
             # 해당아이템 딕트가 이미 존재할 경우
             else:
                 #log.info(f'come to else')
@@ -197,7 +293,7 @@ async def db_update_from_server(engine, server, defaultset):
 
                 if (int(temp_dict[cur]['min']) == 0) or (price < temp_dict[cur]['min']):
                     temp_dict[cur]['min'] = price
-                    temp_dict[cur]['min_seller'] = l['owner']
+                    #temp_dict[cur]['min_seller'] = l['owner']
             # sleep을 줘서 점유를 풀어줍니다
             # 0.05 이상의 값을 줄 경우 어떤 경우에 있으서 transport 에러 워닝이 뜹니다.
             # sleep을 0으로 하라는 말도 있는데 그렇게 하니 오히려 행이 좀 걸리는 것 같습니다.
@@ -212,7 +308,6 @@ async def db_update_from_server(engine, server, defaultset):
         elap_a = round(end_a - start_a, 2)
         elap_a_min = round(elap_a / 60)
         log.info(f'JSON 파싱 소요시간: {elap_a} 초({elap_a_min}분)')
-
 
         # arranged_auction db에 삽입 프로세스 by 만들어진 temp_dict를 통해...
         #
@@ -441,7 +536,9 @@ async def get_item(id, tok):
     #print(f'토큰:{tok}')
     if(id == 999999):   #WoW 토큰
         return ['WoW 토큰', 'wow_token01']
-    item_req_url = f'https://kr.api.blizzard.com/wow/item/{id}?locale=ko_KR&access_token={tok}'
+    #변경된 auction에 따라 수정합니다
+    #item_req_url = f'https://kr.api.blizzard.com/wow/item/{id}?locale=ko_KR&access_token={tok}'
+    item_req_url = f'https://kr.api.blizzard.com/data/wow/item/{id}?namespace=static-kr&locale=ko_KR&access_token={tok}'
     log.info(f'item_req_url:{item_req_url}')
     # requests를 비동기형 aiohttp 의 clientssion get 으로 대치합니다
     async with aiohttp.ClientSession() as sess:
@@ -449,18 +546,85 @@ async def get_item(id, tok):
         async with sess.get(item_req_url) as resp:
             js = json.loads(await resp.text())
 
-    #log.info(js)
+    # 데이터를 못가져오는 경우가 발생해 아래와 같은 루틴을 추가했습니다. 
+    if js.get('status') is not None:
+        if js['status'] == 'nok':
+            return ['', '']
+    elif js.get('code') is not None:
+        r = js['code']
+        log.info(f'아이템 가져오기 중 {r} 에러응답')
+        return ['', '']
+        #if r == "404":
+    else:
+        try:
+            item_name = js['name'] 
+            icon_name = await get_item_icon(id, tok)
+        
+            # 아이콘 이름 자체만 사용합니다
+            m_icon = re.search('.*/(.*)\.jpg', icon_name)
+            icon_name = m_icon.group(1)
+            log.info(f'item_name:{item_name}, icon:{icon_name}')
+            return [item_name, icon_name]
+        except:
+            return ['', '']
     #print(js['name'])
+    '''
     # 데이터를 못가져오는 경우가 발생해 아래와 같은 루틴을 추가했습니다. 
     if js.get('status') is not None:
         if js['status'] == 'nok':
             return ['', '']
     else:
         try:
-            return [js['name'], js['icon']]
+            #return [js['name'], js['icon']]
+            return [item_name, icon_name]
         # 에러날 경우 그냥 널을 리턴해줘봅니다
         except:
             return ['', '']
+    '''
+
+async def get_item_icon(id, tok):
+    #아이템 아이콘도 미디어 카테고리로 따로 분리를 했더군요
+    '''https://kr.api.blizzard.com/data/wow/item/19019?namespace=static-kr&locale=ko_KR&access_token=US329NfMMVNHM8QujtlQ2yLHsG9A4J0xMp'''
+    '''
+    {
+          "_links": {
+            "self": {
+              "href": "https://us.api.blizzard.com/data/wow/media/item/19019?namespace=static-8.3.0_32861-us"
+            }
+          },
+          "assets": [
+            {
+              "key": "icon",
+              "value": "https://render-us.worldofwarcraft.com/icons/56/inv_sword_39.jpg"
+            }
+          ],
+          "id": 19019
+    }
+    '''
+    itemicon_req_url = f'https://kr.api.blizzard.com/data/wow/media/item/{id}?namespace=static-kr&locale=ko_KR&access_token={tok}'
+    log.info(f'itemicon_req_url:{itemicon_req_url}')
+    # requests를 비동기형 aiohttp 의 clientssion get 으로 대치합니다
+    async with aiohttp.ClientSession() as sess:
+        #async with sess.get('https://kr.api.battle.net/wow/item/{}?locale={}&apikey={}'.format(id, locale, myapi)) as resp:
+        async with sess.get(itemicon_req_url) as resp:
+            js = json.loads(await resp.text())
+
+    # 데이터를 못가져오는 경우가 발생해 아래와 같은 루틴을 추가했습니다. 
+    if js.get('status') is not None:
+        if js['status'] == 'nok':
+            return ''
+    elif js.get('code') is not None:
+        if js('code') == "404":
+            log.info('아이템 가져오기 중 404 에러응답')
+            return ''
+    else:
+        try:
+            log.info(js['assets'][0]['value'])
+            return js['assets'][0]['value']
+        # 에러날 경우 그냥 널을 리턴해줘봅니다
+        except:
+            return ''
+
   
 # 로컬 db에서 id를 통해 이름을 가져옵니다
 async def get_item_name(conn, _id):

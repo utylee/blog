@@ -5,7 +5,7 @@
 	## bootswatch 에서 사용하는 lato 폰트를 아예 다운받지 않아봤습니다. 한글만 쓰여서리
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
 	<link rel="stylesheet" href="/static/css/add.css">
-	<link rel="stylesheet" href="/static/webfonts/icomoon.css">
+	<link rel="stylesheet" href="/static/webfonts/icomoon11.css">
 	##<link rel="stylesheet" href="/static/css/spin.css">
 	## fontawesome 직접 호스팅(:by nginx)
 	## ../ 에 webfonts 폴더만 추가로 넣으니 되었습니다
@@ -278,13 +278,21 @@
 						</%doc>
 						##<div id="image${loop.index}" class="iconlarge" style="background-image: url('${imageroot + ar[a]['image']}'+'.jpg')">
 						##<div id="image${a}" class="iconlarge" style="background-image: url('${imageroot + b['image'] + '.jpg'}')">
+						##<div class="icon-flexy">
+						##<center>
 						<div id="image${a}" class="iconlarge" style="">
 							<a href="javascript:show_item_form(${a});">
 								## nginx 에서 static 을 호스팅하느라 상대경로를 바꿨습니다
 								##<img src="../static/css/images/border.png"/>
 								<img src="/static/css/images/border.png"/>
+								##<i class="icon-caret-down"></i>
 							</a>
 						</div>
+						<div class="iconlarge-caret text-muted" >
+							<i class="icon-caret-down"></i>
+						</div>
+						##</center>
+						##</div>
 					</center>
 				</div>
 
@@ -446,7 +454,6 @@
 
 		## 차트객체 chart.js 6개를 생성합니다
 	});
-
 
 </script>
 </%block>

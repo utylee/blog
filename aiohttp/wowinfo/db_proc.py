@@ -5,6 +5,8 @@ from auction import *
 import logging
 import logging.handlers
 import pathlib
+import ujson as json
+#from collections import defaultdict
 
 #interval = 1800 #초
 #interval = 3600 #초
@@ -16,6 +18,7 @@ myapi = 'm5u8gdp6qmhbjkhbht3ax9byp62wench'
 cli = 'b934788e2cde4166acb93dcbf558040f'
 pwd = 'nMA7eloEh2rHFEiRw9Xs5j0Li6ZaFA5A'
 tok_url = 'https://apac.battle.net/oauth/token'  #apac = kr, tw
+servers_dict = {}
 
 # 로깅을 설정합니다. getLogger()를 통해 root를 설정해 놓으면 이후 logging으로 바로 사용해도 됩니다
 log = logging.getLogger('dbproc')
@@ -61,6 +64,16 @@ async def main_proc(intv):
         알렉스트라자:4분
         '''
 
+    # 변경된 api에 대응합니다
+    # 토큰을 가져옵니다
+    tok = await get_oauth()
+
+    # realm 들을 가져옵니다
+    #l_servers_pair = await get_realm(tok)
+    await get_realm(tok)
+
+
+
     # 아즈샤라, 하이잘은 매시간 탐색, 나머지 16개 서버는 세시간 단위로 나눠서탐색합니다
 
     r_list = [['아즈샤라', '하이잘', '헬스크림', '말퓨리온'],
@@ -76,7 +89,34 @@ async def main_proc(intv):
 
 async def timer_proc(engine, serverlist):
         for s_ in serverlist:
-            await db_update_from_server(engine, s_, defaultset)
+            #await db_update_from_server(engine, s_, defaultset)
+            # 서버이름과 아이디모두를 튜플로 넘겨줍니다
+            await db_update_from_server(engine, (s_,servers_dict[s_]), defaultset)
+
+async def get_oauth():
+    auth = aiohttp.BasicAuth(login=cli, password=pwd)
+    print('OAuth 토큰을 요청합니다')
+    log.info('OAuth 토큰을 요청합니다')
+    async with aiohttp.ClientSession(auth=auth) as sess:
+        async with sess.get(tok_url,params='grant_type=client_credentials') as resp:
+            tok_load = json.loads(await resp.text())
+            tok = tok_load['access_token']
+    return tok
+
+# 변경된 api에 대응하는 realm id를 가져오는 함수입니다
+#https://kr.api.blizzard.com/data/wow/realm/index?namespace=dynamic-kr&locale=ko_KR&access_token=US4uLYR6CkMOk066Dv8om5O2P3oBRdm53m
+async def get_realm(tok):
+    url = f'https://kr.api.blizzard.com/data/wow/realm/index?namespace=dynamic-kr&locale=ko_KR&access_token={tok}'
+    result = ''
+    async with aiohttp.ClientSession() as sess:
+        async with sess.get(url) as resp:
+            #result = await resp.text()
+            load = json.loads(await resp.text())
+            #log.info(load['realms'])
+            l = load['realms']
+            for i in l:
+                #log.info(i)
+                servers_dict[i['name']] = i['id']
 
 logging.basicConfig(filename='dbproc.log', level=logging.INFO, format='%(asctime)s-%(message)s')
 loop = asyncio.get_event_loop()
