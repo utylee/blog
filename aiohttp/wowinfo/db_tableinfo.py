@@ -67,7 +67,8 @@ tbl_wow_server_info = sa.Table('wow_server_info', metadata,
         sa.Column('server', sa.String(128)),
         sa.Column('dumped_time', sa.String(128)),
         sa.Column('region', sa.String(128)),
-        sa.Column('info', sa.Text))
+        sa.Column('info', sa.Text),
+        sa.Column('server_master', sa.String(128)))
 # users 테이블입니다
 tbl_users = sa.Table('users', metadata,
         sa.Column('name', sa.String(255)),

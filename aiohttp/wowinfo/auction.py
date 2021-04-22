@@ -79,6 +79,7 @@ async def db_update_from_server(engine, server_tup, defaultset):
     temp_dict = {}
     server = server_tup[0]
     server_id = server_tup[1]
+    log.info(' ')
     log.info(f'** 서버 {server}에 대한 프로세스를 시작합니다')
     # DB에 접속해둡니다
     async with engine.acquire() as conn:
@@ -118,6 +119,7 @@ async def db_update_from_server(engine, server_tup, defaultset):
         start_time = time.time()
         server_time = ''
 
+        print(req_url)
         # 변경된 api에 맞춘auctionhouse 프로시져입니다
         async with aiohttp.ClientSession() as sess:
             async with sess.get(req_url) as resp:
@@ -304,6 +306,7 @@ async def db_update_from_server(engine, server_tup, defaultset):
         #print(temp_dict)
         ## 각 item 반복작업 종료
         
+        log.info(f'Insert ended')
         end_a = time.time()
         elap_a = round(end_a - start_a, 2)
         elap_a_min = round(elap_a / 60)
@@ -975,13 +978,19 @@ async def delete_itemset(engine, user, setname):
 async def get_serverlist(engine):
     # 한국 와우 서버 리스트를 가져옵니다
     serverlist = []
+    master_server_pairs = []
     async with engine.acquire() as conn:
         async for r in conn.execute(db.tbl_wow_server_info.select()):
             serverlist.append(r[0])
+            master_server_pairs.append([r[0],r[4]])
     
-    #serverlist = ['아즈샤라']
+    serverlist.sort()
+    master_server_pairs.sort(key = lambda s: s[0])
     log.info(f'serverlist = {serverlist}')
-    return sorted(serverlist)
+    log.info(f'master_server_pairs = {master_server_pairs}')
+    return (serverlist, master_server_pairs)
+    #return sorted(serverlist)
+    #return sorted(serverlist, key=lambda s: s[0])       # 튜플 첫번째 값, 즉 서버명으로 튜플을 정렬합니다 
 
 async def get_user_from_code(engine, code):
     async with engine.acquire() as conn:

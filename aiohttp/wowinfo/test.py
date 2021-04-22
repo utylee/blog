@@ -43,6 +43,7 @@ except:
 # 서버 선택
 server = '아즈샤라'
 serverlist = []     # 총 서버리스트는 거의 변하지 않으므로 글로벌로 최초 handle시에만 전달해줍니다
+master_server_pairs = []
 #currentset = '격아약초세트1'
 currentset = '기본구성'
 defaultset = '기본구성'
@@ -364,6 +365,7 @@ async def handle(request):
     global currentset
     global imageroot
     global serverlist
+    global master_server_pairs
     
     #redis로부터 top5 가져옴
     keys_top5 = ['1','2', '3', '4', '5']
@@ -387,7 +389,7 @@ async def handle(request):
                     'itemsets': itemsets, 'current_itemset':currentset}
     '''
     return {'name': '7', 'imageroot': imageroot ,'ar':dict_, 'server':server, 'user':'guest','user_code':'',
-                    'serverlist':serverlist, 'itemsets': itemsets, 
+            'serverlist':serverlist, 'master_server_pairs': master_server_pairs, 'itemsets': itemsets, 
                     'current_itemset':currentset, 'current_itemset_code':currentset_code,
                     'top_5':redis_top5}
 
@@ -455,14 +457,16 @@ async def init(app):
 
 async def init_proc(engine):
     global serverlist
+    global master_server_pairs
     #log.info(f'init serverlist size: {len(serverlist)}')
     if(len(serverlist) == 0):
-        serverlist = await auc.get_serverlist(engine)
+        # [ (server, master_server) ] 형식으로 받아오도록 변경되었습니다
+        serverlist, master_server_pairs = await auc.get_serverlist(engine)
         #log.info(f'after serverlist size: {len(serverlist)}')
 
-
+'''
 async def main_proc(intv):
-    # 현재 동작 안합니다. 별도로 분리
+    # 현재 동작 안합니다. 별도테스크로 분리
     # 한국 와우 서버 리스트를 가져옵니다
     serverlist = []
     async with create_engine(user='postgres',
@@ -508,28 +512,47 @@ async def fetch_auction():
     except:
         print('ws send err!!!!')
         log.info('ws send err!!!!')
+'''
 
+'''
 def init_data():
     #global ar
     global serverlist
 
-    '''
-    ar = {'사술매듭 가방': {'num': 10, 'min': 1379999900, 'min_seller': '밀림왕세나씨', 'min_chain':'0'}, 
-                '심해 가방': {'num': 300, 'min': 18000000, 'min_seller': '인중개박살'}, 
-                '호화로운 모피': {'num': 158, 'min': 4000, 'min_seller': '우렝밀렵'}, 
-                '하늘 골렘': {'num': 173, 'min': 18560000, 'min_seller': '남미왕'}, 
-                '살아있는 강철': {'num': 77, 'min': 34900000, 'min_seller': '임리치'}, 
-                '민첩의 전투 물약': {'num': 25, 'min': 3505000, 'min_seller': 'Spit'}}
-    for a in ar.keys():
-        ar[a]['image'] = 'inv_tailoring_hexweavebag.jpg'
-        min_chain = []
-        for c_ in range(0, 1440):
-            min_chain.append(0)
-        ar[a]['min_chain'] = min_chain 
-        ar[a]['gold'] = 0
-        ar[a]['silver'] =0
-        ar[a]['copper'] =0
+    #ar = {'사술매듭 가방': {'num': 10, 'min': 1379999900, 'min_seller': '밀림왕세나씨', 'min_chain':'0'}, 
+                #'심해 가방': {'num': 300, 'min': 18000000, 'min_seller': '인중개박살'}, 
+                #'호화로운 모피': {'num': 158, 'min': 4000, 'min_seller': '우렝밀렵'}, 
+                #'하늘 골렘': {'num': 173, 'min': 18560000, 'min_seller': '남미왕'}, 
+                #'살아있는 강철': {'num': 77, 'min': 34900000, 'min_seller': '임리치'}, 
+                #'민첩의 전투 물약': {'num': 25, 'min': 3505000, 'min_seller': 'Spit'}}
+    #for a in ar.keys():
+        #ar[a]['image'] = 'inv_tailoring_hexweavebag.jpg'
+        #min_chain = []
+        #for c_ in range(0, 1440):
+            #min_chain.append(0)
+        #ar[a]['min_chain'] = min_chain 
+        #ar[a]['gold'] = 0
+        #ar[a]['silver'] =0
+        #ar[a]['copper'] =0
         '''
+
+'''
+def srv_redirect(srv):
+    ret = srv
+    #r_list = [['아즈샤라', '하이잘', '헬스크림', '말퓨리온'],
+                #['아즈샤라', '가로나','굴단', '줄진', '노르간논', '달라란', '듀로탄', '데스윙', '렉사르'], 
+                #['아즈샤라', '불타는 군단', '세나리우스', '스톰레이지', '윈드러너'
+                                        #, '와일드해머', '알렉스트라자']]
+
+    # 줄진군입니다
+    if srv == '가로나':             srv = '줄진'
+    elif srv == '굴단':             srv = '줄진'
+    elif srv == '세나리우스':       srv = '줄진'
+    elif srv == '노르간논':         srv = '줄진'
+    elif srv == '달라란':           srv = '줄진'
+    elif srv == '달라란':           srv = '줄진'
+    return ret
+    '''
 
 async def get_itemsets(request, user):
     itemset_names = []

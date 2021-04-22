@@ -425,6 +425,8 @@
 		window.modalLogout = new LogoutModal();
 		itemsets = ${itemsets};
 		serverlist = ${serverlist};
+		master_server_pairing(${master_server_pairs});
+		//alert(master_server_pairs['하이잘']);
 		if(cur_user!='guest') {
 			window.history.pushState('', '', '/u/' + cur_user_code + '/' + cur_itemset_code);
 			loginned();
@@ -437,7 +439,7 @@
 		document.getElementById("designed_by").innerHTML = "developed and designed by utylee studios 2019 /&nbsp;";
 		document.getElementById("gathered_from").innerHTML = "item images hosted by zamimg.com /&nbsp; ";
 		document.getElementById("dumped_at").innerHTML = "${server} DB dumped recently at &nbsp;";
-		document.getElementById("report").innerHTML = "any suggestions'll be thankful"; 
+		document.getElementById("report").innerHTML = "any suggestions'd be thankful"; 
 		document.getElementById("email").innerHTML = "utylee@gmail.com"; 
 		## donation 제거
 		##document.getElementById("thx_for").innerHTML = "thanks for your";

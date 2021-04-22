@@ -10,7 +10,8 @@ import ujson as json
 
 #interval = 1800 #초
 #interval = 3600 #초
-interval = 6000 #초
+#interval = 6000 #초
+interval = 7200 #초  # 서버가 4개군으로 통합됐다는 것을 몰랐습니다. 아즈샤라만 중복해서 나눴습니다
 tok = ''
 defaultset = '기본구성'
 locale = 'ko_KR'
@@ -74,10 +75,26 @@ async def main_proc(intv):
 
     # 아즈샤라, 하이잘은 매시간 탐색, 나머지 16개 서버는 세시간 단위로 나눠서탐색합니다
 
+    ''' 
+    # 서버 4개군으로 통폐합으로 인해서 변경되었습니다
+    **** 아즈샤라, 줄진, 윈드러너, 듀로탄
+
+
     r_list = [['아즈샤라', '하이잘', '헬스크림', '말퓨리온'],
                 ['아즈샤라', '가로나','굴단', '줄진', '노르간논', '달라란', '듀로탄', '데스윙', '렉사르'], 
                 ['아즈샤라', '불타는 군단', '세나리우스', '스톰레이지', '윈드러너'
                                         , '와일드해머', '알렉스트라자']]
+
+                                        '''
+    #r_list = [['아즈샤라', '줄진'],
+    r_list = [['줄진', '아즈샤라'],
+                ['아즈샤라', '윈드러너'],
+                ['아즈샤라', '듀로탄']]
+    #r_list = [['불타는 군단']]
+    #r_list = [['줄진']]
+    #r_list = [['듀로탄']]
+    #r_list = [['아즈샤라']]
+
     # 주기마다 반복합니다
     while True:
         for serverlist in r_list:
@@ -86,10 +103,11 @@ async def main_proc(intv):
             await asyncio.sleep(intv)
 
 async def timer_proc(engine, serverlist):
+        global servers_dict
+        print(servers_dict)
         for s_ in serverlist:
             #await db_update_from_server(engine, s_, defaultset)
             # 서버이름과 아이디모두를 튜플로 넘겨줍니다
-
             await db_update_from_server(engine, (s_,servers_dict[s_]), defaultset)
 
 async def get_oauth():

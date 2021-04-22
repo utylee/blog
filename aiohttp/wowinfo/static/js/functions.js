@@ -6,7 +6,15 @@ window.form_opened = new Array;
 window.itemsets = [];
 window.items = {};
 window.serverlist = [];
+window.master_server_pairs = {};
 window.socket = 0;
+
+function master_server_pairing(msv){
+	var len_ = msv.length;
+	for (let i=0;i<len_;i++) {
+		window.master_server_pairs[msv[i][0]] = msv[i][1];
+	}
+}
 
 function init(cnum, is, isc, u, uc, ih, sv){
 	//alert('hahaha');
@@ -925,7 +933,11 @@ function rq_itemdata(n, name) {
 	};
 	//fullstr = collect_items_tostring(n, name);
 	var dummy = new Date().getTime();
-	xhttp.open("GET", '/rq_item/' + n + '/' + server + '/' + name + '/' + dummy, true);
+	//alert(master_server_pairs[server]);
+	//alert(server);
+	//xhttp.open("GET", '/rq_item/' + n + '/' + server + '/' + name + '/' + dummy, true);
+	// 웹상에서는 master 서버로 변경해주는 이 한줄만 변경해주면 됩니다
+	xhttp.open("GET", '/rq_item/' + n + '/' + master_server_pairs[server] + '/' + name + '/' + dummy, true);
 	//xhttp.open("GET", '/rq_item/' + cur_user + '/' + n + '/' + server + '/' 
 							//+ fullstr + '/' + dummy, true);
 	xhttp.send();
@@ -957,7 +969,9 @@ function rq_dumptime() {
 	};
 	// 캐싱해도 괜찮은 컨텐츠입니다. dummy를 제거합니다
 	//var dummy = new Date().getTime();
-	xhttp.open("GET", '/rq_servertime/' + server , true);
+	//xhttp.open("GET", '/rq_servertime/' + server , true);
+	// 역시 서버통폐합으로 인해 master server pair에 해당하는 서버값을 요청합니다
+	xhttp.open("GET", '/rq_servertime/' + master_server_pairs[server] , true);
 	xhttp.send();
 }
 
