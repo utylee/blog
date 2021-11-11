@@ -38,7 +38,7 @@ pycurl==7.43.0.2
 pynvim==0.3.2
 pytest==4.3.0
 pytest-benchmark==3.2.2
-python-engineio==1.7.0
+python-engineio==3.8.2.post1
 python-socketio==1.7.6
 PyYAML==3.13
 Represent==1.5.1
