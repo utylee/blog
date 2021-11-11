@@ -31,7 +31,7 @@ parso==0.5.2
 pluggy==0.8.1
 psycopg2==2.7.6.1
 psycopg2-binary==2.7.6.1
-py==1.7.0
+py==1.10.0
 py-cpuinfo==4.0.0
 pycares==2.3.0
 pycurl==7.43.0.2
