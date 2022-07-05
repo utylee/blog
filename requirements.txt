@@ -33,7 +33,7 @@ psycopg2==2.7.6.1
 psycopg2-binary==2.7.6.1
 py==1.7.0
 py-cpuinfo==4.0.0
-pycares==2.3.0
+pycares==4.2.0
 pycurl==7.43.0.2
 pynvim==0.3.2
 pytest==4.3.0
